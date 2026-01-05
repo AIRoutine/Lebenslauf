@@ -43,7 +43,7 @@ public class ImplementTasksHandler(IProcessRunner processRunner) : IRequestHandl
             Console.ResetColor();
 
             var implementPrompt = PromptTemplates.GetImplementTaskPrompt(stepContext, task);
-            var result = await processRunner.RunClaudeAsync(implementPrompt, ct);
+            var result = await processRunner.RunClaudeAsync(implementPrompt, ct: ct);
 
             if (!result.Success)
             {
@@ -67,7 +67,7 @@ public class ImplementTasksHandler(IProcessRunner processRunner) : IRequestHandl
                     Console.ResetColor();
 
                     var seedingPrompt = PromptTemplates.GetSeedingPrompt(stepContext);
-                    var seedingResult = await processRunner.RunClaudeAsync(seedingPrompt, ct);
+                    var seedingResult = await processRunner.RunClaudeAsync(seedingPrompt, ct: ct);
 
                     if (!seedingResult.Success)
                     {

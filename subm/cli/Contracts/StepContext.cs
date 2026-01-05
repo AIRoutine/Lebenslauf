@@ -55,6 +55,13 @@ public record StepContext
     public string GetSharedContext() => $"""
         Ticket: {TicketDescription}
 
+        WICHTIG: Du bist im nicht-interaktiven Modus. Du MUSST die verfuegbaren Tools (Write, Edit, Bash, Glob, Grep, Read) aktiv nutzen um Dateien zu erstellen und zu bearbeiten.
+
+        - Verwende Write um neue Dateien zu erstellen
+        - Verwende Edit um bestehende Dateien zu aendern
+        - Verwende Bash um dotnet CLI Befehle auszufuehren (dotnet new, dotnet build, etc.)
+        - Lies CLAUDE.md fuer Projektrichtlinien
+
         Du hast Zugriff auf die GitHub CLI (gh). Falls das Ticket eine GitHub Issue URL ist, lade den vollstaendigen Inhalt mit:
           gh issue view <issue-number> --repo <owner/repo>
           gh issue view <issue-number> --repo <owner/repo> --comments
@@ -62,5 +69,7 @@ public record StepContext
         Nutze diese Tools um alle Details, Beschreibungen und SubTasks des Tickets zu laden bevor du mit der Analyse beginnst.
 
         Fuer die folgenden Tasks beachte du musst nicht Backwards kompatibel sein.
+
+        AKTION ERFORDERLICH: Fuehre die angeforderten Aenderungen durch - antworte nicht nur mit einer Beschreibung, sondern erstelle/bearbeite die Dateien direkt!
         """;
 }

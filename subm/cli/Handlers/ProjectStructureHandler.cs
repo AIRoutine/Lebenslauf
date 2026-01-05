@@ -20,7 +20,7 @@ public class ProjectStructureHandler(IProcessRunner processRunner) : IRequestHan
         Console.ResetColor();
 
         var prompt = PromptTemplates.GetProjectStructurePrompt(request.Context);
-        var result = await processRunner.RunClaudeAsync(prompt, ct);
+        var result = await processRunner.RunClaudeAsync(prompt, ct: ct);
 
         if (!result.Success)
         {

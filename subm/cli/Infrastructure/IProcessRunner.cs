@@ -8,7 +8,10 @@ public interface IProcessRunner
     /// <summary>
     /// Fuehrt Claude CLI mit einem Prompt aus.
     /// </summary>
-    Task<ProcessResult> RunClaudeAsync(string prompt, CancellationToken ct = default);
+    /// <param name="prompt">Der Prompt fuer Claude</param>
+    /// <param name="workingDirectory">Optionales Working Directory (default: Lebenslauf Hauptprojekt)</param>
+    /// <param name="ct">Cancellation Token</param>
+    Task<ProcessResult> RunClaudeAsync(string prompt, string? workingDirectory = null, CancellationToken ct = default);
 
     /// <summary>
     /// Fuehrt GitHub CLI aus.

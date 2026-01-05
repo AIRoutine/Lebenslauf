@@ -20,7 +20,7 @@ public class ApiAnalysisHandler(IProcessRunner processRunner) : IRequestHandler<
         Console.ResetColor();
 
         var prompt = PromptTemplates.GetApiAnalysisPrompt(request.Context);
-        var result = await processRunner.RunClaudeAsync(prompt, ct);
+        var result = await processRunner.RunClaudeAsync(prompt, ct: ct);
 
         if (!result.Success)
         {

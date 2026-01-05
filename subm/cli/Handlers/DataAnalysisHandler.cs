@@ -20,7 +20,7 @@ public class DataAnalysisHandler(IProcessRunner processRunner) : IRequestHandler
         Console.ResetColor();
 
         var prompt = PromptTemplates.GetDataAnalysisPrompt(request.Context);
-        var result = await processRunner.RunClaudeAsync(prompt, ct);
+        var result = await processRunner.RunClaudeAsync(prompt, ct: ct);
 
         if (!result.Success)
         {

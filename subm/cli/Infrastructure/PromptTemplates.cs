@@ -72,45 +72,50 @@ public static class PromptTemplates
     public static string GetImplementTaskPrompt(StepContext context, string task) => $"""
         {context.GetSharedContext()}
 
-        Implementiere folgenden Task:
+        Implementiere folgenden Task JETZT:
         {task}
 
-        Nutze die passenden Skills falls angegeben. Implementiere vollstaendig und teste ob der Code kompiliert.
+        ANLEITUNG:
+        1. Lies zuerst CLAUDE.md fuer die Projektstruktur und Konventionen
+        2. Verwende das Write-Tool um neue Dateien anzulegen
+        3. Verwende das Edit-Tool um bestehende Dateien zu aendern
+        4. Verwende Bash um csproj-Dateien mit 'dotnet new classlib' zu erstellen falls benoetigt
+        5. Nach Erstellung: Fuehre 'dotnet build' aus um Fehler zu pruefen
+
+        Nutze die passenden Skills falls angegeben.
+
+        WICHTIG: Du MUSST die Dateien tatsaechlich erstellen - nicht nur beschreiben was zu tun waere!
+        Beginne SOFORT mit der Implementierung.
         """;
 
     public static string GetSeedingPrompt(StepContext context) =>
         context.GetSharedContext() + """
 
 
-        Fuer das gerade implementierte Data/Entity Feature muessen jetzt Mock-Daten erstellt werden.
+        AKTION: Erstelle JETZT einen Seeder fuer das gerade implementierte Data/Entity Feature.
 
-        1. Erstelle einen Seeder im Feature-Projekt:
-           - Datei: Features/{FeatureName}/Lebenslauf.Api.Features.{FeatureName}/Data/Seeding/{FeatureName}Seeder.cs
-           - Implementiere ISeeder aus Lebenslauf.Api.Core.Data.Seeding
-           - Pruefe ob Daten bereits existieren (idempotent!)
-           - Fuege 5-10 realistische Testdaten pro Entity hinzu
+        Verwende das Write-Tool um folgende Datei zu erstellen:
+        - Pfad: src/api/src/Features/{FeatureName}/Lebenslauf.Api.Features.{FeatureName}/Data/Seeding/{FeatureName}Seeder.cs
 
-        2. Registriere den Seeder in der Feature ServiceCollectionExtensions:
-           services.AddSeeder<{FeatureName}Seeder>();
-
-        Beispiel Seeder:
+        Template:
         ```csharp
         using Lebenslauf.Api.Core.Data;
         using Lebenslauf.Api.Core.Data.Seeding;
         using Microsoft.EntityFrameworkCore;
 
-        public class MyFeatureSeeder(AppDbContext dbContext) : ISeeder
+        namespace Lebenslauf.Api.Features.{FeatureName}.Data.Seeding;
+
+        public class {FeatureName}Seeder(AppDbContext dbContext) : ISeeder
         {
             public int Order => 10;
 
             public async Task SeedAsync(CancellationToken cancellationToken = default)
             {
-                if (await dbContext.Set<MyEntity>().AnyAsync(cancellationToken))
+                if (await dbContext.Set<{Entity}>().AnyAsync(cancellationToken))
                     return;
 
-                dbContext.Set<MyEntity>().AddRange(
-                    new MyEntity { Name = "Test 1", ... },
-                    new MyEntity { Name = "Test 2", ... }
+                dbContext.Set<{Entity}>().AddRange(
+                    // 5-10 realistische Testdaten hier
                 );
 
                 await dbContext.SaveChangesAsync(cancellationToken);
@@ -118,10 +123,9 @@ public static class PromptTemplates
         }
         ```
 
-        WICHTIG:
-        - Seeder MUSS idempotent sein (pruefen ob Daten existieren)
-        - Datenbank wird NICHT geloescht
-        - Nach Implementierung: dotnet build ausfuehren um zu pruefen ob alles kompiliert
+        Danach: Verwende Edit-Tool um die ServiceCollectionExtensions um services.AddSeeder<{FeatureName}Seeder>() zu erweitern.
+
+        WICHTIG: Du MUSST die Dateien mit Write/Edit erstellen - nicht nur beschreiben!
         """;
 
     /// <summary>
