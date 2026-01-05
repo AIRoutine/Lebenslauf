@@ -1,0 +1,3 @@
+[submodule "subm/uno"]
+	path = subm/uno
+	url = https://github.com/AIRoutine/UnoFramework.git

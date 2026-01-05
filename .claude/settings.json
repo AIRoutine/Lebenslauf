@@ -1,0 +1,47 @@
+{
+  "enableAllProjectMcpServers": true,
+  "extraKnownMarketplaces": {
+    "daniel-claude-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "AIRoutine/ClaudePlugins"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "uno-dev@daniel-claude-marketplace": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(dotnet *)",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(uno-devserver *)",
+      "Read",
+      "Write",
+      "Edit"
+    ],
+    "deny": []
+  },
+  "env": {
+    "DOTNET_MODIFIABLE_ASSEMBLIES": "debug",
+    "MCP_TIMEOUT": "90000"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "claude plugin marketplace add AIRoutine/ClaudePlugins 2>nul || true && claude plugin install uno-dev@daniel-claude-marketplace --scope project 2>nul || claude plugin update uno-dev@daniel-claude-marketplace 2>nul || true"
+          },
+          {
+            "type": "command",
+            "command": "uno-devserver cleanup 2>nul || true && uno-devserver start 2>nul || true"
+          }
+        ]
+      }
+    ]
+  }
+}

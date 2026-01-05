@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "Lebenslauf",
+  "display": "standalone",
+  "name": "Lebenslauf",
+  "short_name": "Lebenslauf",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

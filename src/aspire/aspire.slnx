@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Lebenslauf.AppHost/Lebenslauf.AppHost.csproj" />
+    <Project Path="src/Lebenslauf.ServiceDefaults/Lebenslauf.ServiceDefaults.csproj" />
+  </Folder>
+</Solution>
