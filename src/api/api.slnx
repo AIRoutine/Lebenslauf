@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Lebenslauf.Api/Lebenslauf.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Core/">
+    <Project Path="src/Core/Lebenslauf.Api.Core.Data/Lebenslauf.Api.Core.Data.csproj" />
+    <Project Path="src/Core/Lebenslauf.Api.Core.Startup/Lebenslauf.Api.Core.Startup.csproj" />
+  </Folder>
+  <Folder Name="/tests/UnitTests/">
+    <Project Path="tests/UnitTests/Lebenslauf.Api.UnitTests/Lebenslauf.Api.UnitTests.csproj" />
+    <Project Path="tests/UnitTests/Lebenslauf.Api.Core.UnitTests/Lebenslauf.Api.Core.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/tests/IntegrationTests/">
+    <Project Path="tests/IntegrationTests/Lebenslauf.Api.IntegrationTests/Lebenslauf.Api.IntegrationTests.csproj" />
+    <Project Path="tests/IntegrationTests/Lebenslauf.Api.Core.IntegrationTests/Lebenslauf.Api.Core.IntegrationTests.csproj" />
+  </Folder>
+</Solution>
