@@ -36,6 +36,9 @@
         <!-- Responsive Layout Helpers -->
         <ResourceDictionary Source="ms-appx:///Lebenslauf.Core.Styles/Layouts/Responsive.xaml" />
 
+        <!-- Control Styles -->
+        <ResourceDictionary Source="ms-appx:///Lebenslauf.Core.Styles/Controls/Controls.xaml" />
+
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

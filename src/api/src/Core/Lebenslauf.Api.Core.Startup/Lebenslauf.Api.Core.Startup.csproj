@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Shiny.Mediator" />
     <PackageReference Include="Shiny.Mediator.AspNet" />
     <PackageReference Include="Shiny.Extensions.DependencyInjection" />
@@ -18,6 +22,8 @@
     <ProjectReference Include="..\Lebenslauf.Api.Core.Data.Seeding\Lebenslauf.Api.Core.Data.Seeding.csproj" />
     <!-- Contracts & Handlers -->
     <!-- Features -->
+    <ProjectReference Include="..\..\Features\Cv\Lebenslauf.Api.Features.Cv\Lebenslauf.Api.Features.Cv.csproj" />
+    <ProjectReference Include="..\..\Features\Cv\Lebenslauf.Api.Features.Cv.Contracts\Lebenslauf.Api.Features.Cv.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

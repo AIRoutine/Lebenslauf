@@ -78,6 +78,7 @@
             <!-- App-Specific Semantic Brushes -->
             <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
             <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource LayerFillColorDefault}" />
+            <SolidColorBrush x:Key="SurfaceVariantBrush" Color="{StaticResource CardBackgroundFillColorSecondary}" />
             <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardBackgroundFillColorDefault}" />
             <SolidColorBrush x:Key="OnBackgroundBrush" Color="{StaticResource TextFillColorPrimary}" />
             <SolidColorBrush x:Key="OnSurfaceBrush" Color="{StaticResource TextFillColorPrimary}" />
@@ -142,6 +143,7 @@
             <!-- App-Specific Semantic Brushes -->
             <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
             <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource LayerFillColorDefault}" />
+            <SolidColorBrush x:Key="SurfaceVariantBrush" Color="{StaticResource CardBackgroundFillColorSecondary}" />
             <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardBackgroundFillColorDefault}" />
             <SolidColorBrush x:Key="OnBackgroundBrush" Color="{StaticResource TextFillColorPrimary}" />
             <SolidColorBrush x:Key="OnSurfaceBrush" Color="{StaticResource TextFillColorPrimary}" />
@@ -161,6 +163,7 @@
             <SolidColorBrush x:Key="AccentBrush" Color="{ThemeResource SystemColorHighlightColor}" />
             <SolidColorBrush x:Key="BackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="SurfaceBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="SurfaceVariantBrush" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="CardBrush" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="OnBackgroundBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
             <SolidColorBrush x:Key="OnSurfaceBrush" Color="{ThemeResource SystemColorWindowTextColor}" />

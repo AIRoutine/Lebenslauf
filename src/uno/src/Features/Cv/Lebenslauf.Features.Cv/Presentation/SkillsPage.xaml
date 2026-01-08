@@ -1,0 +1,219 @@
+<Page x:Class="Lebenslauf.Features.Cv.Presentation.SkillsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header with Back Button -->
+        <Border Background="{ThemeResource CardBrush}"
+                BorderBrush="{ThemeResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="16,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Command="{Binding GoBackCommand}"
+                        Style="{StaticResource IconButtonStyle}">
+                    <FontIcon Glyph="&#xE72B;" FontSize="20" />
+                </Button>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding Title}"
+                           Style="{StaticResource TitleLargeTextBlockStyle}"
+                           VerticalAlignment="Center"
+                           Margin="12,0,0,0" />
+            </Grid>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" Padding="24,16">
+            <StackPanel Spacing="24" MaxWidth="900" HorizontalAlignment="Center">
+
+                <!-- Expertise Section -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Border Width="4" Height="20" CornerRadius="2" Background="{ThemeResource AccentBrush}" />
+                        <TextBlock Text="Expertise / Taeglicher Gebrauch"
+                                   Style="{StaticResource CvSectionHeaderTextBlockStyle}" />
+                    </StackPanel>
+
+                    <ItemsRepeater ItemsSource="{Binding ExpertiseSkills}">
+                        <ItemsRepeater.Layout>
+                            <FlowLayout MinRowSpacing="8" MinColumnSpacing="8" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource AccentBrush}"
+                                        CornerRadius="6"
+                                        Padding="14,8">
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource LabelMediumTextBlockStyle}"
+                                               Foreground="White" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <!-- Basic Knowledge Section -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Border Width="4" Height="20" CornerRadius="2" Background="{ThemeResource OnSurfaceVariantBrush}" />
+                        <TextBlock Text="Grundlegende Kenntnisse"
+                                   Style="{StaticResource CvSectionHeaderTextBlockStyle}" />
+                    </StackPanel>
+
+                    <ItemsRepeater ItemsSource="{Binding BasicSkills}">
+                        <ItemsRepeater.Layout>
+                            <FlowLayout MinRowSpacing="8" MinColumnSpacing="8" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource SurfaceVariantBrush}"
+                                        CornerRadius="6"
+                                        Padding="14,8">
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource LabelMediumTextBlockStyle}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <!-- App Base Technologies -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE74C;" FontSize="18" Foreground="{ThemeResource AccentBrush}" />
+                        <TextBlock Text="App-Basis Technologien"
+                                   Style="{StaticResource CvSectionHeaderTextBlockStyle}" />
+                    </StackPanel>
+
+                    <ItemsRepeater ItemsSource="{Binding AppBaseTechnologies}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Spacing="8" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Ellipse Width="6" Height="6" Fill="{ThemeResource AccentBrush}" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource BodyMediumTextBlockStyle}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <!-- Dev Tools -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE713;" FontSize="18" Foreground="#10B981" />
+                        <TextBlock Text="Entwicklungstools &amp; DevOps"
+                                   Style="{StaticResource CvSectionHeaderTextBlockStyle}" />
+                    </StackPanel>
+
+                    <ItemsRepeater ItemsSource="{Binding DevTools}">
+                        <ItemsRepeater.Layout>
+                            <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource SurfaceVariantBrush}"
+                                        CornerRadius="4"
+                                        Padding="12,6">
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource CvChipTextBlockStyle}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <!-- AI Tools -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE99A;" FontSize="18" Foreground="#8B5CF6" />
+                        <TextBlock Text="AI Tools"
+                                   Style="{StaticResource CvSectionHeaderTextBlockStyle}" />
+                    </StackPanel>
+
+                    <ItemsRepeater ItemsSource="{Binding AiTools}">
+                        <ItemsRepeater.Layout>
+                            <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#EDE9FE"
+                                        CornerRadius="4"
+                                        Padding="12,6">
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource LabelMediumTextBlockStyle}"
+                                               Foreground="#6D28D9" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <!-- Frameworks -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE8F1;" FontSize="18" Foreground="#F59E0B" />
+                        <TextBlock Text="Frameworks &amp; Libraries"
+                                   Style="{StaticResource CvSectionHeaderTextBlockStyle}" />
+                    </StackPanel>
+
+                    <ItemsRepeater ItemsSource="{Binding Frameworks}">
+                        <ItemsRepeater.Layout>
+                            <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource SurfaceVariantBrush}"
+                                        CornerRadius="4"
+                                        Padding="12,6">
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource CvChipTextBlockStyle}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+                <!-- App Dev Experience -->
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE8A1;" FontSize="18" Foreground="#EF4444" />
+                        <TextBlock Text="App-Entwicklung Erfahrung"
+                                   Style="{StaticResource CvSectionHeaderTextBlockStyle}" />
+                    </StackPanel>
+
+                    <ItemsRepeater ItemsSource="{Binding AppDevExperience}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Spacing="6" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="#10B981" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource BodyMediumTextBlockStyle}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

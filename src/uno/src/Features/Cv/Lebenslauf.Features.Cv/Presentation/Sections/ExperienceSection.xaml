@@ -1,0 +1,143 @@
+<UserControl x:Class="Lebenslauf.Features.Cv.Presentation.Sections.ExperienceSection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utu="using:Uno.Toolkit.UI">
+
+    <!-- Section Card with Elevation -->
+    <Border CornerRadius="16"
+            Padding="24"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            Translation="0,0,16"
+            Style="{StaticResource CardBorderStyle}">
+        <Border.Shadow>
+            <ThemeShadow />
+        </Border.Shadow>
+
+        <utu:AutoLayout Orientation="Vertical"
+                        Style="{StaticResource ContentAutoLayoutStyle}"
+                        Spacing="20">
+
+            <!-- Section Header with Icon -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Border Width="40" Height="40"
+                        CornerRadius="20"
+                        Style="{StaticResource CardBorderStyle}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2196f3" Offset="0.0" />
+                            <GradientStop Color="#1565c0" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <FontIcon Glyph="&#xE821;"
+                              FontSize="20"
+                              Foreground="White"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center" />
+                </Border>
+                <TextBlock Text="Berufserfahrung"
+                           Style="{StaticResource TitleLargeTextBlockStyle}"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Experience Items with Timeline -->
+            <ItemsRepeater ItemsSource="{Binding}"
+                           Style="{StaticResource DefaultItemsRepeaterStyle}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Spacing="0" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="48" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Timeline -->
+                            <StackPanel HorizontalAlignment="Center">
+                                <!-- Top Line -->
+                                <Border Width="3" Height="16"
+                                        Background="{ThemeResource DividerBrush}"
+                                        CornerRadius="1.5"
+                                        Style="{StaticResource CardBorderStyle}" />
+
+                                <!-- Circle -->
+                                <Border Width="18" Height="18"
+                                        CornerRadius="9"
+                                        BorderThickness="3"
+                                        BorderBrush="#2196f3"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        Style="{StaticResource CardBorderStyle}" />
+
+                                <!-- Bottom Line -->
+                                <Border Width="3" Height="100"
+                                        Background="{ThemeResource DividerBrush}"
+                                        CornerRadius="1.5"
+                                        Style="{StaticResource CardBorderStyle}" />
+                            </StackPanel>
+
+                            <!-- Content Card -->
+                            <Border Grid.Column="1"
+                                    CornerRadius="12"
+                                    Padding="16"
+                                    Margin="0,8"
+                                    Background="{ThemeResource SurfaceBrush}"
+                                    Style="{StaticResource CardBorderStyle}">
+                                <StackPanel Spacing="8">
+                                    <!-- Header Row with Company and Badge -->
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <!-- Date Badge -->
+                                        <Border Background="#E3F2FD"
+                                                CornerRadius="8"
+                                                Padding="10,4"
+                                                Style="{StaticResource CardBorderStyle}">
+                                            <TextBlock Foreground="#1565c0"
+                                                       Style="{StaticResource LabelSmallTextBlockStyle}"
+                                                       FontWeight="SemiBold">
+                                                <Run Text="{Binding StartDate.Month}" /><Run Text="/" /><Run Text="{Binding StartDate.Year}" /><Run Text=" - " /><Run Text="{Binding EndDate.Month, TargetNullValue='heute'}" /><Run Text="{Binding EndDate.Year, TargetNullValue=''}" />
+                                            </TextBlock>
+                                        </Border>
+
+                                        <!-- Current Badge -->
+                                        <Border Visibility="{Binding IsCurrent}"
+                                                CornerRadius="8"
+                                                Padding="10,4"
+                                                Style="{StaticResource CardBorderStyle}">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#4caf50" Offset="0.0" />
+                                                    <GradientStop Color="#66bb6a" Offset="1.0" />
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                            <TextBlock Text="Aktuell"
+                                                       Style="{StaticResource LabelSmallTextBlockStyle}"
+                                                       Foreground="White"
+                                                       FontWeight="Bold" />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Company -->
+                                    <TextBlock Text="{Binding Company}"
+                                               Style="{StaticResource TitleMediumTextBlockStyle}"
+                                               FontWeight="SemiBold" />
+
+                                    <!-- Role -->
+                                    <TextBlock Text="{Binding Role}"
+                                               Style="{StaticResource BodyMediumTextBlockStyle}"
+                                               Foreground="{ThemeResource AccentBrush}" />
+
+                                    <!-- Description -->
+                                    <TextBlock Text="{Binding Description}"
+                                               Style="{StaticResource BodySmallTextBlockStyle}"
+                                               Foreground="{ThemeResource OnSurfaceVariantBrush}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,4,0,0" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </utu:AutoLayout>
+    </Border>
+</UserControl>

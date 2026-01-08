@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Shiny.Mediator" />
+    <PackageReference Include="Shiny.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Shared -->
+    <ProjectReference Include="..\..\..\Shared\Lebenslauf.Api.Shared\Lebenslauf.Api.Shared.csproj" />
+    <!-- Core -->
+    <ProjectReference Include="..\..\..\Core\Lebenslauf.Api.Core.Data\Lebenslauf.Api.Core.Data.csproj" />
+    <ProjectReference Include="..\..\..\Core\Lebenslauf.Api.Core.Data.Seeding\Lebenslauf.Api.Core.Data.Seeding.csproj" />
+    <!-- Contracts -->
+    <ProjectReference Include="..\Lebenslauf.Api.Features.Cv.Contracts\Lebenslauf.Api.Features.Cv.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

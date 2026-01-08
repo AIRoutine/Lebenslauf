@@ -1,0 +1,5 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>$(UnoFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+</Project>

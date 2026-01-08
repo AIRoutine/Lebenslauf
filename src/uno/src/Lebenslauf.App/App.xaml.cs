@@ -1,4 +1,5 @@
 using Lebenslauf.Core.Startup;
+using Lebenslauf.Features.Cv.Presentation;
 using Uno.Resizetizer;
 
 namespace Lebenslauf.App;
@@ -46,9 +47,10 @@ public partial class App : Application
             );
         MainWindow = builder.Window;
 
-#if DEBUG
-        MainWindow.UseStudio();
-#endif
+// Hot Design Studio temporarily disabled for navigation testing
+//#if DEBUG
+//        MainWindow.UseStudio();
+//#endif
         MainWindow.SetWindowIcon();
 
         Host = await builder.NavigateAsync<Shell>();
@@ -58,14 +60,19 @@ public partial class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
-            new ViewMap<MainPage, MainViewModel>()
+            new ViewMap<MainPage, MainViewModel>(),
+            new ViewMap<CvPage, CvViewModel>(),
+            new ViewMap<SkillsPage, SkillsViewModel>(),
+            new ViewMap<ProjectsPage, ProjectsViewModel>()
         );
 
         routes.Register(
             new RouteMap("", View: views.FindByViewModel<ShellViewModel>(),
                 Nested:
                 [
-                    new ("Main", View: views.FindByViewModel<MainViewModel>())
+                    new ("Cv", View: views.FindByViewModel<CvViewModel>(), IsDefault: true),
+                    new ("Skills", View: views.FindByViewModel<SkillsViewModel>()),
+                    new ("Projects", View: views.FindByViewModel<ProjectsViewModel>())
                 ]
             )
         );

@@ -1,0 +1,20 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>$(UnoFrameworks)</TargetFrameworks>
+    <UnoFeatures>
+      Toolkit;
+      Mvvm;
+    </UnoFeatures>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Shared -->
+    <ProjectReference Include="..\..\..\Shared\Lebenslauf.Shared\Lebenslauf.Shared.csproj" />
+    <!-- Contracts -->
+    <ProjectReference Include="..\Lebenslauf.Features.Cv.Contracts\Lebenslauf.Features.Cv.Contracts.csproj" />
+    <!-- Framework -->
+    <ProjectReference Include="..\..\..\..\..\..\subm\uno\src\UnoFramework\UnoFramework.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\subm\uno\src\UnoFramework.Contracts\UnoFramework.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\subm\uno\src\UnoFramework.Generators\UnoFramework.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+</Project>

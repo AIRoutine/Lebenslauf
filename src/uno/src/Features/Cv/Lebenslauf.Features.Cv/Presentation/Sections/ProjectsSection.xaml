@@ -1,0 +1,148 @@
+<UserControl x:Class="Lebenslauf.Features.Cv.Presentation.Sections.ProjectsSection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             x:Name="Root">
+
+    <!-- Section Card with Elevation -->
+    <Border CornerRadius="16"
+            Padding="24"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            Translation="0,0,16"
+            Style="{StaticResource CardBorderStyle}">
+        <Border.Shadow>
+            <ThemeShadow />
+        </Border.Shadow>
+
+        <utu:AutoLayout Orientation="Vertical"
+                        Style="{StaticResource ContentAutoLayoutStyle}"
+                        Spacing="20">
+
+            <!-- Section Header with Icon -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Border Width="40" Height="40"
+                        CornerRadius="20"
+                        Style="{StaticResource CardBorderStyle}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ff5722" Offset="0.0" />
+                            <GradientStop Color="#e64a19" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <FontIcon Glyph="&#xE8A1;"
+                              FontSize="20"
+                              Foreground="White"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center" />
+                </Border>
+                <TextBlock Text="Projekte"
+                           Style="{StaticResource TitleLargeTextBlockStyle}"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Projects Grid -->
+            <ItemsRepeater ItemsSource="{Binding}"
+                           Style="{StaticResource DefaultItemsRepeaterStyle}">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout MinItemWidth="320"
+                                       MaximumRowsOrColumns="3"
+                                       MinRowSpacing="16"
+                                       MinColumnSpacing="16"
+                                       ItemsStretch="Fill" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <Border CornerRadius="12"
+                                Background="{ThemeResource SurfaceBrush}"
+                                Style="{StaticResource CardBorderStyle}">
+                            <StackPanel>
+                                <!-- Colored Header Bar -->
+                                <Border Height="6"
+                                        CornerRadius="12,12,0,0"
+                                        Style="{StaticResource CardBorderStyle}">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#ff5722" Offset="0.0" />
+                                            <GradientStop Color="#ff9800" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <!-- Content -->
+                                <StackPanel Padding="16" Spacing="12">
+                                    <!-- Project Name -->
+                                    <TextBlock Text="{Binding Name}"
+                                               Style="{StaticResource TitleMediumTextBlockStyle}"
+                                               FontWeight="Bold" />
+
+                                    <!-- Description -->
+                                    <TextBlock Text="{Binding Description}"
+                                               Style="{StaticResource BodySmallTextBlockStyle}"
+                                               Foreground="{ThemeResource OnSurfaceVariantBrush}"
+                                               TextWrapping="Wrap"
+                                               MaxLines="2"
+                                               TextTrimming="CharacterEllipsis" />
+
+                                    <!-- Technologies -->
+                                    <ItemsRepeater ItemsSource="{Binding Technologies}"
+                                                   Style="{StaticResource DefaultItemsRepeaterStyle}">
+                                        <ItemsRepeater.Layout>
+                                            <FlowLayout MinRowSpacing="4"
+                                                        MinColumnSpacing="4" />
+                                        </ItemsRepeater.Layout>
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#FBE9E7"
+                                                        CornerRadius="4"
+                                                        Padding="8,3"
+                                                        Style="{StaticResource CardBorderStyle}">
+                                                    <TextBlock Text="{Binding}"
+                                                               Style="{StaticResource LabelSmallTextBlockStyle}"
+                                                               Foreground="#BF360C" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+
+                                    <!-- Store Links -->
+                                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                                        <Button Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                Style="{StaticResource TextButtonStyle}"
+                                                Padding="8,4"
+                                                Command="{Binding OpenUrlCommand, ElementName=Root}"
+                                                CommandParameter="{Binding AppStoreUrl}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <FontIcon Glyph="&#xE8A9;" FontSize="12" />
+                                                <TextBlock Text="iOS" Style="{StaticResource LabelSmallTextBlockStyle}" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                Style="{StaticResource TextButtonStyle}"
+                                                Padding="8,4"
+                                                Command="{Binding OpenUrlCommand, ElementName=Root}"
+                                                CommandParameter="{Binding PlayStoreUrl}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <FontIcon Glyph="&#xE8A9;" FontSize="12" />
+                                                <TextBlock Text="Android" Style="{StaticResource LabelSmallTextBlockStyle}" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Visibility="{Binding WebsiteUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                Style="{StaticResource TextButtonStyle}"
+                                                Padding="8,4"
+                                                Command="{Binding OpenUrlCommand, ElementName=Root}"
+                                                CommandParameter="{Binding WebsiteUrl}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <FontIcon Glyph="&#xE774;" FontSize="12" />
+                                                <TextBlock Text="Web" Style="{StaticResource LabelSmallTextBlockStyle}" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </utu:AutoLayout>
+    </Border>
+</UserControl>

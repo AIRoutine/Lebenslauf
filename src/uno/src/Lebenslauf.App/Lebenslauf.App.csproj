@@ -57,6 +57,8 @@
     <ProjectReference Include="..\Core\Lebenslauf.Core.Startup\Lebenslauf.Core.Startup.csproj" />
     <ProjectReference Include="..\Core\Lebenslauf.Core.Styles\Lebenslauf.Core.Styles.csproj" />
     <!-- Features -->
+    <ProjectReference Include="..\Features\Cv\Lebenslauf.Features.Cv\Lebenslauf.Features.Cv.csproj" />
+    <ProjectReference Include="..\Features\Cv\Lebenslauf.Features.Cv.Contracts\Lebenslauf.Features.Cv.Contracts.csproj" />
     <!-- Framework References -->
     <ProjectReference Include="..\..\..\..\subm\uno\src\UnoFramework\UnoFramework.csproj" />
     <ProjectReference Include="..\..\..\..\subm\uno\src\UnoFramework.Contracts\UnoFramework.Contracts.csproj" />
