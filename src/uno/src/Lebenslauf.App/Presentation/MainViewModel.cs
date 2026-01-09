@@ -1,20 +1,8 @@
 namespace Lebenslauf.App.Presentation;
 
-public partial class MainViewModel(BaseServices baseServices) : PageViewModel(baseServices)
+public partial class MainViewModel
 {
-    [ObservableProperty]
-    private string _title = "Lebenslauf";
-
-    [ObservableProperty]
-    private int _clickCount;
-
-    [UnoCommand]
-    private async Task ClickAsync()
+    public MainViewModel()
     {
-        using (BeginBusy("Processing..."))
-        {
-            await Task.Delay(500);
-            ClickCount++;
-        }
     }
 }

@@ -2,70 +2,51 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:Lebenslauf.App.Presentation"
-      xmlns:controls="using:UnoFramework.Controls"
       xmlns:utu="using:Uno.Toolkit.UI"
-      NavigationCacheMode="Required">
+      xmlns:uen="using:Uno.Extensions.Navigation.UI"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      Background="{ThemeResource BackgroundBrush}">
 
-    <!--
-    ============================================================================
-    RESPONSIVE PAGE PATTERN
-    ============================================================================
-    Dieses Pattern zeigt die empfohlene Struktur fuer responsive Pages:
-
-    1. Grid mit PageRootStyle als aeusserer Container
-    2. SafeArea.Insets fuer Notch/StatusBar
-    3. AutoLayout mit responsivem Padding/Spacing
-    4. {utu:Responsive} fuer breakpoint-basierte Werte
-
-    Fuer komplett unterschiedliche Layouts (Phone vs Desktop):
-    Verwende <utu:ResponsiveView> mit NarrowTemplate/WideTemplate
-    ============================================================================
-    -->
-
-    <Grid Style="{StaticResource PageRootStyle}"
+    <Grid uen:Region.Attached="True"
           AutomationProperties.AutomationId="MainPage.Root">
-        <controls:BusyOverlay IsBusy="{Binding IsBusy}" BusyMessage="{Binding BusyMessage}"
-                              AutomationProperties.AutomationId="MainPage.BusyOverlay">
-            <Grid utu:SafeArea.Insets="VisibleBounds">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
 
-                <!-- Navigation Header -->
-                <utu:NavigationBar Content="{Binding Title}"
-                                   AutomationProperties.AutomationId="MainPage.NavigationBar"
-                                   Style="{StaticResource DefaultNavigationBarStyle}" />
+        <muxc:NavigationView x:Name="NavView"
+                             uen:Region.Attached="True"
+                             Style="{StaticResource DefaultNavigationViewStyle}"
+                             PaneTitle="Lebenslauf"
+                             PaneDisplayMode="LeftCompact"
+                             OpenPaneLength="280"
+                             IsBackButtonVisible="Collapsed"
+                             IsSettingsVisible="False">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem Content="Lebenslauf" uen:Region.Name="Cv">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE77B;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Content="Programmierkenntnisse" uen:Region.Name="Skills">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE74C;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem Content="Projektuebersicht" uen:Region.Name="Projects">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8A1;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+            </muxc:NavigationView.MenuItems>
+            <muxc:NavigationView.Content>
+                <Grid uen:Region.Attached="True"
+                      uen:Region.Navigator="Visibility">
+                    <ContentControl x:Name="NavigationContent"
+                                    AutomationProperties.AutomationId="MainPage.NavigationContent"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch" />
+                </Grid>
+            </muxc:NavigationView.Content>
+        </muxc:NavigationView>
 
-                <!-- Main Content mit AutoLayout -->
-                <utu:AutoLayout Grid.Row="1"
-                                Style="{StaticResource CenteredContentAutoLayoutStyle}"
-                                Padding="{utu:Responsive Narrowest=16, Narrow=20, Normal=24, Wide=32, Widest=48}"
-                                Spacing="{utu:Responsive Narrowest=12, Narrow=14, Normal=16, Wide=20, Widest=24}">
-
-                    <!-- Headline -->
-                    <TextBlock Text="Welcome to Lebenslauf!"
-                               AutomationProperties.AutomationId="MainPage.HeadlineText"
-                               Style="{StaticResource HeadlineLargeCenteredTextStyle}" />
-
-                    <!-- Subtitle -->
-                    <TextBlock Text="Full-Stack: API + Uno App with shared configuration"
-                               AutomationProperties.AutomationId="MainPage.SubtitleText"
-                               Style="{StaticResource BodyMediumCenteredSubtleTextStyle}" />
-
-                    <!-- Action Button -->
-                    <Button Content="Click Me"
-                            AutomationProperties.AutomationId="MainPage.ClickButton"
-                            Style="{StaticResource PrimaryButtonCenteredStyle}"
-                            Command="{Binding ClickCommand}" />
-
-                    <!-- Click Counter -->
-                    <TextBlock Text="{Binding ClickCount, Converter={StaticResource NullToCollapsedConverter}}"
-                               AutomationProperties.AutomationId="MainPage.ClickCountText"
-                               Style="{StaticResource TitleLargeCenteredTextStyle}" />
-
-                </utu:AutoLayout>
-            </Grid>
-        </controls:BusyOverlay>
     </Grid>
 </Page>

@@ -1,5 +1,3 @@
-using Lebenslauf.Features.Cv.Presentation;
-
 namespace Lebenslauf.App.Presentation;
 
 public class ShellViewModel
@@ -15,6 +13,6 @@ public class ShellViewModel
 
     public async Task Start()
     {
-        await _navigator.NavigateViewModelAsync<CvViewModel>(this);
+        await _navigator.NavigateViewModelAsync<MainViewModel>(this);
     }
 }

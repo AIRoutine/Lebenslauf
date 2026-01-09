@@ -47,10 +47,9 @@ public partial class App : Application
             );
         MainWindow = builder.Window;
 
-// Hot Design Studio temporarily disabled for navigation testing
-//#if DEBUG
-//        MainWindow.UseStudio();
-//#endif
+#if DEBUG
+        MainWindow.UseStudio();
+#endif
         MainWindow.SetWindowIcon();
 
         Host = await builder.NavigateAsync<Shell>();
@@ -70,9 +69,14 @@ public partial class App : Application
             new RouteMap("", View: views.FindByViewModel<ShellViewModel>(),
                 Nested:
                 [
-                    new ("Cv", View: views.FindByViewModel<CvViewModel>(), IsDefault: true),
-                    new ("Skills", View: views.FindByViewModel<SkillsViewModel>()),
-                    new ("Projects", View: views.FindByViewModel<ProjectsViewModel>())
+                    new RouteMap("Main", View: views.FindByViewModel<MainViewModel>(),
+                        Nested:
+                        [
+                            new ("Cv", View: views.FindByViewModel<CvViewModel>(), IsDefault: true),
+                            new ("Skills", View: views.FindByViewModel<SkillsViewModel>()),
+                            new ("Projects", View: views.FindByViewModel<ProjectsViewModel>())
+                        ]
+                    )
                 ]
             )
         );
