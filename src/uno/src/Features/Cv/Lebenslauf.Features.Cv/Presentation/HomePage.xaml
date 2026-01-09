@@ -1,0 +1,296 @@
+<Page x:Class="Lebenslauf.Features.Cv.Presentation.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="#FFFFFF">
+
+    <Page.Resources>
+        <!-- Typography Styles -->
+        <Style x:Key="HomeNameStyle" TargetType="TextBlock" BasedOn="{StaticResource DisplayLargeTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="CharacterSpacing" Value="-30" />
+        </Style>
+        <Style x:Key="HomeSubtitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyMediumTextBlockStyle}">
+            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="CharacterSpacing" Value="150" />
+        </Style>
+        <Style x:Key="HomeNavTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleLargeTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="CharacterSpacing" Value="100" />
+        </Style>
+        <Style x:Key="HomeNavDescStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#BBBBBB" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="CharacterSpacing" Value="50" />
+        </Style>
+        <Style x:Key="HomeNavNumberStyle" TargetType="TextBlock" BasedOn="{StaticResource DisplayLargeTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#555555" />
+            <Setter Property="CharacterSpacing" Value="-50" />
+        </Style>
+        <Style x:Key="HomeNavCardStyle" TargetType="Button">
+            <Setter Property="Background" Value="#000000" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style x:Key="ResponsiveViewStyle" TargetType="utu:ResponsiveView" />
+    </Page.Resources>
+
+    <utu:ResponsiveView Style="{StaticResource ResponsiveViewStyle}">
+        <!-- MOBILE LAYOUT -->
+        <utu:ResponsiveView.NarrowTemplate>
+            <DataTemplate>
+                <ScrollViewer>
+                    <StackPanel Spacing="0">
+                        <!-- Hero Header -->
+                        <StackPanel Padding="24,48,24,32" Background="#FFFFFF">
+                            <TextBlock Text="DANIEL"
+                                       Style="{StaticResource HomeNameStyle}"
+                                       FontSize="56" />
+                            <TextBlock Text="HUFNAGL"
+                                       Style="{StaticResource HomeNameStyle}"
+                                       FontSize="56"
+                                       Margin="0,-12,0,0" />
+                            <Rectangle Height="4" Fill="#000000" Width="80" HorizontalAlignment="Left" Margin="0,16,0,12" />
+                            <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER"
+                                       Style="{StaticResource HomeSubtitleStyle}"
+                                       FontSize="10" />
+                        </StackPanel>
+
+                        <!-- Navigation Cards - Stacked -->
+                        <Button Click="OnCvClick" Style="{StaticResource HomeNavCardStyle}">
+                            <Grid Padding="24,28" Background="#000000">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="01" Style="{StaticResource HomeNavNumberStyle}" FontSize="32" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="LEBENSLAUF" Style="{StaticResource HomeNavTitleStyle}" FontSize="18" />
+                                    <TextBlock Text="Karriere und Ausbildung" Style="{StaticResource HomeNavDescStyle}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <FontIcon Grid.Column="2" Glyph="&#xE72A;" FontSize="20" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+
+                        <Button Click="OnSkillsClick" Style="{StaticResource HomeNavCardStyle}">
+                            <Grid Padding="24,28" Background="#1A1A1A">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="02" Style="{StaticResource HomeNavNumberStyle}" FontSize="32" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="SKILLS" Style="{StaticResource HomeNavTitleStyle}" FontSize="18" />
+                                    <TextBlock Text="Technische Kompetenzen" Style="{StaticResource HomeNavDescStyle}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <FontIcon Grid.Column="2" Glyph="&#xE72A;" FontSize="20" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+
+                        <Button Click="OnProjectsClick" Style="{StaticResource HomeNavCardStyle}">
+                            <Grid Padding="24,28" Background="#2A2A2A">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="03" Style="{StaticResource HomeNavNumberStyle}" FontSize="32" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="PROJEKTE" Style="{StaticResource HomeNavTitleStyle}" FontSize="18" />
+                                    <TextBlock Text="Referenzen und Erfahrungen" Style="{StaticResource HomeNavDescStyle}" Margin="0,4,0,0" />
+                                </StackPanel>
+                                <FontIcon Grid.Column="2" Glyph="&#xE72A;" FontSize="20" Foreground="#FFFFFF" VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+
+                        <!-- Footer -->
+                        <StackPanel Padding="24,32" Background="#FFFFFF">
+                            <TextBlock Text="daniel.hufnagl@aon.at"
+                                       Style="{StaticResource HomeSubtitleStyle}"
+                                       FontSize="11" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </DataTemplate>
+        </utu:ResponsiveView.NarrowTemplate>
+
+        <!-- DESKTOP LAYOUT -->
+        <utu:ResponsiveView.NormalTemplate>
+            <DataTemplate>
+                <Grid Background="#FFFFFF">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="400" MaxWidth="480" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left: Hero Section - Editorial Style -->
+                    <Border Background="#FFFFFF" Padding="48,64">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Name & Title - Centered -->
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="DANIEL"
+                                           Style="{StaticResource HomeNameStyle}"
+                                           FontSize="58" />
+                                <TextBlock Text="HUFNAGL"
+                                           Style="{StaticResource HomeNameStyle}"
+                                           FontSize="58"
+                                           Margin="0,-10,0,0" />
+                                <Rectangle Height="4" Fill="#000000" Width="100" HorizontalAlignment="Left" Margin="0,20,0,14" />
+                                <TextBlock Text="SENIOR CROSS-PLATFORM"
+                                           Style="{StaticResource HomeSubtitleStyle}"
+                                           FontSize="10" />
+                                <TextBlock Text="DEVELOPER"
+                                           Style="{StaticResource HomeSubtitleStyle}"
+                                           FontSize="10"
+                                           Margin="0,2,0,0" />
+                            </StackPanel>
+
+                            <!-- Contact Footer - Structured -->
+                            <StackPanel Grid.Row="1" Spacing="16">
+                                <Rectangle Height="1" Fill="#E8E8E8" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Email -->
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="EMAIL" Style="{StaticResource HomeSubtitleStyle}" FontSize="10" FontWeight="SemiBold" Foreground="#888888" />
+                                        <TextBlock Text="daniel.hufnagl@aon.at" Style="{StaticResource HomeSubtitleStyle}" FontSize="12" Foreground="#333333" CharacterSpacing="0" />
+                                    </StackPanel>
+
+                                    <!-- Phone -->
+                                    <StackPanel Grid.Column="1" Spacing="4">
+                                        <TextBlock Text="TELEFON" Style="{StaticResource HomeSubtitleStyle}" FontSize="10" FontWeight="SemiBold" Foreground="#888888" />
+                                        <TextBlock Text="+43 664 73221804" Style="{StaticResource HomeSubtitleStyle}" FontSize="12" Foreground="#333333" CharacterSpacing="0" />
+                                    </StackPanel>
+
+                                    <!-- Location -->
+                                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Spacing="4" Margin="0,12,0,0">
+                                        <TextBlock Text="STANDORT" Style="{StaticResource HomeSubtitleStyle}" FontSize="10" FontWeight="SemiBold" Foreground="#888888" />
+                                        <TextBlock Text="Laakirchen, Österreich" Style="{StaticResource HomeSubtitleStyle}" FontSize="12" Foreground="#333333" CharacterSpacing="0" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Right: Navigation Cards -->
+                    <Grid Grid.Column="1" Background="#000000">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Card 1: Lebenslauf -->
+                        <Button Click="OnCvClick"
+                                Style="{StaticResource HomeNavCardStyle}"
+                                VerticalAlignment="Stretch">
+                            <Grid Padding="48,32" Background="#000000">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="01"
+                                           Style="{StaticResource HomeNavNumberStyle}"
+                                           FontSize="64"
+                                           Foreground="#222222"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,24,0" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="LEBENSLAUF"
+                                               Style="{StaticResource HomeNavTitleStyle}"
+                                               FontSize="24" />
+                                    <TextBlock Text="Karriere und Ausbildung"
+                                               Style="{StaticResource HomeNavDescStyle}"
+                                               Margin="0,6,0,0" />
+                                </StackPanel>
+                                <FontIcon Grid.Column="1" Glyph="&#xE72A;" FontSize="20" Foreground="#444444"
+                                          HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+
+                        <!-- Card 2: Skills -->
+                        <Button Grid.Row="1"
+                                Click="OnSkillsClick"
+                                Style="{StaticResource HomeNavCardStyle}"
+                                VerticalAlignment="Stretch">
+                            <Grid Padding="48,32" Background="#111111">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="02"
+                                           Style="{StaticResource HomeNavNumberStyle}"
+                                           FontSize="64"
+                                           Foreground="#222222"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,24,0" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="SKILLS"
+                                               Style="{StaticResource HomeNavTitleStyle}"
+                                               FontSize="24" />
+                                    <TextBlock Text="Technische Kompetenzen"
+                                               Style="{StaticResource HomeNavDescStyle}"
+                                               Margin="0,6,0,0" />
+                                </StackPanel>
+                                <FontIcon Grid.Column="1" Glyph="&#xE72A;" FontSize="20" Foreground="#444444"
+                                          HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+
+                        <!-- Card 3: Projekte -->
+                        <Button Grid.Row="2"
+                                Click="OnProjectsClick"
+                                Style="{StaticResource HomeNavCardStyle}"
+                                VerticalAlignment="Stretch">
+                            <Grid Padding="48,32" Background="#1A1A1A">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="03"
+                                           Style="{StaticResource HomeNavNumberStyle}"
+                                           FontSize="64"
+                                           Foreground="#222222"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,24,0" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="PROJEKTE"
+                                               Style="{StaticResource HomeNavTitleStyle}"
+                                               FontSize="24" />
+                                    <TextBlock Text="Referenzen und Erfahrungen"
+                                               Style="{StaticResource HomeNavDescStyle}"
+                                               Margin="0,6,0,0" />
+                                </StackPanel>
+                                <FontIcon Grid.Column="1" Glyph="&#xE72A;" FontSize="20" Foreground="#444444"
+                                          HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </utu:ResponsiveView.NormalTemplate>
+    </utu:ResponsiveView>
+</Page>
