@@ -31,33 +31,39 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Export Header -->
-        <controls:ExportHeaderControl PageTitle="Skills"
-                                       ExportTarget="{x:Bind SkillsContent}"
-                                       FileName="Skills_Daniel_Hufnagl"
-                                       Margin="48,16,48,0" />
+        <!-- Export Area: Masthead + Content -->
+        <Grid x:Name="SkillsExportArea" Background="#FFFFFF">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <!-- Navigation Header -->
-        <Border Grid.Row="1" Background="#000000" Padding="16,12">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Button Command="{Binding GoBackCommand}" Style="{StaticResource SkillsBtnStyle}">
-                    <FontIcon Glyph="&#xE72B;" FontSize="20" Foreground="#FFFFFF" />
-                </Button>
-                <TextBlock Grid.Column="1" Text="{Binding Title}" Style="{StaticResource SkillsTitleStyle}" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="12,0,0,0" />
-            </Grid>
-        </Border>
+            <!-- Editorial Masthead - Bold B&W Header -->
+            <Border Background="#000000">
+                <Grid Padding="{utu:Responsive Narrow='24,20', Normal='48,28'}">
+                    <StackPanel>
+                        <TextBlock Text="SKILLS"
+                                   Style="{StaticResource DisplayLargeTextBlockStyle}"
+                                   FontSize="{utu:Responsive Narrow=32, Normal=42}"
+                                   FontWeight="Black"
+                                   Foreground="#FFFFFF"
+                                   CharacterSpacing="200" />
+                        <TextBlock Text="Technische Kompetenzen"
+                                   Style="{StaticResource LabelSmallTextBlockStyle}"
+                                   FontSize="{utu:Responsive Narrow=11, Normal=12}"
+                                   FontWeight="Normal"
+                                   Foreground="#CCCCCC"
+                                   CharacterSpacing="100"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-        <!-- Content -->
-        <utu:ResponsiveView x:Name="SkillsContent" Grid.Row="2" Style="{StaticResource SkillsResponsiveStyle}">
+            <!-- Content -->
+            <utu:ResponsiveView x:Name="SkillsContent" Grid.Row="1" Style="{StaticResource SkillsResponsiveStyle}">
             <utu:ResponsiveView.NarrowTemplate>
                 <!-- Mobile: Single Column -->
                 <DataTemplate>
@@ -330,5 +336,13 @@
                 </DataTemplate>
             </utu:ResponsiveView.NormalTemplate>
         </utu:ResponsiveView>
+        </Grid>
+
+        <!-- Floating PDF Export Button (rendered on top) -->
+        <controls:ExportHeaderControl ExportTarget="{x:Bind SkillsExportArea}"
+                                       FileName="Skills_Daniel_Hufnagl"
+                                       Margin="0,16,48,0"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Top" />
     </Grid>
 </Page>

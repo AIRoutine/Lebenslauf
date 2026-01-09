@@ -59,18 +59,7 @@
     </Page.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!-- Export Header -->
-        <controls:ExportHeaderControl PageTitle="Lebenslauf"
-                                       ExportTarget="{x:Bind CvContent}"
-                                       FileName="Lebenslauf_Daniel_Hufnagl"
-                                       Margin="48,16,48,0" />
-
-        <utu:ResponsiveView x:Name="CvContent" Grid.Row="1" Style="{StaticResource RespStyle}">
+        <utu:ResponsiveView x:Name="CvContent" Style="{StaticResource RespStyle}">
 
         <!-- MOBILE -->
         <utu:ResponsiveView.NarrowTemplate>
@@ -165,10 +154,10 @@
                         <!-- ════════════════════════════════════════════════════════════════ -->
                         <!-- HEADER: Name links, Expertise rechts                              -->
                         <!-- ════════════════════════════════════════════════════════════════ -->
-                        <Grid>
+                        <Grid ColumnSpacing="32">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" MinWidth="200" />
                             </Grid.ColumnDefinitions>
 
                             <!-- Links: Bild + Name + Contact -->
@@ -195,7 +184,7 @@
                             </StackPanel>
 
                             <!-- Rechts: Expertise -->
-                            <StackPanel Spacing="12" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <StackPanel Grid.Column="1" Spacing="12" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                                 <TextBlock Text="EXPERTISE" Style="{StaticResource LabelStyle}" />
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="C# / .NET · XAML · MVVM" Style="{StaticResource SkillStyle}" />
@@ -307,5 +296,12 @@
         </utu:ResponsiveView.NormalTemplate>
 
     </utu:ResponsiveView>
+
+        <!-- Floating PDF Export Button (rendered on top) -->
+        <controls:ExportHeaderControl ExportTarget="{x:Bind CvContent}"
+                                       FileName="Lebenslauf_Daniel_Hufnagl"
+                                       Margin="0,16,48,0"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Top" />
     </Grid>
 </Page>

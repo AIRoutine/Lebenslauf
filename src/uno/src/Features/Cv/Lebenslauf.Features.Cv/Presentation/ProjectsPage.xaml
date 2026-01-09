@@ -55,48 +55,36 @@
     </Page.Resources>
 
     <Grid Background="#FFFFFF">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <!-- Export Area: Masthead + Content -->
+        <Grid x:Name="ProjectsExportArea" Background="#FFFFFF">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <!-- Export Header -->
-        <controls:ExportHeaderControl PageTitle="Projekte"
-                                       ExportTarget="{x:Bind ProjectsContent}"
-                                       FileName="Projekte_Daniel_Hufnagl"
-                                       Margin="48,16,48,0" />
+            <!-- Editorial Masthead - Bold B&W Header -->
+            <Border Background="#000000">
+                <Grid Padding="{utu:Responsive Narrow='24,20', Normal='48,28'}">
+                    <StackPanel>
+                        <TextBlock Text="PROJEKTE"
+                                   Style="{StaticResource DisplayLargeTextBlockStyle}"
+                                   FontSize="{utu:Responsive Narrow=32, Normal=42}"
+                                   FontWeight="Black"
+                                   Foreground="#FFFFFF"
+                                   CharacterSpacing="200" />
+                        <TextBlock Text="Referenzprojekte und Erfahrungen"
+                                   Style="{StaticResource LabelSmallTextBlockStyle}"
+                                   FontSize="{utu:Responsive Narrow=11, Normal=12}"
+                                   FontWeight="Normal"
+                                   Foreground="#CCCCCC"
+                                   CharacterSpacing="100"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-        <!-- Navigation Header -->
-        <Border Grid.Row="1" Background="#000000"
-                Padding="{utu:Responsive Narrow='16,12', Normal='24,16'}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Button Command="{Binding GoBackCommand}"
-                        Style="{StaticResource ProjectBackButtonStyle}">
-                    <FontIcon Glyph="&#xE72B;"
-                              FontSize="{utu:Responsive Narrow=18, Normal=22}"
-                              Foreground="#FFFFFF" />
-                </Button>
-
-                <TextBlock Grid.Column="1"
-                           Text="{Binding Title}"
-                           Style="{StaticResource ProjectPageTitleStyle}"
-                           VerticalAlignment="Center"
-                           Margin="12,0,0,0" />
-            </Grid>
-        </Border>
-
-        <!-- Content with ResponsiveView -->
-        <ScrollViewer x:Name="ProjectsContent" Grid.Row="2"
-                      Background="#FFFFFF"
-                      Padding="{utu:Responsive Narrow='16,16', Normal='24,24', Wide='48,32'}">
-
-            <utu:ResponsiveView Style="{StaticResource ProjectResponsiveViewStyle}">
+            <!-- Content with ResponsiveView -->
+            <utu:ResponsiveView x:Name="ProjectsContent" Grid.Row="1" Style="{StaticResource ProjectResponsiveViewStyle}">
                 <utu:ResponsiveView.ResponsiveLayout>
                     <utu:ResponsiveLayout Narrow="0" Normal="640" Wide="900" />
                 </utu:ResponsiveView.ResponsiveLayout>
@@ -104,6 +92,7 @@
                 <!-- Mobile Layout (Narrow) -->
                 <utu:ResponsiveView.NarrowTemplate>
                     <DataTemplate>
+                        <ScrollViewer Background="#FFFFFF" Padding="16,16">
                         <ItemsRepeater ItemsSource="{Binding Projects}">
                             <ItemsRepeater.Layout>
                                 <StackLayout Spacing="0" />
@@ -235,12 +224,14 @@
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>
+                        </ScrollViewer>
                     </DataTemplate>
                 </utu:ResponsiveView.NarrowTemplate>
 
                 <!-- Desktop Layout (Normal/Wide) -->
                 <utu:ResponsiveView.NormalTemplate>
                     <DataTemplate>
+                        <ScrollViewer Background="#FFFFFF" Padding="24,24">
                         <ItemsRepeater ItemsSource="{Binding Projects}">
                             <ItemsRepeater.Layout>
                                 <StackLayout Spacing="0" />
@@ -385,9 +376,17 @@
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>
+                        </ScrollViewer>
                     </DataTemplate>
                 </utu:ResponsiveView.NormalTemplate>
             </utu:ResponsiveView>
-        </ScrollViewer>
+        </Grid>
+
+        <!-- Floating PDF Export Button (rendered on top) -->
+        <controls:ExportHeaderControl ExportTarget="{x:Bind ProjectsExportArea}"
+                                       FileName="Projekte_Daniel_Hufnagl"
+                                       Margin="0,16,48,0"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Top" />
     </Grid>
 </Page>
