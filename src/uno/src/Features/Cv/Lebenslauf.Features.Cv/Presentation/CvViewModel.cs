@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Lebenslauf.Core.ApiClient.Generated;
 using Lebenslauf.Features.Cv.Contracts.Models;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
@@ -25,6 +26,7 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     [ObservableProperty]
     private PersonalDataModel _personalData = new(
         Name: "",
+        Title: "",
         Email: "",
         Phone: "",
         Address: "",
@@ -65,12 +67,60 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     {
         using (BeginBusy("Lade Lebenslauf..."))
         {
-            // TODO: Replace with API call via Mediator when API is running
-            // var response = await Mediator.Request(new GetCvHttpRequest());
+            try
+            {
+                // Call API via Shiny Mediator's generated HTTP contract
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest());
 
-            await Task.Delay(500); // Simulate network delay
+                if (result is not null)
+                {
+                    // Map API response to local models
+                    PersonalData = new PersonalDataModel(
+                        Name: result.PersonalData.Name,
+                        Title: result.PersonalData.Title,
+                        Email: result.PersonalData.Email,
+                        Phone: result.PersonalData.Phone,
+                        Address: result.PersonalData.Address,
+                        City: result.PersonalData.City,
+                        PostalCode: result.PersonalData.PostalCode,
+                        Country: result.PersonalData.Country,
+                        BirthDate: result.PersonalData.BirthDate,
+                        Citizenship: result.PersonalData.Citizenship,
+                        ProfileImageUrl: result.PersonalData.ProfileImageUrl
+                    );
 
-            // Load mock data
+                    Education = result.Education
+                        .Select(e => new EducationModel(e.Id, e.Institution, e.Degree, e.StartYear, e.EndYear, e.Description))
+                        .ToList();
+
+                    WorkExperience = result.WorkExperience
+                        .Select(w => new WorkExperienceModel(w.Id, w.Company, w.Role, w.StartDate, w.EndDate, w.Description, w.IsCurrent))
+                        .ToList();
+
+                    SkillCategories = result.SkillCategories
+                        .Select(sc => new SkillCategoryModel(
+                            sc.Id,
+                            sc.Name,
+                            sc.Skills.Select(s => new SkillModel(s.Id, s.Name)).ToList()))
+                        .ToList();
+
+                    Projects = result.Projects
+                        .Select(p => new ProjectModel(p.Id, p.Name, p.Description, p.Technologies.ToList(), p.AppStoreUrl, p.PlayStoreUrl, p.WebsiteUrl, p.ImageUrl))
+                        .ToList();
+
+                    // Extract frameworks from categories
+                    var frameworkCategory = SkillCategories.FirstOrDefault(c => c.Name.Contains("Framework", StringComparison.OrdinalIgnoreCase));
+                    Frameworks = frameworkCategory?.Skills.Select(s => s.Name).ToList() ?? [];
+
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load CV from API: {ex.Message}");
+            }
+
+            // Fallback to mock data if API fails
             LoadMockData();
         }
     }
@@ -79,6 +129,7 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     {
         PersonalData = new PersonalDataModel(
             Name: "Daniel Hufnagl",
+            Title: "Senior Cross-Platform Developer",
             Email: "daniel.hufnagl@aon.at",
             Phone: "+43-664-73221804",
             Address: "Stockham 44",

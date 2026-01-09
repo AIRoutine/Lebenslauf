@@ -16,6 +16,7 @@ public record CvData(
 /// </summary>
 public record PersonalDataModel(
     string Name,
+    string Title,
     string Email,
     string Phone,
     string Address,

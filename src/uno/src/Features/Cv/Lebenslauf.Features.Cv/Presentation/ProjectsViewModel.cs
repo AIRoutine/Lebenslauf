@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Lebenslauf.Core.ApiClient.Generated;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
 using UnoFramework.ViewModels;
@@ -10,7 +11,7 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
     public ProjectsViewModel(BaseServices baseServices) : base(baseServices)
     {
         Title = "Projektuebersicht";
-        LoadData();
+        _ = LoadDataAsync();
     }
 
     [ObservableProperty]
@@ -27,7 +28,40 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
     {
     }
 
-    private void LoadData()
+    private async Task LoadDataAsync()
+    {
+        using (BeginBusy("Lade Projekte..."))
+        {
+            try
+            {
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest());
+
+                if (result?.Projects is not null)
+                {
+                    Projects = result.Projects
+                        .Select(p => new ProjectDetailModel(
+                            Name: p.Name,
+                            Framework: p.Framework ?? "N/A",
+                            AppStoreUrl: p.AppStoreUrl,
+                            PlayStoreUrl: p.PlayStoreUrl,
+                            WebsiteUrl: p.WebsiteUrl,
+                            Functions: p.Functions.ToList(),
+                            TechnicalAspects: p.TechnicalAspects.ToList()))
+                        .ToList();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load projects from API: {ex.Message}");
+            }
+
+            // Fallback to mock data if API fails
+            LoadMockData();
+        }
+    }
+
+    private void LoadMockData()
     {
         Projects =
         [
@@ -108,101 +142,6 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
                     "Server: Refit REST",
                     "QR-Code: ZXing",
                     "Push: Shiny Library"
-                ]),
-
-            new ProjectDetailModel(
-                Name: "Ekey Bionyx",
-                Framework: "Xamarin.Forms",
-                AppStoreUrl: "https://apps.apple.com/at/app/ekey-bionyx/id1484053054",
-                PlayStoreUrl: "https://play.google.com/store/apps/details?id=net.ekey.bionyx",
-                WebsiteUrl: "https://www.ekey.net/ekey-bionyx-app/",
-                Functions:
-                [
-                    "Automatische Push-Nachrichten",
-                    "Hoechste Sicherheit/Verschluesselung",
-                    "Bluetooth zu Fingerscanner",
-                    "Benutzermanagement/Rollensystem"
-                ],
-                TechnicalAspects:
-                [
-                    "Framework: Xamarin.Forms",
-                    "Repository: Azure DevOps",
-                    "Push: Azure Notification Hub",
-                    "Bluetooth: Shiny",
-                    "CI/CD: Azure DevOps",
-                    "Animationen: Lottie"
-                ]),
-
-            new ProjectDetailModel(
-                Name: "Miele Smart Home",
-                Framework: "MAUI",
-                AppStoreUrl: "https://apps.apple.com/at/app/miele-app-smart-home/id930406907",
-                PlayStoreUrl: "https://play.google.com/store/apps/details?id=de.miele.infocontrol",
-                WebsiteUrl: "https://www.miele.at/c/miele-app-2594.htm",
-                Functions:
-                [
-                    "Hausgeraete mobil steuern",
-                    "Push ueber Geraetestatus",
-                    "Assistenten-System (NuGet)",
-                    "Eigener Shop"
-                ],
-                TechnicalAspects:
-                [
-                    "Framework: MAUI",
-                    "Repository: Bitbucket",
-                    "Notifications: Firebase",
-                    "Codegenerierung: Roslyn",
-                    "Logging: Sentry",
-                    "Animationen: Lottie"
-                ]),
-
-            new ProjectDetailModel(
-                Name: "Asfinag",
-                Framework: "MAUI",
-                AppStoreUrl: "https://apps.apple.com/at/app/asfinag/id453459323",
-                PlayStoreUrl: "https://play.google.com/store/apps/details?id=at.asfinag.unterwegs",
-                WebsiteUrl: "https://www.asfinag.at/asfinag-app/",
-                Functions:
-                [
-                    "Personalisierter Homescreen",
-                    "1800+ Webcams",
-                    "Verkehrsinfos und Baustellen",
-                    "Raststationen und E-Ladestationen",
-                    "Digitale Vignette",
-                    "Routenplaner (Europa)",
-                    "12 Sprachen"
-                ],
-                TechnicalAspects:
-                [
-                    "Framework: MAUI",
-                    "App Lifecycle: Prism",
-                    "Server: OpenApi, Polly, Scalar",
-                    "UI: Syncfusion",
-                    "Datenbank: SQLite .NET",
-                    "Push: Cross Platform"
-                ]),
-
-            new ProjectDetailModel(
-                Name: "PracticeBird",
-                Framework: "Xamarin.Forms",
-                AppStoreUrl: "https://apps.apple.com/us/app/practice-bird-interactive-sheet-music-and-scores/id1253492926",
-                PlayStoreUrl: "https://play.google.com/store/apps/details?id=phonicscore.phonicscore_lite",
-                WebsiteUrl: "https://www.practicebird.com",
-                Functions:
-                [
-                    "Mitspielendes Notenblatt",
-                    "MusicXML/MIDI Dateien",
-                    "Playback mit Klavier/Schlagzeug",
-                    "Stimme hervorheben",
-                    "Facebook/Google Login"
-                ],
-                TechnicalAspects:
-                [
-                    "Framework: Xamarin.Forms",
-                    "App Lifecycle: Prism",
-                    "State Changes: ReactiveUI",
-                    "Server: Refit REST",
-                    "Notenblatt: SkiaSharp"
                 ])
         ];
     }

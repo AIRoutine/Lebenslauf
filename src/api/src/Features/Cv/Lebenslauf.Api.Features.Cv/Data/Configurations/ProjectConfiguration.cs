@@ -12,12 +12,28 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
         builder.Property(x => x.Description).HasMaxLength(2000);
-        builder.Property(x => x.Technologies).HasMaxLength(1000); // JSON array
+        builder.Property(x => x.Framework).HasMaxLength(100);
         builder.Property(x => x.AppStoreUrl).HasMaxLength(500);
         builder.Property(x => x.PlayStoreUrl).HasMaxLength(500);
         builder.Property(x => x.WebsiteUrl).HasMaxLength(500);
         builder.Property(x => x.ImageUrl).HasMaxLength(500);
 
         builder.HasIndex(x => x.SortOrder);
+
+        // Navigation properties
+        builder.HasMany(x => x.Technologies)
+            .WithOne(x => x.Project)
+            .HasForeignKey(x => x.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Functions)
+            .WithOne(x => x.Project)
+            .HasForeignKey(x => x.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.TechnicalAspects)
+            .WithOne(x => x.Project)
+            .HasForeignKey(x => x.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Shiny.Mediator" />
+    <PackageReference Include="Shiny.Mediator.AspNet" />
     <PackageReference Include="Shiny.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>

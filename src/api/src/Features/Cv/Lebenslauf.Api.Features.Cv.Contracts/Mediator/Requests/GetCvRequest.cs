@@ -23,6 +23,7 @@ public record GetCvResponse(
 /// </summary>
 public record PersonalDataDto(
     string Name,
+    string Title,
     string Email,
     string Phone,
     string Address,
@@ -83,7 +84,10 @@ public record ProjectDto(
     Guid Id,
     string Name,
     string? Description,
+    string? Framework,
     IReadOnlyList<string> Technologies,
+    IReadOnlyList<string> Functions,
+    IReadOnlyList<string> TechnicalAspects,
     string? AppStoreUrl,
     string? PlayStoreUrl,
     string? WebsiteUrl,

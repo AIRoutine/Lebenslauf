@@ -10,6 +10,7 @@
   <ItemGroup>
     <!-- Core -->
     <ProjectReference Include="..\..\..\Core\Lebenslauf.Core.Styles\Lebenslauf.Core.Styles.csproj" />
+    <ProjectReference Include="..\..\..\Core\Lebenslauf.Core.ApiClient\Lebenslauf.Core.ApiClient.csproj" />
     <!-- Shared -->
     <ProjectReference Include="..\..\..\Shared\Lebenslauf.Shared\Lebenslauf.Shared.csproj" />
     <!-- Contracts -->

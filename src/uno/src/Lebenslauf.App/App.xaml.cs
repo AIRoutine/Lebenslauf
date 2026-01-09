@@ -64,6 +64,7 @@ public partial class App : Application
         views.Register(
             new ViewMap(ViewModel: typeof(ShellViewModel)),
             new ViewMap<MainPage, MainViewModel>(),
+            new ViewMap<HomePage, HomeViewModel>(),
             new ViewMap<CvPage, CvViewModel>(),
             new ViewMap<SkillsPage, SkillsViewModel>(),
             new ViewMap<ProjectsPage, ProjectsViewModel>()
@@ -76,7 +77,8 @@ public partial class App : Application
                     new RouteMap("Main", View: views.FindByViewModel<MainViewModel>(),
                         Nested:
                         [
-                            new ("Cv", View: views.FindByViewModel<CvViewModel>(), IsDefault: true),
+                            new ("Home", View: views.FindByViewModel<HomeViewModel>(), IsDefault: true),
+                            new ("Cv", View: views.FindByViewModel<CvViewModel>()),
                             new ("Skills", View: views.FindByViewModel<SkillsViewModel>()),
                             new ("Projects", View: views.FindByViewModel<ProjectsViewModel>())
                         ]

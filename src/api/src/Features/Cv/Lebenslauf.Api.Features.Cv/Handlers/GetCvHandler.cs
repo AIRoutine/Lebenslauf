@@ -1,14 +1,17 @@
-using System.Text.Json;
+using Lebenslauf.Api;
 using Lebenslauf.Api.Core.Data;
 using Lebenslauf.Api.Features.Cv.Contracts.Mediator.Requests;
 using Lebenslauf.Api.Features.Cv.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shiny.Extensions.DependencyInjection;
 using Shiny.Mediator;
 
 namespace Lebenslauf.Api.Features.Cv.Handlers;
 
+[Service(ApiService.Lifetime, TryAdd = ApiService.TryAdd)]
 public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest, GetCvResponse>
 {
+    [MediatorHttpGet("/api/cv", OperationId = "GetCv")]
     public async Task<GetCvResponse> Handle(GetCvRequest request, IMediatorContext context, CancellationToken cancellationToken)
     {
         var personalData = await dbContext.Set<PersonalData>()
@@ -28,6 +31,9 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
             .ToListAsync(cancellationToken);
 
         var projects = await dbContext.Set<Project>()
+            .Include(x => x.Technologies.OrderBy(t => t.SortOrder))
+            .Include(x => x.Functions.OrderBy(f => f.SortOrder))
+            .Include(x => x.TechnicalAspects.OrderBy(a => a.SortOrder))
             .OrderBy(x => x.SortOrder)
             .ToListAsync(cancellationToken);
 
@@ -46,6 +52,7 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
         {
             return new PersonalDataDto(
                 Name: "Unknown",
+                Title: "",
                 Email: "",
                 Phone: "",
                 Address: "",
@@ -60,6 +67,7 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
 
         return new PersonalDataDto(
             Name: entity.Name,
+            Title: entity.Title,
             Email: entity.Email,
             Phone: entity.Phone,
             Address: entity.Address,
@@ -108,24 +116,14 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
 
     private static ProjectDto MapProject(Project entity)
     {
-        var technologies = new List<string>();
-        if (!string.IsNullOrEmpty(entity.Technologies))
-        {
-            try
-            {
-                technologies = JsonSerializer.Deserialize<List<string>>(entity.Technologies) ?? [];
-            }
-            catch
-            {
-                // Ignore deserialization errors
-            }
-        }
-
         return new ProjectDto(
             Id: entity.Id,
             Name: entity.Name,
             Description: entity.Description,
-            Technologies: technologies,
+            Framework: entity.Framework,
+            Technologies: entity.Technologies.Select(t => t.Name).ToList(),
+            Functions: entity.Functions.Select(f => f.Description).ToList(),
+            TechnicalAspects: entity.TechnicalAspects.Select(a => a.Description).ToList(),
             AppStoreUrl: entity.AppStoreUrl,
             PlayStoreUrl: entity.PlayStoreUrl,
             WebsiteUrl: entity.WebsiteUrl,

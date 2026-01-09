@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Lebenslauf.Api.Core.Data;
 using Lebenslauf.Api.Core.Data.Seeding;
 using Lebenslauf.Api.Features.Cv.Data.Entities;
@@ -31,6 +30,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         {
             Id = Guid.NewGuid(),
             Name = "Daniel Hufnagl",
+            Title = "Senior Cross-Platform Developer",
             Email = "daniel.hufnagl@aon.at",
             Phone = "+43-664-73221804",
             Address = "Stockham 44",
@@ -118,7 +118,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
 
     private async Task SeedSkillsAsync(CancellationToken cancellationToken)
     {
-        // Expertise Category
+        // 1. Expertise Category
         var expertiseCategory = new SkillCategory
         {
             Id = Guid.NewGuid(),
@@ -133,15 +133,15 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 new() { Id = Guid.NewGuid(), Name = "Uno Platform", SortOrder = 5 },
                 new() { Id = Guid.NewGuid(), Name = "ASP.NET", SortOrder = 6 },
                 new() { Id = Guid.NewGuid(), Name = "XAML", SortOrder = 7 },
-                new() { Id = Guid.NewGuid(), Name = "MVVM", SortOrder = 8 }
+                new() { Id = Guid.NewGuid(), Name = "MVVM Pattern", SortOrder = 8 }
             ]
         };
 
-        // Basic Knowledge Category
+        // 2. Basic Knowledge Category
         var basicCategory = new SkillCategory
         {
             Id = Guid.NewGuid(),
-            Name = "Grundlagen",
+            Name = "Grundkenntnisse",
             SortOrder = 2,
             Skills =
             [
@@ -150,34 +150,27 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 new() { Id = Guid.NewGuid(), Name = "Java", SortOrder = 3 },
                 new() { Id = Guid.NewGuid(), Name = "Swift", SortOrder = 4 },
                 new() { Id = Guid.NewGuid(), Name = "C", SortOrder = 5 },
-                new() { Id = Guid.NewGuid(), Name = "C++", SortOrder = 6 },
-                new() { Id = Guid.NewGuid(), Name = "SQL", SortOrder = 7 }
+                new() { Id = Guid.NewGuid(), Name = "C++", SortOrder = 6 }
             ]
         };
 
-        // Frameworks Category
-        var frameworksCategory = new SkillCategory
+        // 3. App Base Technologies Category
+        var appBaseCategory = new SkillCategory
         {
             Id = Guid.NewGuid(),
-            Name = "Frameworks & Libraries",
+            Name = "App Basistechnologien",
             SortOrder = 3,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "ReactiveUI", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "Prism", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "Shiny", SortOrder = 3 },
-                new() { Id = Guid.NewGuid(), Name = "Shiny Mediator", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "Syncfusion", SortOrder = 5 },
-                new() { Id = Guid.NewGuid(), Name = "SkiaSharp", SortOrder = 6 },
-                new() { Id = Guid.NewGuid(), Name = "Lottie", SortOrder = 7 },
-                new() { Id = Guid.NewGuid(), Name = "SQLite-net", SortOrder = 8 },
-                new() { Id = Guid.NewGuid(), Name = "Refit", SortOrder = 9 },
-                new() { Id = Guid.NewGuid(), Name = "ZXing", SortOrder = 10 },
-                new() { Id = Guid.NewGuid(), Name = "SignalR", SortOrder = 11 }
+                new() { Id = Guid.NewGuid(), Name = "MAUI/Xamarin Forms als Hauptframework", SortOrder = 1 },
+                new() { Id = Guid.NewGuid(), Name = "XAML fuer das Design", SortOrder = 2 },
+                new() { Id = Guid.NewGuid(), Name = "Prism als MVVM Framework", SortOrder = 3 },
+                new() { Id = Guid.NewGuid(), Name = "ReactiveUI fuer Statusveraenderungen", SortOrder = 4 },
+                new() { Id = Guid.NewGuid(), Name = "Shiny Framework", SortOrder = 5 }
             ]
         };
 
-        // DevOps Category
+        // 4. DevOps & Tools Category
         var devOpsCategory = new SkillCategory
         {
             Id = Guid.NewGuid(),
@@ -186,10 +179,10 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             Skills =
             [
                 new() { Id = Guid.NewGuid(), Name = "Visual Studio", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "VS Code", SortOrder = 2 },
+                new() { Id = Guid.NewGuid(), Name = "Visual Studio Code", SortOrder = 2 },
                 new() { Id = Guid.NewGuid(), Name = "Rider", SortOrder = 3 },
                 new() { Id = Guid.NewGuid(), Name = "Git", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "Azure DevOps", SortOrder = 5 },
+                new() { Id = Guid.NewGuid(), Name = "Microsoft Azure DevOps", SortOrder = 5 },
                 new() { Id = Guid.NewGuid(), Name = "GitLab", SortOrder = 6 },
                 new() { Id = Guid.NewGuid(), Name = "GitHub", SortOrder = 7 },
                 new() { Id = Guid.NewGuid(), Name = "Jira", SortOrder = 8 },
@@ -198,7 +191,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             ]
         };
 
-        // AI Tools Category
+        // 5. AI Tools Category
         var aiCategory = new SkillCategory
         {
             Id = Guid.NewGuid(),
@@ -207,13 +200,65 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             Skills =
             [
                 new() { Id = Guid.NewGuid(), Name = "Claude Code", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "GitHub Copilot", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "Codex", SortOrder = 3 }
+                new() { Id = Guid.NewGuid(), Name = "Codex", SortOrder = 2 },
+                new() { Id = Guid.NewGuid(), Name = "GitHub Copilot", SortOrder = 3 }
+            ]
+        };
+
+        // 6. Frameworks & Libraries Category
+        var frameworksCategory = new SkillCategory
+        {
+            Id = Guid.NewGuid(),
+            Name = "Frameworks & Libraries",
+            SortOrder = 6,
+            Skills =
+            [
+                new() { Id = Guid.NewGuid(), Name = "MAUI Essentials", SortOrder = 1 },
+                new() { Id = Guid.NewGuid(), Name = "MAUI Community Toolkit", SortOrder = 2 },
+                new() { Id = Guid.NewGuid(), Name = "Syncfusion", SortOrder = 3 },
+                new() { Id = Guid.NewGuid(), Name = "SignalR", SortOrder = 4 },
+                new() { Id = Guid.NewGuid(), Name = "SQLite-net", SortOrder = 5 },
+                new() { Id = Guid.NewGuid(), Name = "ReactiveUI", SortOrder = 6 },
+                new() { Id = Guid.NewGuid(), Name = "Refit REST Library", SortOrder = 7 },
+                new() { Id = Guid.NewGuid(), Name = "Prism", SortOrder = 8 },
+                new() { Id = Guid.NewGuid(), Name = "Shiny", SortOrder = 9 },
+                new() { Id = Guid.NewGuid(), Name = "Shiny Mediator", SortOrder = 10 },
+                new() { Id = Guid.NewGuid(), Name = "SharpNado", SortOrder = 11 },
+                new() { Id = Guid.NewGuid(), Name = "SkiaSharp", SortOrder = 12 },
+                new() { Id = Guid.NewGuid(), Name = "Lottie", SortOrder = 13 },
+                new() { Id = Guid.NewGuid(), Name = "ZXing", SortOrder = 14 },
+                new() { Id = Guid.NewGuid(), Name = "BarcodeNative", SortOrder = 15 }
+            ]
+        };
+
+        // 7. App Development Experience Category
+        var appDevCategory = new SkillCategory
+        {
+            Id = Guid.NewGuid(),
+            Name = "App Entwicklungserfahrung",
+            SortOrder = 7,
+            Skills =
+            [
+                new() { Id = Guid.NewGuid(), Name = "Bluetooth Drucker Anbindung", SortOrder = 1 },
+                new() { Id = Guid.NewGuid(), Name = "QR-Code Scanner Anbindung", SortOrder = 2 },
+                new() { Id = Guid.NewGuid(), Name = "Push Notifications (Cross Platform)", SortOrder = 3 },
+                new() { Id = Guid.NewGuid(), Name = "REST Service Kommunikation", SortOrder = 4 },
+                new() { Id = Guid.NewGuid(), Name = "Lokale Datenbank in App", SortOrder = 5 },
+                new() { Id = Guid.NewGuid(), Name = "Raspberry Pi Kommunikation", SortOrder = 6 },
+                new() { Id = Guid.NewGuid(), Name = "Eigener Editor", SortOrder = 7 },
+                new() { Id = Guid.NewGuid(), Name = "Google Maps Einbindung", SortOrder = 8 },
+                new() { Id = Guid.NewGuid(), Name = "Dark Mode Design", SortOrder = 9 },
+                new() { Id = Guid.NewGuid(), Name = "Kontaktverwaltung", SortOrder = 10 },
+                new() { Id = Guid.NewGuid(), Name = "WebView Integration", SortOrder = 11 },
+                new() { Id = Guid.NewGuid(), Name = "Token Authentifizierung", SortOrder = 12 },
+                new() { Id = Guid.NewGuid(), Name = "Google/Facebook Login", SortOrder = 13 },
+                new() { Id = Guid.NewGuid(), Name = "Kalender Implementierung", SortOrder = 14 },
+                new() { Id = Guid.NewGuid(), Name = "Caching mit Sync (Request Pattern)", SortOrder = 15 }
             ]
         };
 
         await dbContext.Set<SkillCategory>().AddRangeAsync(
-            [expertiseCategory, basicCategory, frameworksCategory, devOpsCategory, aiCategory],
+            [expertiseCategory, basicCategory, appBaseCategory, devOpsCategory, aiCategory, frameworksCategory, appDevCategory],
             cancellationToken);
     }
 
@@ -221,107 +266,245 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
     {
         var projects = new List<Project>
         {
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Orderlyze",
-                Description = "Kassensystem App: Rechnungen erstellen, Tischplan mit Drag & Drop, Reservierungen, Berichte, Mitarbeiterverwaltung, Statistiken, Multi-Device Sync.",
-                Technologies = JsonSerializer.Serialize(new[] { "Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Syncfusion", "SQLite", "Shiny.BLE" }),
-                AppStoreUrl = "https://apps.apple.com/at/app/orderlyze/id1495015799",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=orderlyze.com",
-                WebsiteUrl = "https://www.orderlyze.com",
-                SortOrder = 1
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Colop E-Mark",
-                Description = "Stempel-Editor App: Eigener Editor fuer mehrfarbige Abdrucke, QR/Barcode Generator, WLAN-Druckerverbindung, mehrsprachig (7 Sprachen).",
-                Technologies = JsonSerializer.Serialize(new[] { "Xamarin.Forms", "C#", "Prism", "SkiaSharp", "ZXing", "SQLite" }),
-                AppStoreUrl = "https://apps.apple.com/at/app/colop-e-mark/id1397292575",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=com.colop.colopemark",
-                WebsiteUrl = "https://www.colop.com/de/digital-produkte",
-                SortOrder = 2
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Sybos",
-                Description = "Feuerwehr-Verwaltung: Chat mit Push-Notifications, QR-Code Scanner, Kalender, Zusatzalarmierung, Materialverwaltung, Server-Synchronisation.",
-                Technologies = JsonSerializer.Serialize(new[] { "Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Refit", "ZXing", "Shiny" }),
-                AppStoreUrl = "https://apps.apple.com/at/app/sybos/id1176062382",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=at.syPhone",
-                WebsiteUrl = "https://www.sybos.net",
-                SortOrder = 3
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "PracticeBird",
-                Description = "Notenblatt App: Mitspielendes Notenblatt, MusicXML/MIDI Import, Playback mit Klavier/Schlagzeug, Stimmenhervorhebung, Social Login.",
-                Technologies = JsonSerializer.Serialize(new[] { "Xamarin.Forms", "C#", "Prism", "ReactiveUI", "SkiaSharp", "Refit" }),
-                AppStoreUrl = "https://apps.apple.com/us/app/practice-bird-interactive-sheet-music-and-scores/id1253492926",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=phonicscore.phonicscore_lite",
-                WebsiteUrl = "https://www.practicebird.com",
-                SortOrder = 4
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Ekey Bionyx",
-                Description = "Fingerscanner App: Push-Nachrichten, hohe Sicherheit mit Verschluesselung, Bluetooth-Anbindung zu Tuerschloessern, umfangreiches Benutzermanagement.",
-                Technologies = JsonSerializer.Serialize(new[] { "Xamarin.Forms", "C#", "Prism", "Shiny", "ZXing", "Azure Notification Hub", "Lottie" }),
-                AppStoreUrl = "https://apps.apple.com/at/app/ekey-bionyx/id1484053054",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=net.ekey.bionyx",
-                WebsiteUrl = "https://www.ekey.net/ekey-bionyx-app/",
-                SortOrder = 5
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Miele",
-                Description = "Smart Home App: Hausgeraete mobil steuern, Push-Nachrichten ueber Geraetestatus, verschiedene Assistenten als Nuget-Module, eigener Shop.",
-                Technologies = JsonSerializer.Serialize(new[] { "MAUI", "C#", "MVVM", "Firebase", "Roslyn Code Generation", "Sentry", "Lottie" }),
-                AppStoreUrl = "https://apps.apple.com/at/app/miele-app-smart-home/id930406907",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=de.miele.infocontrol",
-                WebsiteUrl = "https://www.miele.at/c/miele-app-2594.htm",
-                SortOrder = 6
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Asfinag",
-                Description = "Verkehrsinfo App: Personalisierter Homescreen, 1800+ Webcams, Verkehrsinfos & Baustellen, E-Ladestationen, Digitale Vignette, Routenplaner, 12 Sprachen.",
-                Technologies = JsonSerializer.Serialize(new[] { "MAUI", "C#", "Prism", "Prism Regions", "OpenAPI", "Polly", "Syncfusion", "SQLite" }),
-                AppStoreUrl = "https://apps.apple.com/at/app/asfinag/id453459323",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=at.asfinag.unterwegs",
-                WebsiteUrl = "https://www.asfinag.at/asfinag-app/",
-                SortOrder = 7
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Lolyo",
-                Description = "Mitarbeiter-Kommunikations App: Interne Kommunikationsplattform fuer Unternehmen.",
-                Technologies = JsonSerializer.Serialize(new[] { "Xamarin.Android", "Xamarin.iOS", "C#", "GitLab" }),
-                AppStoreUrl = null,
-                PlayStoreUrl = null,
-                WebsiteUrl = "https://www.lolyo.at",
-                SortOrder = 8
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Protimer",
-                Description = "Zeiterfassungs App: Migration von Xamarin.Forms auf MAUI.",
-                Technologies = JsonSerializer.Serialize(new[] { "MAUI", "Xamarin.Forms", "C#" }),
-                AppStoreUrl = "https://apps.apple.com/ch/app/protimer-easy/id1114715179",
-                PlayStoreUrl = "https://play.google.com/store/apps/details?id=ch.protimereasy.terminal",
-                WebsiteUrl = null,
-                SortOrder = 9
-            }
+            CreateProject(
+                name: "Orderlyze",
+                description: "Kassensystem App: Rechnungen erstellen, Tischplan mit Drag & Drop, Reservierungen, Berichte, Mitarbeiterverwaltung, Statistiken, Multi-Device Sync.",
+                framework: "Xamarin.Forms / MAUI",
+                appStoreUrl: "https://apps.apple.com/at/app/orderlyze/id1495015799",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=orderlyze.com",
+                websiteUrl: "https://www.orderlyze.com",
+                sortOrder: 1,
+                technologies: ["Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Syncfusion", "SQLite", "Shiny.BLE"],
+                functions: [
+                    "Rechnungen erstellen und ausdrucken",
+                    "Tischplan mit Drag und Drop",
+                    "Reservierungen erstellen",
+                    "Tages-, Monats- und Jahresberichte",
+                    "Mitarbeiterverwaltung",
+                    "Statistiken und Analysen",
+                    "Synchronisation zwischen Geraeten"
+                ],
+                technicalAspects: [
+                    "Programmiersprachen: C#, XAML",
+                    "App Lifecycle: Prism",
+                    "Design Pattern: Prism MVVM",
+                    "State Changes: ReactiveUI",
+                    "Server: OpenApi Generierung",
+                    "Bluetooth: Shiny.BLE",
+                    "Datenbank: sqlite-net (Async)",
+                    "UI: Syncfusion"
+                ]),
+
+            CreateProject(
+                name: "Colop E-Mark",
+                description: "Stempel-Editor App: Eigener Editor fuer mehrfarbige Abdrucke, QR/Barcode Generator, WLAN-Druckerverbindung, mehrsprachig (7 Sprachen).",
+                framework: "Xamarin.Forms",
+                appStoreUrl: "https://apps.apple.com/at/app/colop-e-mark/id1397292575",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=com.colop.colopemark",
+                websiteUrl: "https://www.colop.com/de/digital-produkte",
+                sortOrder: 2,
+                technologies: ["Xamarin.Forms", "C#", "Prism", "SkiaSharp", "ZXing", "SQLite"],
+                functions: [
+                    "Editor fuer mehrfarbige Abdruecke",
+                    "QR und Barcode Generierung",
+                    "Eigenes Benutzersystem",
+                    "Video-Wizard Einfuehrung",
+                    "WLAN Drucker Verbindung",
+                    "7 Sprachen"
+                ],
+                technicalAspects: [
+                    "Framework: Xamarin.Forms",
+                    "App Lifecycle: Prism",
+                    "Design Pattern: Prism MVVM",
+                    "Editor: SkiaSharp",
+                    "QR-Code: ZXing",
+                    "Datenbank: SQLite .NET"
+                ]),
+
+            CreateProject(
+                name: "Sybos",
+                description: "Feuerwehr-Verwaltung: Chat mit Push-Notifications, QR-Code Scanner, Kalender, Zusatzalarmierung, Materialverwaltung, Server-Synchronisation.",
+                framework: "Xamarin.Forms / MAUI",
+                appStoreUrl: "https://apps.apple.com/at/app/sybos/id1176062382",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=at.syPhone",
+                websiteUrl: "https://www.sybos.net",
+                sortOrder: 3,
+                technologies: ["Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Refit", "ZXing", "Shiny"],
+                functions: [
+                    "Chat mit Push-Notifications",
+                    "QR-Code Scanner fuer Material",
+                    "Kalender fuer Veranstaltungen",
+                    "Zusatzalarmierung mit Push",
+                    "Dark Mode",
+                    "Materialverwaltung",
+                    "Server Synchronisation"
+                ],
+                technicalAspects: [
+                    "Programmiersprachen: C#, XAML",
+                    "App Lifecycle: Prism",
+                    "State Changes: ReactiveUI",
+                    "Server: Refit REST",
+                    "QR-Code: ZXing",
+                    "Push: Shiny Library"
+                ]),
+
+            CreateProject(
+                name: "Ekey Bionyx",
+                description: "Fingerscanner App: Push-Nachrichten, hohe Sicherheit mit Verschluesselung, Bluetooth-Anbindung zu Tuerschloessern, umfangreiches Benutzermanagement.",
+                framework: "Xamarin.Forms",
+                appStoreUrl: "https://apps.apple.com/at/app/ekey-bionyx/id1484053054",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=net.ekey.bionyx",
+                websiteUrl: "https://www.ekey.net/ekey-bionyx-app/",
+                sortOrder: 4,
+                technologies: ["Xamarin.Forms", "C#", "Prism", "Shiny", "Azure Notification Hub", "Lottie"],
+                functions: [
+                    "Automatische Push-Nachrichten",
+                    "Hoechste Sicherheit/Verschluesselung",
+                    "Bluetooth zu Fingerscanner",
+                    "Benutzermanagement/Rollensystem"
+                ],
+                technicalAspects: [
+                    "Framework: Xamarin.Forms",
+                    "Repository: Azure DevOps",
+                    "Push: Azure Notification Hub",
+                    "Bluetooth: Shiny",
+                    "CI/CD: Azure DevOps",
+                    "Animationen: Lottie"
+                ]),
+
+            CreateProject(
+                name: "Miele Smart Home",
+                description: "Smart Home App: Hausgeraete mobil steuern, Push-Nachrichten ueber Geraetestatus, verschiedene Assistenten als Nuget-Module, eigener Shop.",
+                framework: "MAUI",
+                appStoreUrl: "https://apps.apple.com/at/app/miele-app-smart-home/id930406907",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=de.miele.infocontrol",
+                websiteUrl: "https://www.miele.at/c/miele-app-2594.htm",
+                sortOrder: 5,
+                technologies: ["MAUI", "C#", "MVVM", "Firebase", "Roslyn Code Generation", "Sentry", "Lottie"],
+                functions: [
+                    "Hausgeraete mobil steuern",
+                    "Push ueber Geraetestatus",
+                    "Assistenten-System (NuGet)",
+                    "Eigener Shop"
+                ],
+                technicalAspects: [
+                    "Framework: MAUI",
+                    "Repository: Bitbucket",
+                    "Notifications: Firebase",
+                    "Codegenerierung: Roslyn",
+                    "Logging: Sentry",
+                    "Animationen: Lottie"
+                ]),
+
+            CreateProject(
+                name: "Asfinag",
+                description: "Verkehrsinfo App: Personalisierter Homescreen, 1800+ Webcams, Verkehrsinfos & Baustellen, E-Ladestationen, Digitale Vignette, Routenplaner, 12 Sprachen.",
+                framework: "MAUI",
+                appStoreUrl: "https://apps.apple.com/at/app/asfinag/id453459323",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=at.asfinag.unterwegs",
+                websiteUrl: "https://www.asfinag.at/asfinag-app/",
+                sortOrder: 6,
+                technologies: ["MAUI", "C#", "Prism", "OpenAPI", "Polly", "Syncfusion", "SQLite"],
+                functions: [
+                    "Personalisierter Homescreen",
+                    "1800+ Webcams",
+                    "Verkehrsinfos und Baustellen",
+                    "Raststationen und E-Ladestationen",
+                    "Digitale Vignette",
+                    "Routenplaner (Europa)",
+                    "12 Sprachen"
+                ],
+                technicalAspects: [
+                    "Framework: MAUI",
+                    "App Lifecycle: Prism",
+                    "Server: OpenApi, Polly, Scalar",
+                    "UI: Syncfusion",
+                    "Datenbank: SQLite .NET",
+                    "Push: Cross Platform"
+                ]),
+
+            CreateProject(
+                name: "PracticeBird",
+                description: "Notenblatt App: Mitspielendes Notenblatt, MusicXML/MIDI Import, Playback mit Klavier/Schlagzeug, Stimmenhervorhebung, Social Login.",
+                framework: "Xamarin.Forms",
+                appStoreUrl: "https://apps.apple.com/us/app/practice-bird-interactive-sheet-music-and-scores/id1253492926",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=phonicscore.phonicscore_lite",
+                websiteUrl: "https://www.practicebird.com",
+                sortOrder: 7,
+                technologies: ["Xamarin.Forms", "C#", "Prism", "ReactiveUI", "SkiaSharp", "Refit"],
+                functions: [
+                    "Mitspielendes Notenblatt",
+                    "MusicXML/MIDI Dateien",
+                    "Playback mit Klavier/Schlagzeug",
+                    "Stimme hervorheben",
+                    "Facebook/Google Login"
+                ],
+                technicalAspects: [
+                    "Framework: Xamarin.Forms",
+                    "App Lifecycle: Prism",
+                    "State Changes: ReactiveUI",
+                    "Server: Refit REST",
+                    "Notenblatt: SkiaSharp"
+                ])
         };
 
         await dbContext.Set<Project>().AddRangeAsync(projects, cancellationToken);
+    }
+
+    private static Project CreateProject(
+        string name,
+        string description,
+        string framework,
+        string? appStoreUrl,
+        string? playStoreUrl,
+        string? websiteUrl,
+        int sortOrder,
+        string[] technologies,
+        string[] functions,
+        string[] technicalAspects)
+    {
+        var project = new Project
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Description = description,
+            Framework = framework,
+            AppStoreUrl = appStoreUrl,
+            PlayStoreUrl = playStoreUrl,
+            WebsiteUrl = websiteUrl,
+            SortOrder = sortOrder
+        };
+
+        for (var i = 0; i < technologies.Length; i++)
+        {
+            project.Technologies.Add(new ProjectTechnology
+            {
+                Id = Guid.NewGuid(),
+                Name = technologies[i],
+                SortOrder = i + 1
+            });
+        }
+
+        for (var i = 0; i < functions.Length; i++)
+        {
+            project.Functions.Add(new ProjectFunction
+            {
+                Id = Guid.NewGuid(),
+                Description = functions[i],
+                SortOrder = i + 1
+            });
+        }
+
+        for (var i = 0; i < technicalAspects.Length; i++)
+        {
+            project.TechnicalAspects.Add(new ProjectTechnicalAspect
+            {
+                Id = Guid.NewGuid(),
+                Description = technicalAspects[i],
+                SortOrder = i + 1
+            });
+        }
+
+        return project;
     }
 }

@@ -6,10 +6,15 @@ public class Project : BaseEntity
 {
     public required string Name { get; set; }
     public string? Description { get; set; }
-    public string Technologies { get; set; } = string.Empty; // JSON array stored as string
+    public string? Framework { get; set; }
     public string? AppStoreUrl { get; set; }
     public string? PlayStoreUrl { get; set; }
     public string? WebsiteUrl { get; set; }
     public string? ImageUrl { get; set; }
     public int SortOrder { get; set; }
+
+    // Navigation properties (normalized)
+    public ICollection<ProjectTechnology> Technologies { get; set; } = [];
+    public ICollection<ProjectFunction> Functions { get; set; } = [];
+    public ICollection<ProjectTechnicalAspect> TechnicalAspects { get; set; } = [];
 }
