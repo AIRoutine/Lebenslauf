@@ -13,7 +13,7 @@
             <Setter Property="CharacterSpacing" Value="-20" />
         </Style>
         <Style x:Key="RoleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyMediumTextBlockStyle}">
-            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="Foreground" Value="#555555" />
             <Setter Property="CharacterSpacing" Value="80" />
             <Setter Property="FontSize" Value="11" />
         </Style>
@@ -22,7 +22,7 @@
         </Style>
         <Style x:Key="LabelStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Foreground" Value="#AAAAAA" />
+            <Setter Property="Foreground" Value="#666666" />
             <Setter Property="CharacterSpacing" Value="120" />
             <Setter Property="FontSize" Value="10" />
         </Style>
@@ -39,10 +39,10 @@
             <Setter Property="Foreground" Value="#1A1A1A" />
         </Style>
         <Style x:Key="SubtitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
-            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="Foreground" Value="#555555" />
         </Style>
         <Style x:Key="DescStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
-            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="Foreground" Value="#444444" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
         <Style x:Key="ProjectNameStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelMediumTextBlockStyle}">
@@ -50,7 +50,7 @@
             <Setter Property="Foreground" Value="#000000" />
         </Style>
         <Style x:Key="ProjectDescStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
-            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="Foreground" Value="#555555" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
         <Style x:Key="BtnStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}" />
@@ -66,7 +66,13 @@
                     <StackPanel Spacing="32">
 
                         <!-- HEADER -->
-                        <StackPanel Spacing="12">
+                        <StackPanel Spacing="16">
+                            <!-- Profilbild -->
+                            <Border Width="100" Height="125" CornerRadius="4" HorizontalAlignment="Left">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="ms-appx:///Assets/Images/profile.jpg" Stretch="UniformToFill" />
+                                </Border.Background>
+                            </Border>
                             <TextBlock Text="{Binding PersonalData.Name}" Style="{StaticResource NameStyle}" FontSize="40" />
                             <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER" Style="{StaticResource RoleStyle}" />
                             <StackPanel Spacing="4" Margin="0,8,0,0">
@@ -152,16 +158,26 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <!-- Links: Name + Contact -->
-                            <StackPanel Spacing="12">
-                                <TextBlock Text="{Binding PersonalData.Name}" Style="{StaticResource NameStyle}" />
-                                <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER" Style="{StaticResource RoleStyle}" />
-                                <StackPanel Orientation="Horizontal" Spacing="20" Margin="0,12,0,0">
-                                    <TextBlock Text="{Binding PersonalData.Email}" Style="{StaticResource ContactStyle}" />
-                                    <TextBlock Text="{Binding PersonalData.Phone}" Style="{StaticResource ContactStyle}" />
-                                    <TextBlock Style="{StaticResource ContactStyle}">
-                                        <Run Text="{Binding PersonalData.City}" /><Run Text=", " /><Run Text="{Binding PersonalData.Country}" />
-                                    </TextBlock>
+                            <!-- Links: Bild + Name + Contact -->
+                            <StackPanel Orientation="Horizontal" Spacing="24">
+                                <!-- Profilbild -->
+                                <Border Width="120" Height="150" CornerRadius="4">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="ms-appx:///Assets/Images/profile.jpg" Stretch="UniformToFill" />
+                                    </Border.Background>
+                                </Border>
+
+                                <!-- Name + Info -->
+                                <StackPanel Spacing="12" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding PersonalData.Name}" Style="{StaticResource NameStyle}" />
+                                    <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER" Style="{StaticResource RoleStyle}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="20" Margin="0,12,0,0">
+                                        <TextBlock Text="{Binding PersonalData.Email}" Style="{StaticResource ContactStyle}" />
+                                        <TextBlock Text="{Binding PersonalData.Phone}" Style="{StaticResource ContactStyle}" />
+                                        <TextBlock Style="{StaticResource ContactStyle}">
+                                            <Run Text="{Binding PersonalData.City}" /><Run Text=", " /><Run Text="{Binding PersonalData.Country}" />
+                                        </TextBlock>
+                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
 
