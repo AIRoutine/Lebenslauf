@@ -1,6 +1,7 @@
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+#if !__WASM__
+using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using SkiaSharp;
@@ -8,16 +9,19 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+#endif
 
 namespace Lebenslauf.Core.Styles.Controls;
 
 public sealed partial class ExportHeaderControl : UserControl
 {
+#if !__WASM__
     /// <summary>
     /// Static reference to the main window for file picker initialization.
     /// Set this from App.xaml.cs during startup.
     /// </summary>
     public static Window? MainWindow { get; set; }
+#endif
 
     public static readonly DependencyProperty ExportTargetProperty =
         DependencyProperty.Register(
@@ -48,8 +52,24 @@ public sealed partial class ExportHeaderControl : UserControl
     public ExportHeaderControl()
     {
         this.InitializeComponent();
+#if __WASM__
+        // Hide export button on WebAssembly - RenderTargetBitmap not supported
+        this.Loaded += (s, e) =>
+        {
+            if (FindName("ExportButton") is Button btn)
+            {
+                btn.Visibility = Visibility.Collapsed;
+            }
+        };
+#endif
     }
 
+#if __WASM__
+    private void OnExportClick(object sender, RoutedEventArgs e)
+    {
+        // Export not supported on WebAssembly
+    }
+#else
     private async void OnExportClick(object sender, RoutedEventArgs e)
     {
         var target = ExportTarget;
@@ -166,7 +186,9 @@ public sealed partial class ExportHeaderControl : UserControl
             ExportButton.IsEnabled = true;
         }
     }
+#endif
 
+#if !__WASM__
     private static ScrollViewer? FindScrollViewer(DependencyObject element)
     {
         if (element is ScrollViewer sv)
@@ -221,4 +243,5 @@ public sealed partial class ExportHeaderControl : UserControl
             }
         });
     }
+#endif
 }
