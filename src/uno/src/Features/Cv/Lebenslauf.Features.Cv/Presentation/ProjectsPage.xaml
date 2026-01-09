@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:local="using:Lebenslauf.Features.Cv.Presentation"
+      xmlns:controls="using:Lebenslauf.Core.Styles.Controls"
       Background="#FFFFFF">
 
     <Page.Resources>
@@ -56,11 +57,18 @@
     <Grid Background="#FFFFFF">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Background="#000000"
+        <!-- Export Header -->
+        <controls:ExportHeaderControl PageTitle="Projekte"
+                                       ExportTarget="{x:Bind ProjectsContent}"
+                                       FileName="Projekte_Daniel_Hufnagl"
+                                       Margin="48,16,48,0" />
+
+        <!-- Navigation Header -->
+        <Border Grid.Row="1" Background="#000000"
                 Padding="{utu:Responsive Narrow='16,12', Normal='24,16'}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -84,7 +92,7 @@
         </Border>
 
         <!-- Content with ResponsiveView -->
-        <ScrollViewer Grid.Row="1"
+        <ScrollViewer x:Name="ProjectsContent" Grid.Row="2"
                       Background="#FFFFFF"
                       Padding="{utu:Responsive Narrow='16,16', Normal='24,24', Wide='48,32'}">
 

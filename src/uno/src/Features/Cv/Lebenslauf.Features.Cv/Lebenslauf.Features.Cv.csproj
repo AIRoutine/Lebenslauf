@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Core -->
+    <ProjectReference Include="..\..\..\Core\Lebenslauf.Core.Styles\Lebenslauf.Core.Styles.csproj" />
     <!-- Shared -->
     <ProjectReference Include="..\..\..\Shared\Lebenslauf.Shared\Lebenslauf.Shared.csproj" />
     <!-- Contracts -->

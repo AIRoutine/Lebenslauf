@@ -1,4 +1,5 @@
 using Lebenslauf.Core.Startup;
+using Lebenslauf.Core.Styles.Controls;
 using Lebenslauf.Features.Cv.Presentation;
 using Uno.Resizetizer;
 
@@ -46,6 +47,9 @@ public partial class App : Application
                 .UseNavigation(RegisterRoutes)
             );
         MainWindow = builder.Window;
+
+        // Set MainWindow reference for ExportHeaderControl
+        ExportHeaderControl.MainWindow = MainWindow;
 
 #if DEBUG
         MainWindow.UseStudio();

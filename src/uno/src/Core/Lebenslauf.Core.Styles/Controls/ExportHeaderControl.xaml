@@ -1,0 +1,39 @@
+<UserControl x:Class="Lebenslauf.Core.Styles.Controls.ExportHeaderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utu="using:Uno.Toolkit.UI">
+
+    <Grid Padding="0,8,0,16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Page Title -->
+        <TextBlock x:Name="TitleText"
+                   Text="{x:Bind PageTitle, Mode=OneWay}"
+                   Style="{StaticResource TitleLargeTextBlockStyle}"
+                   FontWeight="Bold"
+                   Foreground="#000000"
+                   VerticalAlignment="Center" />
+
+        <!-- Export Button -->
+        <Button x:Name="ExportButton"
+                Grid.Column="1"
+                Click="OnExportClick"
+                Background="Transparent"
+                BorderBrush="#000000"
+                BorderThickness="1"
+                Padding="12,8"
+                CornerRadius="4">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <FontIcon Glyph="&#xE78C;" FontSize="14" Foreground="#000000" />
+                <TextBlock Text="Als PDF speichern"
+                           Foreground="#000000"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>
