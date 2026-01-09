@@ -254,44 +254,42 @@
                             <!-- Thin divider -->
                             <Rectangle Height="1" Fill="#E0E0E0" />
 
-                            <!-- DEVOPS & AI TOOLS - compact grouped -->
-                            <Border Background="#F8F8F8" Padding="16,12" CornerRadius="4">
-                                <StackPanel Spacing="12">
-                                    <!-- DevOps -->
-                                    <StackPanel Spacing="6">
-                                        <TextBlock Text="DEVOPS &amp; TOOLS" Style="{StaticResource SkillsSectionStyle}" />
-                                        <ItemsRepeater ItemsSource="{Binding DevTools}">
-                                            <ItemsRepeater.Layout>
-                                                <FlowLayout MinRowSpacing="5" MinColumnSpacing="5" />
-                                            </ItemsRepeater.Layout>
-                                            <ItemsRepeater.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border Background="#FFFFFF" BorderBrush="#D0D0D0" BorderThickness="1" CornerRadius="3" Padding="8,4">
-                                                        <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" FontSize="11" />
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsRepeater.ItemTemplate>
-                                        </ItemsRepeater>
-                                    </StackPanel>
+                            <!-- DEVOPS & TOOLS -->
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="DEVOPS &amp; TOOLS" Style="{StaticResource SkillsSectionStyle}" />
+                                <ItemsRepeater ItemsSource="{Binding DevTools}">
+                                    <ItemsRepeater.Layout>
+                                        <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#888888" BorderThickness="1" CornerRadius="3" Padding="8,4">
+                                                <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" FontSize="11" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
+                            </StackPanel>
 
-                                    <!-- AI Tools -->
-                                    <StackPanel Spacing="6">
-                                        <TextBlock Text="AI TOOLS" Style="{StaticResource SkillsSectionStyle}" />
-                                        <ItemsRepeater ItemsSource="{Binding AiTools}">
-                                            <ItemsRepeater.Layout>
-                                                <FlowLayout MinRowSpacing="5" MinColumnSpacing="5" />
-                                            </ItemsRepeater.Layout>
-                                            <ItemsRepeater.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border Background="#FFFFFF" BorderBrush="#D0D0D0" BorderThickness="1" CornerRadius="3" Padding="8,4">
-                                                        <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" FontSize="11" />
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsRepeater.ItemTemplate>
-                                        </ItemsRepeater>
-                                    </StackPanel>
-                                </StackPanel>
-                            </Border>
+                            <!-- Thin divider -->
+                            <Rectangle Height="1" Fill="#E0E0E0" />
+
+                            <!-- AI TOOLS -->
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="AI TOOLS" Style="{StaticResource SkillsSectionStyle}" />
+                                <ItemsRepeater ItemsSource="{Binding AiTools}">
+                                    <ItemsRepeater.Layout>
+                                        <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#888888" BorderThickness="1" CornerRadius="3" Padding="8,4">
+                                                <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" FontSize="11" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
+                            </StackPanel>
 
                             <!-- Thin divider -->
                             <Rectangle Height="1" Fill="#E0E0E0" />
