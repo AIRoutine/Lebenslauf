@@ -294,6 +294,31 @@
                         <Rectangle Height="2" Fill="#000000" />
 
                         <!-- ════════════════════════════════════════════════════════════════ -->
+                        <!-- REFERENZPROJEKTE                                                  -->
+                        <!-- ════════════════════════════════════════════════════════════════ -->
+                        <StackPanel Spacing="20">
+                            <Button Command="{Binding NavigateToProjectsCommand}" Style="{StaticResource BtnStyle}">
+                                <TextBlock Text="REFERENZPROJEKTE →" Style="{StaticResource SectionTitleStyle}" />
+                            </Button>
+
+                            <ItemsRepeater ItemsSource="{Binding Projects}">
+                                <ItemsRepeater.Layout>
+                                    <UniformGridLayout MinItemWidth="200" MinItemHeight="80" MinRowSpacing="12" MinColumnSpacing="12" MaximumRowsOrColumns="4" />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#F5F5F5" Padding="14,12">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="{Binding Name}" Style="{StaticResource ProjectNameStyle}" />
+                                                <TextBlock Text="{Binding Description}" Style="{StaticResource ProjectDescStyle}" MaxLines="2" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
+                        </StackPanel>
+
+                        <!-- ════════════════════════════════════════════════════════════════ -->
                         <!-- BERUFSERFAHRUNG - Career Section                                  -->
                         <!-- ════════════════════════════════════════════════════════════════ -->
                         <StackPanel Spacing="20">
@@ -383,34 +408,6 @@
                                     </StackPanel>
                                 </Border>
                             </Grid>
-                        </StackPanel>
-
-                        <!-- DIVIDER -->
-                        <Rectangle Height="2" Fill="#000000" />
-
-                        <!-- ════════════════════════════════════════════════════════════════ -->
-                        <!-- REFERENZPROJEKTE                                                  -->
-                        <!-- ════════════════════════════════════════════════════════════════ -->
-                        <StackPanel Spacing="20">
-                            <Button Command="{Binding NavigateToProjectsCommand}" Style="{StaticResource BtnStyle}">
-                                <TextBlock Text="REFERENZPROJEKTE →" Style="{StaticResource SectionTitleStyle}" />
-                            </Button>
-
-                            <ItemsRepeater ItemsSource="{Binding Projects}">
-                                <ItemsRepeater.Layout>
-                                    <UniformGridLayout MinItemWidth="200" MinItemHeight="80" MinRowSpacing="12" MinColumnSpacing="12" MaximumRowsOrColumns="4" />
-                                </ItemsRepeater.Layout>
-                                <ItemsRepeater.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Background="#F5F5F5" Padding="14,12">
-                                            <StackPanel Spacing="4">
-                                                <TextBlock Text="{Binding Name}" Style="{StaticResource ProjectNameStyle}" />
-                                                <TextBlock Text="{Binding Description}" Style="{StaticResource ProjectDescStyle}" MaxLines="2" />
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsRepeater.ItemTemplate>
-                            </ItemsRepeater>
                         </StackPanel>
 
                     </StackPanel>
