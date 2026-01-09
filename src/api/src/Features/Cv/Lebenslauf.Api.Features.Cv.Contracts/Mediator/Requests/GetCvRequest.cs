@@ -12,7 +12,9 @@ public record GetCvRequest : IRequest<GetCvResponse>;
 /// </summary>
 public record GetCvResponse(
     PersonalDataDto PersonalData,
+    IReadOnlyList<FamilyMemberDto> FamilyMembers,
     IReadOnlyList<EducationDto> Education,
+    IReadOnlyList<InternshipDto> Internships,
     IReadOnlyList<WorkExperienceDto> WorkExperience,
     IReadOnlyList<SkillCategoryDto> SkillCategories,
     IReadOnlyList<ProjectDto> Projects
@@ -92,4 +94,27 @@ public record ProjectDto(
     string? PlayStoreUrl,
     string? WebsiteUrl,
     string? ImageUrl
+);
+
+/// <summary>
+/// Family member entry (profession only, no names).
+/// </summary>
+public record FamilyMemberDto(
+    Guid Id,
+    string Relationship,
+    string Profession,
+    int? BirthYear
+);
+
+/// <summary>
+/// Internship/Praktikum entry.
+/// </summary>
+public record InternshipDto(
+    Guid Id,
+    string Company,
+    string Role,
+    int Year,
+    int? Month,
+    int? EndMonth,
+    string? Description
 );

@@ -17,7 +17,15 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
         var personalData = await dbContext.Set<PersonalData>()
             .FirstOrDefaultAsync(cancellationToken);
 
+        var familyMembers = await dbContext.Set<FamilyMember>()
+            .OrderBy(x => x.SortOrder)
+            .ToListAsync(cancellationToken);
+
         var education = await dbContext.Set<Education>()
+            .OrderBy(x => x.SortOrder)
+            .ToListAsync(cancellationToken);
+
+        var internships = await dbContext.Set<Internship>()
             .OrderBy(x => x.SortOrder)
             .ToListAsync(cancellationToken);
 
@@ -39,7 +47,9 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
 
         return new GetCvResponse(
             PersonalData: MapPersonalData(personalData),
+            FamilyMembers: familyMembers.Select(MapFamilyMember).ToList(),
             Education: education.Select(MapEducation).ToList(),
+            Internships: internships.Select(MapInternship).ToList(),
             WorkExperience: workExperience.Select(MapWorkExperience).ToList(),
             SkillCategories: skillCategories.Select(MapSkillCategory).ToList(),
             Projects: projects.Select(MapProject).ToList()
@@ -128,6 +138,29 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
             PlayStoreUrl: entity.PlayStoreUrl,
             WebsiteUrl: entity.WebsiteUrl,
             ImageUrl: entity.ImageUrl
+        );
+    }
+
+    private static FamilyMemberDto MapFamilyMember(FamilyMember entity)
+    {
+        return new FamilyMemberDto(
+            Id: entity.Id,
+            Relationship: entity.Relationship,
+            Profession: entity.Profession,
+            BirthYear: entity.BirthYear
+        );
+    }
+
+    private static InternshipDto MapInternship(Internship entity)
+    {
+        return new InternshipDto(
+            Id: entity.Id,
+            Company: entity.Company,
+            Role: entity.Role,
+            Year: entity.Year,
+            Month: entity.Month,
+            EndMonth: entity.EndMonth,
+            Description: entity.Description
         );
     }
 }

@@ -16,7 +16,9 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             return;
 
         await SeedPersonalDataAsync(cancellationToken);
+        await SeedFamilyMembersAsync(cancellationToken);
         await SeedEducationAsync(cancellationToken);
+        await SeedInternshipsAsync(cancellationToken);
         await SeedWorkExperienceAsync(cancellationToken);
         await SeedSkillsAsync(cancellationToken);
         await SeedProjectsAsync(cancellationToken);
@@ -43,6 +45,47 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         };
 
         await dbContext.Set<PersonalData>().AddAsync(personalData, cancellationToken);
+    }
+
+    private async Task SeedFamilyMembersAsync(CancellationToken cancellationToken)
+    {
+        var familyMembers = new List<FamilyMember>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Relationship = "Vater",
+                Profession = "Elektroinstallateur",
+                BirthYear = null,
+                SortOrder = 1
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Relationship = "Mutter",
+                Profession = "Vertriebsassistenz",
+                BirthYear = null,
+                SortOrder = 2
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Relationship = "Bruder",
+                Profession = "Mechatroniker",
+                BirthYear = 2000,
+                SortOrder = 3
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Relationship = "Bruder",
+                Profession = "NMS Schueler",
+                BirthYear = 2007,
+                SortOrder = 4
+            }
+        };
+
+        await dbContext.Set<FamilyMember>().AddRangeAsync(familyMembers, cancellationToken);
     }
 
     private async Task SeedEducationAsync(CancellationToken cancellationToken)
@@ -72,6 +115,37 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         };
 
         await dbContext.Set<Education>().AddRangeAsync(education, cancellationToken);
+    }
+
+    private async Task SeedInternshipsAsync(CancellationToken cancellationToken)
+    {
+        var internships = new List<Internship>
+        {
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Company = "Firma Stoeber",
+                Role = "Programmierpraktikum",
+                Year = 2014,
+                Month = 7,
+                EndMonth = 7,
+                Description = "Programmierarbeiten",
+                SortOrder = 1
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Company = "Elektro Steinschaden",
+                Role = "Elektrotechnik Praktikum",
+                Year = 2015,
+                Month = 7,
+                EndMonth = 8,
+                Description = "Elektrotechnische Arbeiten",
+                SortOrder = 2
+            }
+        };
+
+        await dbContext.Set<Internship>().AddRangeAsync(internships, cancellationToken);
     }
 
     private async Task SeedWorkExperienceAsync(CancellationToken cancellationToken)

@@ -39,10 +39,34 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     );
 
     [ObservableProperty]
+    private IReadOnlyList<FamilyMemberModel> _familyMembers = [];
+
+    [ObservableProperty]
     private IReadOnlyList<EducationModel> _education = [];
 
     [ObservableProperty]
+    private IReadOnlyList<InternshipModel> _internships = [];
+
+    [ObservableProperty]
     private IReadOnlyList<WorkExperienceModel> _workExperience = [];
+
+    /// <summary>
+    /// Calculated age based on birth date.
+    /// </summary>
+    public int Age
+    {
+        get
+        {
+            if (PersonalData.BirthDate == default)
+                return 0;
+
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var age = today.Year - PersonalData.BirthDate.Year;
+            if (PersonalData.BirthDate > today.AddYears(-age))
+                age--;
+            return age;
+        }
+    }
 
     [ObservableProperty]
     private IReadOnlyList<SkillCategoryModel> _skillCategories = [];
@@ -89,8 +113,19 @@ public partial class CvViewModel : PageViewModel, INavigationAware
                         ProfileImageUrl: result.PersonalData.ProfileImageUrl
                     );
 
+                    // Notify that Age property changed after PersonalData is set
+                    OnPropertyChanged(nameof(Age));
+
+                    FamilyMembers = result.FamilyMembers
+                        .Select(f => new FamilyMemberModel(f.Id, f.Relationship, f.Profession, f.BirthYear))
+                        .ToList();
+
                     Education = result.Education
                         .Select(e => new EducationModel(e.Id, e.Institution, e.Degree, e.StartYear, e.EndYear, e.Description))
+                        .ToList();
+
+                    Internships = result.Internships
+                        .Select(i => new InternshipModel(i.Id, i.Company, i.Role, i.Year, i.Month, i.EndMonth, i.Description))
                         .ToList();
 
                     WorkExperience = result.WorkExperience
@@ -141,11 +176,27 @@ public partial class CvViewModel : PageViewModel, INavigationAware
             ProfileImageUrl: null
         );
 
+        OnPropertyChanged(nameof(Age));
+
+        FamilyMembers =
+        [
+            new(Guid.NewGuid(), "Vater", "Elektroinstallateur", null),
+            new(Guid.NewGuid(), "Mutter", "Vertriebsassistenz", null),
+            new(Guid.NewGuid(), "Bruder", "Mechatroniker", 2000),
+            new(Guid.NewGuid(), "Bruder", "NMS Schueler", 2007)
+        ];
+
         Education =
         [
             new(Guid.NewGuid(), "HTL Grieskirchen", "Reife- und Diplompruefung Informatik", 2012, 2017,
                 "Diplomarbeit: Programmierung eines Verwaltungssystems fuer Aerzte und Mitarbeiter"),
             new(Guid.NewGuid(), "VS, HS Laakirchen", "Volksschule und Hauptschule", 2004, 2012, null)
+        ];
+
+        Internships =
+        [
+            new(Guid.NewGuid(), "Firma Stoeber", "Programmierpraktikum", 2014, 7, 7, "Programmierarbeiten"),
+            new(Guid.NewGuid(), "Elektro Steinschaden", "Elektrotechnik Praktikum", 2015, 7, 8, "Elektrotechnische Arbeiten")
         ];
 
         WorkExperience =

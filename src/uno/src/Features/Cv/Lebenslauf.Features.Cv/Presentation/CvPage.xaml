@@ -6,9 +6,9 @@
       Background="#FFFFFF">
 
     <Page.Resources>
-        <!-- CLEAN CV DESIGN -->
+        <!-- CLEAN CV DESIGN - B&W Editorial -->
         <Style x:Key="NameStyle" TargetType="TextBlock" BasedOn="{StaticResource DisplayLargeTextBlockStyle}">
-            <Setter Property="FontSize" Value="64" />
+            <Setter Property="FontSize" Value="52" />
             <Setter Property="FontWeight" Value="Black" />
             <Setter Property="Foreground" Value="#000000" />
             <Setter Property="CharacterSpacing" Value="-20" />
@@ -27,6 +27,12 @@
             <Setter Property="CharacterSpacing" Value="120" />
             <Setter Property="FontSize" Value="10" />
         </Style>
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="CharacterSpacing" Value="120" />
+            <Setter Property="FontSize" Value="11" />
+        </Style>
         <Style x:Key="SkillStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyMediumTextBlockStyle}">
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="#000000" />
@@ -34,6 +40,7 @@
         <Style x:Key="YearStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="FontSize" Value="13" />
         </Style>
         <Style x:Key="TitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyMediumTextBlockStyle}">
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -46,6 +53,9 @@
             <Setter Property="Foreground" Value="#444444" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
+        <Style x:Key="TimelineEntryStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#333333" />
+        </Style>
         <Style x:Key="ProjectNameStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelMediumTextBlockStyle}">
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="#000000" />
@@ -53,6 +63,13 @@
         <Style x:Key="ProjectDescStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
             <Setter Property="Foreground" Value="#555555" />
             <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style x:Key="FamilyLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#333333" />
+        </Style>
+        <Style x:Key="FamilyValueStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#555555" />
         </Style>
         <Style x:Key="BtnStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}" />
         <Style x:Key="RespStyle" TargetType="utu:ResponsiveView" />
@@ -65,19 +82,23 @@
         <utu:ResponsiveView.NarrowTemplate>
             <DataTemplate>
                 <ScrollViewer Background="#FFFFFF" Padding="24,32">
-                    <StackPanel Spacing="32">
+                    <StackPanel Spacing="28">
 
                         <!-- HEADER -->
-                        <StackPanel Spacing="16">
-                            <!-- Profilbild -->
-                            <Border Width="100" Height="125" CornerRadius="4" HorizontalAlignment="Left">
+                        <StackPanel Spacing="12">
+                            <Border Width="90" Height="112" CornerRadius="4" HorizontalAlignment="Left">
                                 <Border.Background>
                                     <ImageBrush ImageSource="ms-appx:///Assets/Images/profile.jpg" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
-                            <TextBlock Text="{Binding PersonalData.Name}" Style="{StaticResource NameStyle}" FontSize="40" />
+                            <TextBlock Text="{Binding PersonalData.Name}" Style="{StaticResource NameStyle}" FontSize="32" />
                             <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER" Style="{StaticResource RoleStyle}" />
-                            <StackPanel Spacing="4" Margin="0,8,0,0">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Style="{StaticResource ContactStyle}">
+                                    <Run Text="Geb. 01.08.1998" /><Run Text=" · " /><Run Text="{Binding Age}" /><Run Text=" Jahre" />
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Spacing="4">
                                 <TextBlock Text="{Binding PersonalData.Email}" Style="{StaticResource ContactStyle}" />
                                 <TextBlock Text="{Binding PersonalData.Phone}" Style="{StaticResource ContactStyle}" />
                             </StackPanel>
@@ -97,21 +118,41 @@
 
                         <Rectangle Height="1" Fill="#E0E0E0" />
 
-                        <!-- KARRIERE -->
+                        <!-- WERDEGANG (Chronological) -->
                         <StackPanel Spacing="16">
-                            <TextBlock Text="KARRIERE" Style="{StaticResource LabelStyle}" />
+                            <TextBlock Text="WERDEGANG" Style="{StaticResource SectionTitleStyle}" />
+
+                            <!-- Career -->
                             <ItemsRepeater ItemsSource="{Binding WorkExperience}">
                                 <ItemsRepeater.Layout>
-                                    <StackLayout Spacing="16" />
+                                    <StackLayout Spacing="14" />
                                 </ItemsRepeater.Layout>
                                 <ItemsRepeater.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Spacing="4">
+                                        <StackPanel Spacing="2">
                                             <TextBlock Style="{StaticResource YearStyle}">
                                                 <Run Text="{Binding StartDate.Year}" /><Run Text="—" /><Run Text="{Binding EndDate.Year, TargetNullValue='heute'}" />
                                             </TextBlock>
                                             <TextBlock Text="{Binding Role}" Style="{StaticResource TitleStyle}" />
                                             <TextBlock Text="{Binding Company}" Style="{StaticResource SubtitleStyle}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
+
+                            <!-- Education -->
+                            <ItemsRepeater ItemsSource="{Binding Education}">
+                                <ItemsRepeater.Layout>
+                                    <StackLayout Spacing="14" />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Spacing="2">
+                                            <TextBlock Style="{StaticResource YearStyle}">
+                                                <Run Text="{Binding StartYear}" /><Run Text="—" /><Run Text="{Binding EndYear}" />
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Degree}" Style="{StaticResource TitleStyle}" />
+                                            <TextBlock Text="{Binding Institution}" Style="{StaticResource SubtitleStyle}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsRepeater.ItemTemplate>
@@ -149,12 +190,12 @@
         <utu:ResponsiveView.NormalTemplate>
             <DataTemplate>
                 <ScrollViewer Background="#FFFFFF">
-                    <StackPanel MaxWidth="1000" HorizontalAlignment="Center" Padding="48,48" Spacing="48">
+                    <StackPanel MaxWidth="900" HorizontalAlignment="Center" Padding="48,48" Spacing="40">
 
                         <!-- ════════════════════════════════════════════════════════════════ -->
-                        <!-- HEADER: Editorial Style - Clean & Professional                    -->
+                        <!-- HEADER: Editorial Style with Age                                   -->
                         <!-- ════════════════════════════════════════════════════════════════ -->
-                        <Grid RowSpacing="24">
+                        <Grid RowSpacing="20">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -166,39 +207,45 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- Profilbild links -->
-                            <Border Grid.RowSpan="2" Width="140" Height="175" CornerRadius="2" Margin="0,0,32,0">
+                            <Border Grid.RowSpan="2" Width="130" Height="162" CornerRadius="2" Margin="0,0,28,0">
                                 <Border.Background>
                                     <ImageBrush ImageSource="ms-appx:///Assets/Images/profile.jpg" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
 
-                            <!-- Name + Role - Mitte oben -->
+                            <!-- Name + Role + Age -->
                             <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Bottom">
                                 <TextBlock Text="{Binding PersonalData.Name}"
                                            Style="{StaticResource NameStyle}"
-                                           FontSize="56"
                                            TextWrapping="NoWrap" />
-                                <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER"
-                                           Style="{StaticResource RoleStyle}"
-                                           Margin="2,0,0,0" />
-                            </StackPanel>
-
-                            <!-- Expertise rechts oben -->
-                            <StackPanel Grid.Column="2" Spacing="10" VerticalAlignment="Bottom" Margin="32,0,0,0">
-                                <TextBlock Text="EXPERTISE" Style="{StaticResource LabelStyle}" />
-                                <StackPanel Spacing="3">
-                                    <TextBlock Text="C# / .NET · XAML · MVVM" Style="{StaticResource SkillStyle}" />
-                                    <TextBlock Text="Uno Platform · Xamarin · MAUI" Style="{StaticResource SkillStyle}" />
-                                    <TextBlock Text="Cross-Platform · Mobile · Desktop" Style="{StaticResource SkillStyle}" />
+                                <StackPanel Orientation="Horizontal" Spacing="16">
+                                    <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER"
+                                               Style="{StaticResource RoleStyle}" />
+                                    <Rectangle Width="1" Height="12" Fill="#CCCCCC" VerticalAlignment="Center" />
+                                    <TextBlock Style="{StaticResource RoleStyle}">
+                                        <Run Text="Geb. 01.08.1998" /><Run Text=" · " /><Run Text="{Binding Age}" /><Run Text=" Jahre" />
+                                    </TextBlock>
                                 </StackPanel>
                             </StackPanel>
 
-                            <!-- Kontaktdaten - unter Name, strukturiert mit Trennern -->
+                            <!-- Expertise rechts -->
+                            <StackPanel Grid.Column="2" Spacing="8" VerticalAlignment="Bottom" Margin="24,0,0,0">
+                                <TextBlock Text="EXPERTISE" Style="{StaticResource LabelStyle}" />
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="C# / .NET · XAML · MVVM" Style="{StaticResource SkillStyle}" FontSize="13" />
+                                    <TextBlock Text="Uno Platform · Xamarin · MAUI" Style="{StaticResource SkillStyle}" FontSize="13" />
+                                    <TextBlock Text="Cross-Platform · Mobile · Desktop" Style="{StaticResource SkillStyle}" FontSize="13" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Kontaktdaten + Familie -->
                             <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                     BorderBrush="#E0E0E0" BorderThickness="0,1,0,0"
-                                    Padding="0,16,0,0" Margin="0,8,0,0">
+                                    Padding="0,14,0,0" Margin="0,8,0,0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
@@ -212,8 +259,7 @@
                                         <TextBlock Text="{Binding PersonalData.Email}" Style="{StaticResource ContactStyle}" FontWeight="Medium" />
                                     </StackPanel>
 
-                                    <!-- Trenner -->
-                                    <Rectangle Grid.Column="1" Width="1" Fill="#E0E0E0" Margin="24,0" Height="32" VerticalAlignment="Center" />
+                                    <Rectangle Grid.Column="1" Width="1" Fill="#E0E0E0" Margin="20,0" Height="28" VerticalAlignment="Center" />
 
                                     <!-- Telefon -->
                                     <StackPanel Grid.Column="2" Spacing="2">
@@ -221,8 +267,7 @@
                                         <TextBlock Text="{Binding PersonalData.Phone}" Style="{StaticResource ContactStyle}" FontWeight="Medium" />
                                     </StackPanel>
 
-                                    <!-- Trenner -->
-                                    <Rectangle Grid.Column="3" Width="1" Fill="#E0E0E0" Margin="24,0" Height="32" VerticalAlignment="Center" />
+                                    <Rectangle Grid.Column="3" Width="1" Fill="#E0E0E0" Margin="20,0" Height="28" VerticalAlignment="Center" />
 
                                     <!-- Standort -->
                                     <StackPanel Grid.Column="4" Spacing="2">
@@ -231,97 +276,134 @@
                                             <Run Text="{Binding PersonalData.City}" /><Run Text=", " /><Run Text="{Binding PersonalData.Country}" />
                                         </TextBlock>
                                     </StackPanel>
+
+                                    <Rectangle Grid.Column="5" Width="1" Fill="#E0E0E0" Margin="20,0" Height="28" VerticalAlignment="Center" />
+
+                                    <!-- Familie (kompakt) -->
+                                    <StackPanel Grid.Column="6" Spacing="2">
+                                        <TextBlock Text="FAMILIE" Style="{StaticResource LabelStyle}" FontSize="9" Opacity="0.6" />
+                                        <TextBlock Style="{StaticResource ContactStyle}" FontWeight="Medium" TextWrapping="Wrap" MaxWidth="200">
+                                            <Run Text="Eltern: Elektroinstallateur, Vertriebsassistenz" />
+                                        </TextBlock>
+                                    </StackPanel>
                                 </Grid>
                             </Border>
                         </Grid>
 
                         <!-- DIVIDER -->
-                        <Rectangle Height="1" Fill="#000000" />
+                        <Rectangle Height="2" Fill="#000000" />
 
                         <!-- ════════════════════════════════════════════════════════════════ -->
-                        <!-- KARRIERE + AUSBILDUNG nebeneinander                               -->
+                        <!-- BERUFSERFAHRUNG - Career Section                                  -->
                         <!-- ════════════════════════════════════════════════════════════════ -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="48" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="20">
+                            <TextBlock Text="BERUFSERFAHRUNG" Style="{StaticResource SectionTitleStyle}" />
 
-                            <!-- KARRIERE -->
-                            <StackPanel Spacing="20">
-                                <TextBlock Text="KARRIERE" Style="{StaticResource LabelStyle}" />
-                                <ItemsRepeater ItemsSource="{Binding WorkExperience}">
-                                    <ItemsRepeater.Layout>
-                                        <StackLayout Spacing="24" />
-                                    </ItemsRepeater.Layout>
-                                    <ItemsRepeater.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid ColumnSpacing="16">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="80" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel>
-                                                    <TextBlock Style="{StaticResource YearStyle}">
-                                                        <Run Text="{Binding StartDate.Year}" />
-                                                    </TextBlock>
-                                                    <TextBlock Style="{StaticResource SubtitleStyle}" FontSize="10">
-                                                        <Run Text="{Binding EndDate.Year, TargetNullValue='heute'}" />
-                                                    </TextBlock>
-                                                </StackPanel>
-                                                <StackPanel Grid.Column="1" Spacing="4">
-                                                    <TextBlock Text="{Binding Role}" Style="{StaticResource TitleStyle}" />
-                                                    <TextBlock Text="{Binding Company}" Style="{StaticResource SubtitleStyle}" />
-                                                    <TextBlock Text="{Binding Description}" Style="{StaticResource DescStyle}" Margin="0,4,0,0" />
-                                                </StackPanel>
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsRepeater.ItemTemplate>
-                                </ItemsRepeater>
-                            </StackPanel>
+                            <Grid ColumnSpacing="32" RowSpacing="20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                            <!-- AUSBILDUNG -->
-                            <StackPanel Grid.Column="2" Spacing="20">
-                                <TextBlock Text="AUSBILDUNG" Style="{StaticResource LabelStyle}" />
-                                <ItemsRepeater ItemsSource="{Binding Education}">
-                                    <ItemsRepeater.Layout>
-                                        <StackLayout Spacing="20" />
-                                    </ItemsRepeater.Layout>
-                                    <ItemsRepeater.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Spacing="4">
-                                                <TextBlock Style="{StaticResource YearStyle}">
-                                                    <Run Text="{Binding StartYear}" /><Run Text="—" /><Run Text="{Binding EndYear}" />
+                                <!-- Selbstaendig -->
+                                <Border Background="#F8F8F8" Padding="20,18" CornerRadius="2">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="2019 – heute" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
+                                        <TextBlock Text="Vollzeit Einzelunternehmer" Style="{StaticResource TitleStyle}" />
+                                        <TextBlock Text="Selbstaendig" Style="{StaticResource SubtitleStyle}" />
+                                        <TextBlock Text="Cross-Platform App-Entwicklung mit Xamarin Forms, .NET MAUI und Uno Platform. Kunden: Miele, Asfinag, Ekey, u.a." Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Colop -->
+                                <Border Grid.Column="1" Background="#F8F8F8" Padding="20,18" CornerRadius="2">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="2018 – 2019" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
+                                        <TextBlock Text="Xamarin Forms Entwickler" Style="{StaticResource TitleStyle}" />
+                                        <TextBlock Text="Colop (Skopek GmbH)" Style="{StaticResource SubtitleStyle}" />
+                                        <TextBlock Text="Entwicklung der Colop E-Mark App mit eigenem Editor fuer mehrfarbige Abdrucke." Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- DDL -->
+                                <Border Grid.Column="2" Background="#F8F8F8" Padding="20,18" CornerRadius="2">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="2017 – 2018" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
+                                        <TextBlock Text="C# Entwickler &amp; Wifi Trainer" Style="{StaticResource TitleStyle}" />
+                                        <TextBlock Text="DDL GmbH" Style="{StaticResource SubtitleStyle}" />
+                                        <TextBlock Text="Datenverwaltung, C# Anwendungen, Wifi Trainer fuer C# (20-30 Personen)." Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- ════════════════════════════════════════════════════════════════ -->
+                        <!-- AUSBILDUNG - Education Section                                    -->
+                        <!-- ════════════════════════════════════════════════════════════════ -->
+                        <StackPanel Spacing="20">
+                            <TextBlock Text="AUSBILDUNG" Style="{StaticResource SectionTitleStyle}" />
+
+                            <Grid ColumnSpacing="32">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- HTL -->
+                                <Border Background="#F8F8F8" Padding="20,18" CornerRadius="2">
+                                    <Grid ColumnSpacing="24">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="2012 – 2017" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" VerticalAlignment="Top" Width="70" />
+                                        <StackPanel Grid.Column="1" Spacing="6">
+                                            <TextBlock Text="Reife- und Diplompruefung Informatik" Style="{StaticResource TitleStyle}" />
+                                            <TextBlock Text="HTL Grieskirchen" Style="{StaticResource SubtitleStyle}" />
+                                            <TextBlock Text="Diplomarbeit: Verwaltungssystem fuer Aerzte und Mitarbeiter inkl. IP-TV Anzeige fuer Kurheim Bad Schallerbach" Style="{StaticResource DescStyle}" FontSize="12" Margin="0,6,0,0" />
+                                            <StackPanel Orientation="Horizontal" Spacing="24" Margin="0,8,0,0">
+                                                <TextBlock Style="{StaticResource SubtitleStyle}" FontSize="11">
+                                                    <Run Text="Praktikum 2015:" FontWeight="SemiBold" /><Run Text=" Elektro Steinschaden" />
                                                 </TextBlock>
-                                                <TextBlock Text="{Binding Degree}" Style="{StaticResource TitleStyle}" />
-                                                <TextBlock Text="{Binding Institution}" Style="{StaticResource SubtitleStyle}" />
+                                                <TextBlock Style="{StaticResource SubtitleStyle}" FontSize="11">
+                                                    <Run Text="Praktikum 2014:" FontWeight="SemiBold" /><Run Text=" Fa. Stoeber (Programmierung)" />
+                                                </TextBlock>
                                             </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsRepeater.ItemTemplate>
-                                </ItemsRepeater>
-                            </StackPanel>
-                        </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- VS/HS -->
+                                <Border Grid.Column="1" Background="#F8F8F8" Padding="20,18" CornerRadius="2">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="2004 – 2012" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
+                                        <TextBlock Text="Volksschule &amp; Hauptschule" Style="{StaticResource TitleStyle}" />
+                                        <TextBlock Text="VS, HS Laakirchen" Style="{StaticResource SubtitleStyle}" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
 
                         <!-- DIVIDER -->
-                        <Rectangle Height="1" Fill="#000000" />
+                        <Rectangle Height="2" Fill="#000000" />
 
                         <!-- ════════════════════════════════════════════════════════════════ -->
-                        <!-- PROJEKTE als Grid                                                 -->
+                        <!-- REFERENZPROJEKTE                                                  -->
                         <!-- ════════════════════════════════════════════════════════════════ -->
                         <StackPanel Spacing="20">
                             <Button Command="{Binding NavigateToProjectsCommand}" Style="{StaticResource BtnStyle}">
-                                <TextBlock Text="REFERENZPROJEKTE →" Style="{StaticResource LabelStyle}" Foreground="#000000" />
+                                <TextBlock Text="REFERENZPROJEKTE →" Style="{StaticResource SectionTitleStyle}" />
                             </Button>
 
                             <ItemsRepeater ItemsSource="{Binding Projects}">
                                 <ItemsRepeater.Layout>
-                                    <UniformGridLayout MinItemWidth="200" MinItemHeight="90" MinRowSpacing="16" MinColumnSpacing="16" MaximumRowsOrColumns="4" />
+                                    <UniformGridLayout MinItemWidth="200" MinItemHeight="80" MinRowSpacing="12" MinColumnSpacing="12" MaximumRowsOrColumns="4" />
                                 </ItemsRepeater.Layout>
                                 <ItemsRepeater.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Background="#F8F8F8" Padding="16,14">
-                                            <StackPanel Spacing="6">
+                                        <Border Background="#F5F5F5" Padding="14,12">
+                                            <StackPanel Spacing="4">
                                                 <TextBlock Text="{Binding Name}" Style="{StaticResource ProjectNameStyle}" />
                                                 <TextBlock Text="{Binding Description}" Style="{StaticResource ProjectDescStyle}" MaxLines="2" />
                                             </StackPanel>
@@ -338,7 +420,7 @@
 
     </utu:ResponsiveView>
 
-        <!-- Floating PDF Export Button (rendered on top) -->
+        <!-- Floating PDF Export Button -->
         <controls:ExportHeaderControl ExportTarget="{x:Bind CvContent}"
                                        FileName="Lebenslauf_Daniel_Hufnagl"
                                        Margin="0,16,48,0"

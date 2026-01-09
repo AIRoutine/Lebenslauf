@@ -5,7 +5,9 @@ namespace Lebenslauf.Features.Cv.Contracts.Models;
 /// </summary>
 public record CvData(
     PersonalDataModel PersonalData,
+    IReadOnlyList<FamilyMemberModel> FamilyMembers,
     IReadOnlyList<EducationModel> Education,
+    IReadOnlyList<InternshipModel> Internships,
     IReadOnlyList<WorkExperienceModel> WorkExperience,
     IReadOnlyList<SkillCategoryModel> SkillCategories,
     IReadOnlyList<ProjectModel> Projects
@@ -82,4 +84,27 @@ public record ProjectModel(
     string? PlayStoreUrl,
     string? WebsiteUrl,
     string? ImageUrl
+);
+
+/// <summary>
+/// Family member (profession only, no names).
+/// </summary>
+public record FamilyMemberModel(
+    Guid Id,
+    string Relationship,
+    string Profession,
+    int? BirthYear
+);
+
+/// <summary>
+/// Internship/Praktikum entry.
+/// </summary>
+public record InternshipModel(
+    Guid Id,
+    string Company,
+    string Role,
+    int Year,
+    int? Month,
+    int? EndMonth,
+    string? Description
 );
