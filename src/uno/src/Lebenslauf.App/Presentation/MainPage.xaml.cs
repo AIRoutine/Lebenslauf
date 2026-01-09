@@ -1,7 +1,9 @@
 using Lebenslauf.Features.Cv.Presentation;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Uno.Extensions.Navigation;
 
 namespace Lebenslauf.App.Presentation;
 
@@ -18,6 +20,7 @@ public sealed partial class MainPage : Page, IContentControlProvider
         { typeof(ProjectsPage), "Projektuebersicht" }
     };
 
+    private IRouteNotifier? _routeNotifier;
     private DispatcherQueueTimer? _pollTimer;
     private Type? _lastPageType;
 
@@ -30,10 +33,20 @@ public sealed partial class MainPage : Page, IContentControlProvider
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        // Poll for page changes since Uno Navigation Extensions
-        // uses ContentControl without Frame.Navigated events
+        // Subscribe to IRouteNotifier for NavigationView-initiated navigation
+        if (Application.Current is App app && app.Host != null)
+        {
+            _routeNotifier = app.Host.Services.GetService<IRouteNotifier>();
+            if (_routeNotifier != null)
+            {
+                _routeNotifier.RouteChanged += OnRouteChanged;
+            }
+        }
+
+        // Also use polling as fallback for programmatic navigation
+        // that doesn't trigger RouteChanged (e.g., Navigator.NavigateViewModelAsync)
         _pollTimer = DispatcherQueue.CreateTimer();
-        _pollTimer.Interval = TimeSpan.FromMilliseconds(100);
+        _pollTimer.Interval = TimeSpan.FromMilliseconds(150);
         _pollTimer.Tick += OnPollTimerTick;
         _pollTimer.Start();
 
@@ -41,23 +54,33 @@ public sealed partial class MainPage : Page, IContentControlProvider
         UpdateSelectionFromVisualTree();
     }
 
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (_routeNotifier != null)
+        {
+            _routeNotifier.RouteChanged -= OnRouteChanged;
+            _routeNotifier = null;
+        }
+
+        _pollTimer?.Stop();
+        _pollTimer = null;
+    }
+
+    private void OnRouteChanged(object? sender, RouteChangedEventArgs e)
+    {
+        DispatcherQueue.TryEnqueue(UpdateSelectionFromVisualTree);
+    }
+
     private void OnPollTimerTick(DispatcherQueueTimer sender, object args)
     {
         var page = FindCurrentPage(NavigationContent);
         var currentType = page?.GetType();
 
-        // Only update if the page type changed
         if (currentType != null && currentType != _lastPageType)
         {
             _lastPageType = currentType;
             UpdateNavigationSelection(currentType);
         }
-    }
-
-    private void OnUnloaded(object sender, RoutedEventArgs e)
-    {
-        _pollTimer?.Stop();
-        _pollTimer = null;
     }
 
     private void UpdateSelectionFromVisualTree()
