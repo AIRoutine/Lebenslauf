@@ -3,19 +3,65 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:local="using:Lebenslauf.Features.Cv.Presentation"
-      Background="{ThemeResource BackgroundBrush}">
+      Background="#FFFFFF">
 
-    <Grid>
+    <Page.Resources>
+        <!-- Black & White Project Styles -->
+        <Style x:Key="ProjectHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadlineMediumTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="CharacterSpacing" Value="50" />
+        </Style>
+
+        <Style x:Key="ProjectFrameworkStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelMediumTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="#AAAAAA" />
+            <Setter Property="CharacterSpacing" Value="100" />
+        </Style>
+
+        <Style x:Key="ProjectSectionTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="CharacterSpacing" Value="150" />
+        </Style>
+
+        <Style x:Key="ProjectItemTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style x:Key="ProjectTechTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style x:Key="ProjectBulletStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+
+        <Style x:Key="ProjectPageTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleLargeTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="CharacterSpacing" Value="100" />
+        </Style>
+
+        <Style x:Key="ProjectBackButtonStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
+            <Setter Property="Padding" Value="8" />
+        </Style>
+
+        <Style x:Key="ProjectResponsiveViewStyle" TargetType="utu:ResponsiveView" />
+    </Page.Resources>
+
+    <Grid Background="#FFFFFF">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Header with Back Button -->
-        <Border Background="{ThemeResource CardBrush}"
-                BorderBrush="{ThemeResource BorderBrush}"
-                BorderThickness="0,0,0,1"
-                Padding="16,12">
+        <!-- Header -->
+        <Border Background="#000000"
+                Padding="{utu:Responsive Narrow='16,12', Normal='24,16'}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -23,135 +69,317 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Command="{Binding GoBackCommand}"
-                        Style="{StaticResource IconButtonStyle}">
-                    <FontIcon Glyph="&#xE72B;" FontSize="20" />
+                        Style="{StaticResource ProjectBackButtonStyle}">
+                    <FontIcon Glyph="&#xE72B;"
+                              FontSize="{utu:Responsive Narrow=18, Normal=22}"
+                              Foreground="#FFFFFF" />
                 </Button>
 
                 <TextBlock Grid.Column="1"
                            Text="{Binding Title}"
-                           Style="{StaticResource TitleLargeTextBlockStyle}"
+                           Style="{StaticResource ProjectPageTitleStyle}"
                            VerticalAlignment="Center"
                            Margin="12,0,0,0" />
             </Grid>
         </Border>
 
-        <!-- Content -->
-        <ScrollViewer Grid.Row="1" Padding="24,16">
-            <ItemsRepeater ItemsSource="{Binding Projects}">
-                <ItemsRepeater.Layout>
-                    <StackLayout Spacing="24" />
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="local:ProjectDetailModel">
-                        <Border Background="{ThemeResource CardBrush}"
-                                CornerRadius="12"
-                                Padding="20"
-                                MaxWidth="900"
-                                HorizontalAlignment="Center"
-                                Translation="0,0,8">
-                            <Border.Shadow>
-                                <ThemeShadow />
-                            </Border.Shadow>
+        <!-- Content with ResponsiveView -->
+        <ScrollViewer Grid.Row="1"
+                      Background="#FFFFFF"
+                      Padding="{utu:Responsive Narrow='16,16', Normal='24,24', Wide='48,32'}">
 
-                            <StackPanel Spacing="16">
-                                <!-- Project Header -->
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+            <utu:ResponsiveView Style="{StaticResource ProjectResponsiveViewStyle}">
+                <utu:ResponsiveView.ResponsiveLayout>
+                    <utu:ResponsiveLayout Narrow="0" Normal="640" Wide="900" />
+                </utu:ResponsiveView.ResponsiveLayout>
 
-                                    <StackPanel Spacing="4">
-                                        <TextBlock Text="{Binding Name}"
-                                                   Style="{StaticResource HeadlineSmallTextBlockStyle}"
-                                                   Foreground="{ThemeResource AccentBrush}" />
-                                        <TextBlock Text="{Binding Framework}"
-                                                   Style="{StaticResource BodyMediumTextBlockStyle}"
-                                                   Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-                                    </StackPanel>
+                <!-- Mobile Layout (Narrow) -->
+                <utu:ResponsiveView.NarrowTemplate>
+                    <DataTemplate>
+                        <ItemsRepeater ItemsSource="{Binding Projects}">
+                            <ItemsRepeater.Layout>
+                                <StackLayout Spacing="0" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="local:ProjectDetailModel">
+                                    <Border Background="#FFFFFF"
+                                            BorderBrush="#000000"
+                                            BorderThickness="2"
+                                            Margin="0,0,0,24">
 
-                                    <!-- Store Links -->
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                CommandParameter="{Binding AppStoreUrl}">
-                                            <FontIcon Glyph="&#xE8A1;" FontSize="18" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-                                        </Button>
-                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                CommandParameter="{Binding PlayStoreUrl}">
-                                            <FontIcon Glyph="&#xE7FC;" FontSize="18" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-                                        </Button>
-                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                Visibility="{Binding WebsiteUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                CommandParameter="{Binding WebsiteUrl}">
-                                            <FontIcon Glyph="&#xE774;" FontSize="18" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
-                                        </Button>
-                                    </StackPanel>
-                                </Grid>
+                                        <StackPanel>
+                                            <!-- Project Header -->
+                                            <Border Background="#000000"
+                                                    Padding="16,12">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
-                                <!-- Two Column Layout -->
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- Functions -->
-                                    <StackPanel Spacing="8" Margin="0,0,12,0">
-                                        <TextBlock Text="Funktionen"
-                                                   Style="{StaticResource TitleSmallTextBlockStyle}"
-                                                   Foreground="{ThemeResource AccentBrush}" />
-
-                                        <ItemsRepeater ItemsSource="{Binding Functions}">
-                                            <ItemsRepeater.Layout>
-                                                <StackLayout Spacing="4" />
-                                            </ItemsRepeater.Layout>
-                                            <ItemsRepeater.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <Ellipse Width="5" Height="5"
-                                                                 Fill="{ThemeResource AccentBrush}"
-                                                                 VerticalAlignment="Center" />
-                                                        <TextBlock Text="{Binding}"
-                                                                   Style="{StaticResource BodySmallTextBlockStyle}"
-                                                                   TextWrapping="Wrap" />
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Name}"
+                                                                   Style="{StaticResource ProjectHeaderStyle}"
+                                                                   FontSize="20" />
+                                                        <TextBlock Text="{Binding Framework}"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="11"
+                                                                   Margin="0,4,0,0" />
                                                     </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsRepeater.ItemTemplate>
-                                        </ItemsRepeater>
-                                    </StackPanel>
 
-                                    <!-- Technical Aspects -->
-                                    <StackPanel Grid.Column="1" Spacing="8" Margin="12,0,0,0">
-                                        <TextBlock Text="Technische Aspekte"
-                                                   Style="{StaticResource TitleSmallTextBlockStyle}"
-                                                   Foreground="#10B981" />
-
-                                        <ItemsRepeater ItemsSource="{Binding TechnicalAspects}">
-                                            <ItemsRepeater.Layout>
-                                                <StackLayout Spacing="4" />
-                                            </ItemsRepeater.Layout>
-                                            <ItemsRepeater.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                                        <FontIcon Glyph="&#xE73E;" FontSize="10"
-                                                                  Foreground="#10B981"
-                                                                  VerticalAlignment="Center" />
-                                                        <TextBlock Text="{Binding}"
-                                                                   Style="{StaticResource BodySmallTextBlockStyle}"
-                                                                   TextWrapping="Wrap" />
+                                                    <!-- Store Links -->
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                                                        <Button Style="{StaticResource IconButtonStyle}"
+                                                                Background="Transparent"
+                                                                Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                                CommandParameter="{Binding AppStoreUrl}">
+                                                            <FontIcon Glyph="&#xE8A1;" FontSize="16" Foreground="#FFFFFF" />
+                                                        </Button>
+                                                        <Button Style="{StaticResource IconButtonStyle}"
+                                                                Background="Transparent"
+                                                                Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                                CommandParameter="{Binding PlayStoreUrl}">
+                                                            <FontIcon Glyph="&#xE7FC;" FontSize="16" Foreground="#FFFFFF" />
+                                                        </Button>
+                                                        <Button Style="{StaticResource IconButtonStyle}"
+                                                                Background="Transparent"
+                                                                Visibility="{Binding WebsiteUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                                CommandParameter="{Binding WebsiteUrl}">
+                                                            <FontIcon Glyph="&#xE774;" FontSize="16" Foreground="#FFFFFF" />
+                                                        </Button>
                                                     </StackPanel>
-                                                </DataTemplate>
-                                            </ItemsRepeater.ItemTemplate>
-                                        </ItemsRepeater>
-                                    </StackPanel>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
+                                                </Grid>
+                                            </Border>
+
+                                            <!-- Content - Stacked for Mobile -->
+                                            <StackPanel Padding="16" Spacing="20">
+
+                                                <!-- Functions Section -->
+                                                <StackPanel Spacing="10">
+                                                    <Border BorderBrush="#000000"
+                                                            BorderThickness="0,0,0,2"
+                                                            Padding="0,0,0,6">
+                                                        <TextBlock Text="FUNKTIONEN"
+                                                                   Style="{StaticResource ProjectSectionTitleStyle}" />
+                                                    </Border>
+
+                                                    <ItemsRepeater ItemsSource="{Binding Functions}">
+                                                        <ItemsRepeater.Layout>
+                                                            <StackLayout Spacing="6" />
+                                                        </ItemsRepeater.Layout>
+                                                        <ItemsRepeater.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnSpacing="10">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Border Width="6" Height="6"
+                                                                            Background="#000000"
+                                                                            VerticalAlignment="Top"
+                                                                            Margin="0,6,0,0" />
+                                                                    <TextBlock Grid.Column="1"
+                                                                               Text="{Binding}"
+                                                                               Style="{StaticResource ProjectItemTextStyle}" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsRepeater.ItemTemplate>
+                                                    </ItemsRepeater>
+                                                </StackPanel>
+
+                                                <!-- Divider -->
+                                                <Border Height="1" Background="#E5E5E5" />
+
+                                                <!-- Technical Aspects Section -->
+                                                <StackPanel Spacing="10">
+                                                    <Border BorderBrush="#000000"
+                                                            BorderThickness="0,0,0,2"
+                                                            Padding="0,0,0,6">
+                                                        <TextBlock Text="TECHNISCHE ASPEKTE"
+                                                                   Style="{StaticResource ProjectSectionTitleStyle}" />
+                                                    </Border>
+
+                                                    <ItemsRepeater ItemsSource="{Binding TechnicalAspects}">
+                                                        <ItemsRepeater.Layout>
+                                                            <StackLayout Spacing="6" />
+                                                        </ItemsRepeater.Layout>
+                                                        <ItemsRepeater.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnSpacing="10">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBlock Text="+"
+                                                                               Style="{StaticResource ProjectBulletStyle}"
+                                                                               VerticalAlignment="Top" />
+                                                                    <TextBlock Grid.Column="1"
+                                                                               Text="{Binding}"
+                                                                               Style="{StaticResource ProjectTechTextStyle}" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsRepeater.ItemTemplate>
+                                                    </ItemsRepeater>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
                     </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-            </ItemsRepeater>
+                </utu:ResponsiveView.NarrowTemplate>
+
+                <!-- Desktop Layout (Normal/Wide) -->
+                <utu:ResponsiveView.NormalTemplate>
+                    <DataTemplate>
+                        <ItemsRepeater ItemsSource="{Binding Projects}">
+                            <ItemsRepeater.Layout>
+                                <StackLayout Spacing="0" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="local:ProjectDetailModel">
+                                    <Border Background="#FFFFFF"
+                                            BorderBrush="#000000"
+                                            BorderThickness="2"
+                                            MaxWidth="900"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,0,0,32">
+
+                                        <StackPanel>
+                                            <!-- Project Header -->
+                                            <Border Background="#000000"
+                                                    Padding="24,16">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Name}"
+                                                                   Style="{StaticResource ProjectHeaderStyle}"
+                                                                   FontSize="28" />
+                                                        <TextBlock Text="{Binding Framework}"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="12"
+                                                                   Margin="0,6,0,0" />
+                                                    </StackPanel>
+
+                                                    <!-- Store Links -->
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                                                        <Button Style="{StaticResource IconButtonStyle}"
+                                                                Background="Transparent"
+                                                                Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                                CommandParameter="{Binding AppStoreUrl}">
+                                                            <FontIcon Glyph="&#xE8A1;" FontSize="20" Foreground="#FFFFFF" />
+                                                        </Button>
+                                                        <Button Style="{StaticResource IconButtonStyle}"
+                                                                Background="Transparent"
+                                                                Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                                CommandParameter="{Binding PlayStoreUrl}">
+                                                            <FontIcon Glyph="&#xE7FC;" FontSize="20" Foreground="#FFFFFF" />
+                                                        </Button>
+                                                        <Button Style="{StaticResource IconButtonStyle}"
+                                                                Background="Transparent"
+                                                                Visibility="{Binding WebsiteUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                                CommandParameter="{Binding WebsiteUrl}">
+                                                            <FontIcon Glyph="&#xE774;" FontSize="20" Foreground="#FFFFFF" />
+                                                        </Button>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+
+                                            <!-- Two Column Layout for Desktop -->
+                                            <Grid Padding="24">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="24" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Functions Column -->
+                                                <StackPanel Spacing="12">
+                                                    <Border BorderBrush="#000000"
+                                                            BorderThickness="0,0,0,2"
+                                                            Padding="0,0,0,8">
+                                                        <TextBlock Text="FUNKTIONEN"
+                                                                   Style="{StaticResource ProjectSectionTitleStyle}" />
+                                                    </Border>
+
+                                                    <ItemsRepeater ItemsSource="{Binding Functions}">
+                                                        <ItemsRepeater.Layout>
+                                                            <StackLayout Spacing="8" />
+                                                        </ItemsRepeater.Layout>
+                                                        <ItemsRepeater.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnSpacing="12">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Border Width="6" Height="6"
+                                                                            Background="#000000"
+                                                                            VerticalAlignment="Top"
+                                                                            Margin="0,7,0,0" />
+                                                                    <TextBlock Grid.Column="1"
+                                                                               Text="{Binding}"
+                                                                               Style="{StaticResource ProjectItemTextStyle}"
+                                                                               FontSize="14" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsRepeater.ItemTemplate>
+                                                    </ItemsRepeater>
+                                                </StackPanel>
+
+                                                <!-- Vertical Divider -->
+                                                <Border Grid.Column="1"
+                                                        Width="1"
+                                                        Background="#E5E5E5"
+                                                        HorizontalAlignment="Center" />
+
+                                                <!-- Technical Aspects Column -->
+                                                <StackPanel Grid.Column="2" Spacing="12">
+                                                    <Border BorderBrush="#000000"
+                                                            BorderThickness="0,0,0,2"
+                                                            Padding="0,0,0,8">
+                                                        <TextBlock Text="TECHNISCHE ASPEKTE"
+                                                                   Style="{StaticResource ProjectSectionTitleStyle}" />
+                                                    </Border>
+
+                                                    <ItemsRepeater ItemsSource="{Binding TechnicalAspects}">
+                                                        <ItemsRepeater.Layout>
+                                                            <StackLayout Spacing="8" />
+                                                        </ItemsRepeater.Layout>
+                                                        <ItemsRepeater.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Grid ColumnSpacing="12">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                        <ColumnDefinition Width="*" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBlock Text="+"
+                                                                               Style="{StaticResource ProjectBulletStyle}"
+                                                                               FontSize="14"
+                                                                               VerticalAlignment="Top" />
+                                                                    <TextBlock Grid.Column="1"
+                                                                               Text="{Binding}"
+                                                                               Style="{StaticResource ProjectTechTextStyle}"
+                                                                               FontSize="14" />
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsRepeater.ItemTemplate>
+                                                    </ItemsRepeater>
+                                                </StackPanel>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </DataTemplate>
+                </utu:ResponsiveView.NormalTemplate>
+            </utu:ResponsiveView>
         </ScrollViewer>
     </Grid>
 </Page>
