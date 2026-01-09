@@ -8,6 +8,7 @@
     <UnoFeatures>
       Toolkit;
       Mvvm;
+      SkiaRenderer;
     </UnoFeatures>
   </PropertyGroup>
 

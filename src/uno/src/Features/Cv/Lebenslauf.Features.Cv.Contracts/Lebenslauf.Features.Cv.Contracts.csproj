@@ -5,5 +5,9 @@
     <UnoSingleProject>true</UnoSingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <UnoFeatures>
+      SkiaRenderer;
+    </UnoFeatures>
   </PropertyGroup>
 </Project>

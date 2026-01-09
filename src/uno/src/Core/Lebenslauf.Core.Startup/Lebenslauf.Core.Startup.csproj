@@ -9,12 +9,12 @@
     <UnoFeatures>
       Hosting;
       Toolkit;
-      Logging;
       Mvvm;
       Configuration;
       Localization;
       Navigation;
       ThemeService;
+      SkiaRenderer;
     </UnoFeatures>
   </PropertyGroup>
 
