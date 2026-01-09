@@ -195,143 +195,153 @@
             </utu:ResponsiveView.NarrowTemplate>
 
             <utu:ResponsiveView.NormalTemplate>
-                <!-- Desktop: Two Columns -->
+                <!-- Desktop: Single Column Editorial Layout -->
                 <DataTemplate>
-                    <ScrollViewer Padding="32,24">
-                        <Grid MaxWidth="900" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="32" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                    <ScrollViewer Padding="48,32">
+                        <StackPanel MaxWidth="700" HorizontalAlignment="Center" Spacing="32">
 
-                            <!-- Left Column -->
-                            <StackPanel Spacing="28">
-                                <!-- Expertise -->
-                                <StackPanel Spacing="12">
-                                    <TextBlock Text="EXPERTISE" Style="{StaticResource SkillsSectionStyle}" />
-                                    <ItemsRepeater ItemsSource="{Binding ExpertiseSkills}">
-                                        <ItemsRepeater.Layout>
-                                            <FlowLayout MinRowSpacing="8" MinColumnSpacing="8" />
-                                        </ItemsRepeater.Layout>
-                                        <ItemsRepeater.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="#000000" CornerRadius="4" Padding="14,8">
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipInvertStyle}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsRepeater.ItemTemplate>
-                                    </ItemsRepeater>
-                                </StackPanel>
-
-                                <!-- Basic Knowledge -->
-                                <StackPanel Spacing="12">
-                                    <TextBlock Text="GRUNDLAGEN" Style="{StaticResource SkillsSectionStyle}" />
-                                    <ItemsRepeater ItemsSource="{Binding BasicSkills}">
-                                        <ItemsRepeater.Layout>
-                                            <FlowLayout MinRowSpacing="8" MinColumnSpacing="8" />
-                                        </ItemsRepeater.Layout>
-                                        <ItemsRepeater.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="#F5F5F5" CornerRadius="4" Padding="14,8">
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsRepeater.ItemTemplate>
-                                    </ItemsRepeater>
-                                </StackPanel>
-
-                                <!-- App Base -->
-                                <StackPanel Spacing="12">
-                                    <TextBlock Text="APP-BASIS" Style="{StaticResource SkillsSectionStyle}" />
-                                    <ItemsRepeater ItemsSource="{Binding AppBaseTechnologies}">
-                                        <ItemsRepeater.Layout>
-                                            <StackLayout Spacing="6" />
-                                        </ItemsRepeater.Layout>
-                                        <ItemsRepeater.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                                    <Ellipse Width="6" Height="6" Fill="#000000" VerticalAlignment="Center" />
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource SkillsItemStyle}" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ItemsRepeater.ItemTemplate>
-                                    </ItemsRepeater>
-                                </StackPanel>
+                            <!-- EXPERTISE - Primary skills, bold presentation -->
+                            <StackPanel Spacing="14">
+                                <TextBlock Text="EXPERTISE" Style="{StaticResource SkillsSectionStyle}" />
+                                <ItemsRepeater ItemsSource="{Binding ExpertiseSkills}">
+                                    <ItemsRepeater.Layout>
+                                        <FlowLayout MinRowSpacing="10" MinColumnSpacing="10" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#000000" CornerRadius="4" Padding="16,10">
+                                                <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipInvertStyle}" FontSize="14" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
                             </StackPanel>
 
-                            <!-- Right Column -->
-                            <StackPanel Grid.Column="2" Spacing="28">
-                                <!-- DevOps -->
-                                <StackPanel Spacing="12">
-                                    <TextBlock Text="DEVOPS" Style="{StaticResource SkillsSectionStyle}" />
-                                    <ItemsRepeater ItemsSource="{Binding DevTools}">
-                                        <ItemsRepeater.Layout>
-                                            <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
-                                        </ItemsRepeater.Layout>
-                                        <ItemsRepeater.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="#F5F5F5" CornerRadius="4" Padding="12,6">
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsRepeater.ItemTemplate>
-                                    </ItemsRepeater>
-                                </StackPanel>
+                            <!-- Thin divider -->
+                            <Rectangle Height="1" Fill="#E0E0E0" />
 
-                                <!-- AI Tools -->
-                                <StackPanel Spacing="12">
-                                    <TextBlock Text="AI TOOLS" Style="{StaticResource SkillsSectionStyle}" />
-                                    <ItemsRepeater ItemsSource="{Binding AiTools}">
-                                        <ItemsRepeater.Layout>
-                                            <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
-                                        </ItemsRepeater.Layout>
-                                        <ItemsRepeater.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="#E5E5E5" CornerRadius="4" Padding="12,6">
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsRepeater.ItemTemplate>
-                                    </ItemsRepeater>
-                                </StackPanel>
-
-                                <!-- Frameworks -->
-                                <StackPanel Spacing="12">
-                                    <TextBlock Text="FRAMEWORKS" Style="{StaticResource SkillsSectionStyle}" />
-                                    <ItemsRepeater ItemsSource="{Binding Frameworks}">
-                                        <ItemsRepeater.Layout>
-                                            <FlowLayout MinRowSpacing="6" MinColumnSpacing="6" />
-                                        </ItemsRepeater.Layout>
-                                        <ItemsRepeater.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border BorderBrush="#000000" BorderThickness="1" CornerRadius="4" Padding="12,6">
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsRepeater.ItemTemplate>
-                                    </ItemsRepeater>
-                                </StackPanel>
-
-                                <!-- App Dev Experience -->
-                                <StackPanel Spacing="12">
-                                    <TextBlock Text="ERFAHRUNG" Style="{StaticResource SkillsSectionStyle}" />
-                                    <ItemsRepeater ItemsSource="{Binding AppDevExperience}">
-                                        <ItemsRepeater.Layout>
-                                            <StackLayout Spacing="6" />
-                                        </ItemsRepeater.Layout>
-                                        <ItemsRepeater.ItemTemplate>
-                                            <DataTemplate>
-                                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                                    <FontIcon Glyph="&#xE73E;" FontSize="12" Foreground="#000000" VerticalAlignment="Center" />
-                                                    <TextBlock Text="{Binding}" Style="{StaticResource SkillsItemStyle}" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ItemsRepeater.ItemTemplate>
-                                    </ItemsRepeater>
-                                </StackPanel>
+                            <!-- GRUNDLAGEN -->
+                            <StackPanel Spacing="14">
+                                <TextBlock Text="GRUNDLAGEN" Style="{StaticResource SkillsSectionStyle}" />
+                                <ItemsRepeater ItemsSource="{Binding BasicSkills}">
+                                    <ItemsRepeater.Layout>
+                                        <FlowLayout MinRowSpacing="10" MinColumnSpacing="10" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F5F5F5" CornerRadius="4" Padding="14,8">
+                                                <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
                             </StackPanel>
-                        </Grid>
+
+                            <!-- Thin divider -->
+                            <Rectangle Height="1" Fill="#E0E0E0" />
+
+                            <!-- FRAMEWORKS - outlined style for distinction -->
+                            <StackPanel Spacing="14">
+                                <TextBlock Text="FRAMEWORKS" Style="{StaticResource SkillsSectionStyle}" />
+                                <ItemsRepeater ItemsSource="{Binding Frameworks}">
+                                    <ItemsRepeater.Layout>
+                                        <FlowLayout MinRowSpacing="10" MinColumnSpacing="10" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#000000" BorderThickness="1" CornerRadius="4" Padding="14,8">
+                                                <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
+                            </StackPanel>
+
+                            <!-- Thin divider -->
+                            <Rectangle Height="1" Fill="#E0E0E0" />
+
+                            <!-- DEVOPS & AI TOOLS - grouped in a subtle card -->
+                            <Border Background="#FAFAFA" Padding="24,20" CornerRadius="4">
+                                <StackPanel Spacing="24">
+                                    <!-- DevOps -->
+                                    <StackPanel Spacing="12">
+                                        <TextBlock Text="DEVOPS &amp; TOOLS" Style="{StaticResource SkillsSectionStyle}" />
+                                        <ItemsRepeater ItemsSource="{Binding DevTools}">
+                                            <ItemsRepeater.Layout>
+                                                <FlowLayout MinRowSpacing="8" MinColumnSpacing="8" />
+                                            </ItemsRepeater.Layout>
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Padding="12,6">
+                                                        <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                    </StackPanel>
+
+                                    <!-- AI Tools -->
+                                    <StackPanel Spacing="12">
+                                        <TextBlock Text="AI TOOLS" Style="{StaticResource SkillsSectionStyle}" />
+                                        <ItemsRepeater ItemsSource="{Binding AiTools}">
+                                            <ItemsRepeater.Layout>
+                                                <FlowLayout MinRowSpacing="8" MinColumnSpacing="8" />
+                                            </ItemsRepeater.Layout>
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4" Padding="12,6">
+                                                        <TextBlock Text="{Binding}" Style="{StaticResource SkillsChipStyle}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Thin divider -->
+                            <Rectangle Height="1" Fill="#E0E0E0" />
+
+                            <!-- APP-BASIS - list style -->
+                            <StackPanel Spacing="14">
+                                <TextBlock Text="APP-BASIS" Style="{StaticResource SkillsSectionStyle}" />
+                                <ItemsRepeater ItemsSource="{Binding AppBaseTechnologies}">
+                                    <ItemsRepeater.Layout>
+                                        <StackLayout Spacing="8" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <Ellipse Width="6" Height="6" Fill="#000000" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding}" Style="{StaticResource SkillsItemStyle}" FontSize="14" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
+                            </StackPanel>
+
+                            <!-- Thin divider -->
+                            <Rectangle Height="1" Fill="#E0E0E0" />
+
+                            <!-- ERFAHRUNG - checkmark list -->
+                            <StackPanel Spacing="14">
+                                <TextBlock Text="ERFAHRUNG" Style="{StaticResource SkillsSectionStyle}" />
+                                <ItemsRepeater ItemsSource="{Binding AppDevExperience}">
+                                    <ItemsRepeater.Layout>
+                                        <StackLayout Spacing="10" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                                <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="#000000" VerticalAlignment="Center" />
+                                                <TextBlock Text="{Binding}" Style="{StaticResource SkillsItemStyle}" FontSize="14" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
+                            </StackPanel>
+
+                        </StackPanel>
                     </ScrollViewer>
                 </DataTemplate>
             </utu:ResponsiveView.NormalTemplate>
