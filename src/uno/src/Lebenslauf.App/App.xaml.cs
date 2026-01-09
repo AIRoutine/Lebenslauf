@@ -48,8 +48,10 @@ public partial class App : Application
             );
         MainWindow = builder.Window;
 
-        // Set MainWindow reference for ExportHeaderControl
+#if !__WASM__
+        // Set MainWindow reference for ExportHeaderControl (PDF export not available on WASM)
         ExportHeaderControl.MainWindow = MainWindow;
+#endif
 
 #if DEBUG
         MainWindow.UseStudio();

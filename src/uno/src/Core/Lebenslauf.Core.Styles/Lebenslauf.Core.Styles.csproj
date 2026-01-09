@@ -8,7 +8,6 @@
 
     <UnoFeatures>
       Toolkit;
-      SkiaRenderer;
     </UnoFeatures>
   </PropertyGroup>
 
