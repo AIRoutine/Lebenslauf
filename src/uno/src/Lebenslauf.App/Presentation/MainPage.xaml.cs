@@ -2,7 +2,6 @@ using Lebenslauf.Features.Cv.Presentation;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace Lebenslauf.App.Presentation;
 
@@ -19,9 +18,8 @@ public sealed partial class MainPage : Page, IContentControlProvider
         { typeof(ProjectsPage), "Projektuebersicht" }
     };
 
-    private Frame? _navigationFrame;
-    private DispatcherQueueTimer? _initTimer;
-    private int _initAttempts;
+    private DispatcherQueueTimer? _pollTimer;
+    private Type? _lastPageType;
 
     public MainPage()
     {
@@ -32,65 +30,48 @@ public sealed partial class MainPage : Page, IContentControlProvider
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        // Use a short timer to find and subscribe to the inner Frame
-        // This ensures the visual tree is fully built
-        _initAttempts = 0;
-        _initTimer = DispatcherQueue.CreateTimer();
-        _initTimer.Interval = TimeSpan.FromMilliseconds(50);
-        _initTimer.Tick += OnInitTimerTick;
-        _initTimer.Start();
+        // Poll for page changes since Uno Navigation Extensions
+        // uses ContentControl without Frame.Navigated events
+        _pollTimer = DispatcherQueue.CreateTimer();
+        _pollTimer.Interval = TimeSpan.FromMilliseconds(100);
+        _pollTimer.Tick += OnPollTimerTick;
+        _pollTimer.Start();
+
+        // Initial update
+        UpdateSelectionFromVisualTree();
     }
 
-    private void OnInitTimerTick(DispatcherQueueTimer sender, object args)
+    private void OnPollTimerTick(DispatcherQueueTimer sender, object args)
     {
-        _initAttempts++;
+        var page = FindCurrentPage(NavigationContent);
+        var currentType = page?.GetType();
 
-        // Try to find and subscribe to Frame
-        if (_navigationFrame == null)
+        // Only update if the page type changed
+        if (currentType != null && currentType != _lastPageType)
         {
-            _navigationFrame = FindNavigationFrame(NavigationContent);
-            if (_navigationFrame != null)
-            {
-                _navigationFrame.Navigated += OnFrameNavigated;
-            }
-        }
-
-        // Update selection from current page
-        UpdateSelectionFromVisualTree();
-
-        // Stop after successful subscription or max attempts (500ms)
-        if (_navigationFrame != null || _initAttempts >= 10)
-        {
-            _initTimer?.Stop();
-            _initTimer = null;
+            _lastPageType = currentType;
+            UpdateNavigationSelection(currentType);
         }
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        _initTimer?.Stop();
-        _initTimer = null;
-
-        if (_navigationFrame != null)
-        {
-            _navigationFrame.Navigated -= OnFrameNavigated;
-            _navigationFrame = null;
-        }
-    }
-
-    private void OnFrameNavigated(object sender, NavigationEventArgs e)
-    {
-        // Use dispatcher to ensure UI updates properly
-        DispatcherQueue.TryEnqueue(() => UpdateSelectionFromVisualTree());
+        _pollTimer?.Stop();
+        _pollTimer = null;
     }
 
     private void UpdateSelectionFromVisualTree()
     {
         var page = FindCurrentPage(NavigationContent);
-        if (page == null)
-            return;
+        if (page != null)
+        {
+            _lastPageType = page.GetType();
+            UpdateNavigationSelection(_lastPageType);
+        }
+    }
 
-        var pageType = page.GetType();
+    private void UpdateNavigationSelection(Type pageType)
+    {
         if (PageToNavItemMap.TryGetValue(pageType, out var navItemContent))
         {
             foreach (var item in NavView.MenuItems.OfType<NavigationViewItem>())
@@ -120,27 +101,6 @@ public sealed partial class MainPage : Page, IContentControlProvider
             }
 
             var result = FindCurrentPage(child);
-            if (result != null)
-            {
-                return result;
-            }
-        }
-        return null;
-    }
-
-    private Frame? FindNavigationFrame(DependencyObject parent)
-    {
-        var count = VisualTreeHelper.GetChildrenCount(parent);
-        for (var i = 0; i < count; i++)
-        {
-            var child = VisualTreeHelper.GetChild(parent, i);
-
-            if (child is Frame frame && frame.Name == "NavigationFrame")
-            {
-                return frame;
-            }
-
-            var result = FindNavigationFrame(child);
             if (result != null)
             {
                 return result;
