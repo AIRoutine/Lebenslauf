@@ -86,6 +86,9 @@
             <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource ControlStrokeColorDefault}" />
             <SolidColorBrush x:Key="DividerBrush" Color="{StaticResource DividerStrokeColorDefault}" />
 
+            <!-- NavigationView Selection Indicator - Schwarz statt Akzentfarbe -->
+            <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{StaticResource TextFillColorPrimary}" />
+
         </ResourceDictionary>
 
         <!-- ================================================================
@@ -150,6 +153,9 @@
             <SolidColorBrush x:Key="OnSurfaceVariantBrush" Color="{StaticResource TextFillColorSecondary}" />
             <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource ControlStrokeColorDefault}" />
             <SolidColorBrush x:Key="DividerBrush" Color="{StaticResource DividerStrokeColorDefault}" />
+
+            <!-- NavigationView Selection Indicator - Weiss statt Akzentfarbe -->
+            <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{StaticResource TextFillColorPrimary}" />
 
         </ResourceDictionary>
 
