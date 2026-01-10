@@ -351,22 +351,26 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 technologies: ["Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Syncfusion", "SQLite", "Shiny.BLE"],
                 functions: [
                     "Rechnungen erstellen und ausdrucken",
-                    "Tischplan mit Drag und Drop",
+                    "Tischplan mit Drag und Drop selber gestalten",
                     "Reservierungen erstellen",
                     "Tages-, Monats- und Jahresberichte",
                     "Mitarbeiterverwaltung",
+                    "Rechnungen verwalten",
                     "Statistiken und Analysen",
-                    "Synchronisation zwischen Geraeten"
+                    "Produkte und vieles mehr verwalten",
+                    "Infrastruktur bearbeiten",
+                    "Stammkunden",
+                    "Synchronisation zwischen mehreren Geraeten"
                 ],
                 technicalAspects: [
                     "Programmiersprachen: C#, XAML",
                     "App Lifecycle: Prism",
                     "Design Pattern: Prism MVVM",
                     "State Changes: ReactiveUI",
-                    "Server: OpenApi Generierung",
-                    "Bluetooth: Shiny.BLE",
-                    "Datenbank: sqlite-net (Async)",
-                    "UI: Syncfusion"
+                    "Kommunikation mit dem Server: OpenApi Generierung",
+                    "Bluetooth Module: Shiny.BLE",
+                    "Datenbank: sqlite-net (Async Pattern)",
+                    "UI Komponenten: Syncfusion"
                 ]),
 
             CreateProject(
@@ -379,20 +383,21 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 sortOrder: 2,
                 technologies: ["Xamarin.Forms", "C#", "Prism", "SkiaSharp", "ZXing", "SQLite"],
                 functions: [
-                    "Editor fuer mehrfarbige Abdruecke",
-                    "QR und Barcode Generierung",
+                    "Eigener Editor um vielseitige mehrfarbige Abdruecke selbst zu gestalten",
+                    "Generieren von QR und Barcodes in der App",
                     "Eigenes Benutzersystem",
-                    "Video-Wizard Einfuehrung",
-                    "WLAN Drucker Verbindung",
-                    "7 Sprachen"
+                    "Wizard mit Video-Einfuehrung",
+                    "Verbindung mit mobilen Drucker ueber WLAN",
+                    "Mehrsprachig (DE, EN, ES, FR, IT, SE, PT)"
                 ],
                 technicalAspects: [
-                    "Framework: Xamarin.Forms",
+                    "Programmiersprachen: C#, XAML",
+                    "Haupt-Framework: Xamarin.Forms",
                     "App Lifecycle: Prism",
                     "Design Pattern: Prism MVVM",
-                    "Editor: SkiaSharp",
-                    "QR-Code: ZXing",
-                    "Datenbank: SQLite .NET"
+                    "Implementierung Editor: SkiaSharp",
+                    "Implementierung QR-Code Scanner: ZXing",
+                    "Datenbank: SQLite .NET (Async Pattern)"
                 ]),
 
             CreateProject(
@@ -405,21 +410,24 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 sortOrder: 3,
                 technologies: ["Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Refit", "ZXing", "Shiny"],
                 functions: [
-                    "Chat mit Push-Notifications",
-                    "QR-Code Scanner fuer Material",
-                    "Kalender fuer Veranstaltungen",
-                    "Zusatzalarmierung mit Push",
+                    "Chat fuer Feuerwehrmitglieder mit Push-Notifications",
+                    "QR-Code Scanner um QR-Code von Material zu scannen",
+                    "Eigener Kalender fuer Veranstaltungen",
+                    "Zusatzalarmierung mit Push Notifications",
                     "Dark Mode",
-                    "Materialverwaltung",
-                    "Server Synchronisation"
+                    "Ansicht der Materialverwaltung",
+                    "Implementierung der Synchronisation mit dem Server",
+                    "Implementierung einer lokalen Datenbank"
                 ],
                 technicalAspects: [
                     "Programmiersprachen: C#, XAML",
                     "App Lifecycle: Prism",
+                    "Design Pattern: Prism MVVM",
                     "State Changes: ReactiveUI",
-                    "Server: Refit REST",
-                    "QR-Code: ZXing",
-                    "Push: Shiny Library"
+                    "Kommunikation mit dem Server: Refit REST library for .NET",
+                    "Implementierung QR-Code Scanner: ZXing",
+                    "Datenbank: SQLite .NET (Async Pattern)",
+                    "Push Notifications: Cross Platform mit Shiny Library"
                 ]),
 
             CreateProject(
@@ -433,15 +441,17 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 technologies: ["Xamarin.Forms", "C#", "Prism", "Shiny", "Azure Notification Hub", "Lottie"],
                 functions: [
                     "Automatische Push-Nachrichten",
-                    "Hoechste Sicherheit/Verschluesselung",
-                    "Bluetooth zu Fingerscanner",
-                    "Benutzermanagement/Rollensystem"
+                    "Hoechste Sicherheit ueber Verschluesselung",
+                    "Bluetooth Anbindung zu Fingerscanner an Tuer",
+                    "Eigenes umfangreiches Benutzermanagement und Rollensystem"
                 ],
                 technicalAspects: [
+                    "Programmiersprache: C#, .NET, XAML",
                     "Framework: Xamarin.Forms",
-                    "Repository: Azure DevOps",
-                    "Push: Azure Notification Hub",
-                    "Bluetooth: Shiny",
+                    "Repository Verwaltung: Azure DevOps",
+                    "App Lifecycle: Prism",
+                    "Design Pattern: Prism MVVM",
+                    "Push Nachrichten: Azure Notification Hub, Apple, Firebase, Shiny",
                     "CI/CD: Azure DevOps",
                     "Animationen: Lottie"
                 ]),
@@ -454,19 +464,21 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 playStoreUrl: "https://play.google.com/store/apps/details?id=de.miele.infocontrol",
                 websiteUrl: "https://www.miele.at/c/miele-app-2594.htm",
                 sortOrder: 5,
-                technologies: ["MAUI", "C#", "MVVM", "Firebase", "Roslyn Code Generation", "Sentry", "Lottie"],
+                technologies: ["MAUI", "C#", "MVVM", "Azure Notification Hub", "Lottie"],
                 functions: [
-                    "Hausgeraete mobil steuern",
-                    "Push ueber Geraetestatus",
-                    "Assistenten-System (NuGet)",
+                    "Hausgeraete mobil steuern: Bedienen Sie Ihre Hausgeraete bequem per App",
+                    "Push Nachrichten ueber Status der Geraete",
+                    "Unterschiedliche Assistenten in Form von eigenem Nugetpaket-System",
                     "Eigener Shop"
                 ],
                 technicalAspects: [
+                    "Programmiersprache: C#, .NET, XAML",
                     "Framework: MAUI",
-                    "Repository: Bitbucket",
-                    "Notifications: Firebase",
-                    "Codegenerierung: Roslyn",
-                    "Logging: Sentry",
+                    "Repository Verwaltung: Bitbucket",
+                    "App Lifecycle: Eigenentwicklung",
+                    "Design Pattern: MVVM",
+                    "Push Nachrichten: Azure Notification Hub",
+                    "CI/CD: Bitbucket",
                     "Animationen: Lottie"
                 ]),
 
@@ -478,23 +490,28 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 playStoreUrl: "https://play.google.com/store/apps/details?id=at.asfinag.unterwegs",
                 websiteUrl: "https://www.asfinag.at/asfinag-app/",
                 sortOrder: 6,
-                technologies: ["MAUI", "C#", "Prism", "OpenAPI", "Polly", "Syncfusion", "SQLite"],
+                technologies: ["MAUI", "C#", "Prism", "OpenAPI", "Polly", "Scalar", "Syncfusion", "SQLite"],
                 functions: [
                     "Personalisierter Homescreen",
-                    "1800+ Webcams",
+                    "Ueber 1800 Webcams + Nachbarlaender",
                     "Verkehrsinfos und Baustellen",
-                    "Raststationen und E-Ladestationen",
-                    "Digitale Vignette",
-                    "Routenplaner (Europa)",
-                    "12 Sprachen"
+                    "Raststationen und Rastplaetze",
+                    "E-Ladestationen (E-Control)",
+                    "Digitale Vignette und Streckenmaut, GO-Selfcare",
+                    "Routenplaner (Europarouting)",
+                    "ASFINAG News",
+                    "12 Sprachen",
+                    "24/7 Service-Center"
                 ],
                 technicalAspects: [
                     "Framework: MAUI",
+                    "Programmiersprachen: C#, XAML",
                     "App Lifecycle: Prism",
-                    "Server: OpenApi, Polly, Scalar",
-                    "UI: Syncfusion",
-                    "Datenbank: SQLite .NET",
-                    "Push: Cross Platform"
+                    "Design Pattern: Prism MVVM",
+                    "Kommunikation mit dem Server: OpenApi, Polly, Scalar",
+                    "Syncfusion Bibliothek",
+                    "Datenbank: SQLite .NET (Async Pattern)",
+                    "Push Notifications: Cross Platform"
                 ]),
 
             CreateProject(
@@ -503,21 +520,22 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 framework: "Xamarin.Forms",
                 appStoreUrl: "https://apps.apple.com/us/app/practice-bird-interactive-sheet-music-and-scores/id1253492926",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=phonicscore.phonicscore_lite",
-                websiteUrl: "https://www.practicebird.com",
+                websiteUrl: null,
                 sortOrder: 7,
                 technologies: ["Xamarin.Forms", "C#", "Prism", "ReactiveUI", "SkiaSharp", "Refit"],
                 functions: [
-                    "Mitspielendes Notenblatt",
-                    "MusicXML/MIDI Dateien",
-                    "Playback mit Klavier/Schlagzeug",
-                    "Stimme hervorheben",
-                    "Facebook/Google Login"
+                    "Eigenes mitspielendes Notenblatt",
+                    "Hinzufuegen und Verwalten von eigenen MusicXML oder MIDI Dateien",
+                    "Playback Notenblatt abspielen mit Klavier und Schlagzeug Klaengen",
+                    "Hervorheben von eigener Stimme auf Notenblatt",
+                    "Login mit Facebook oder Google-Konto"
                 ],
                 technicalAspects: [
-                    "Framework: Xamarin.Forms",
+                    "Programmiersprachen: C#, XAML",
                     "App Lifecycle: Prism",
+                    "Design Pattern: Prism MVVM",
                     "State Changes: ReactiveUI",
-                    "Server: Refit REST",
+                    "Kommunikation mit dem Server: Refit REST library for .NET",
                     "Notenblatt: SkiaSharp"
                 ])
         };
