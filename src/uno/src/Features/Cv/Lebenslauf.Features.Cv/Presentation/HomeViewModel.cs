@@ -63,7 +63,7 @@ public partial class HomeViewModel : PageViewModel
         FirstName = "DANIEL";
         LastName = "HUFNAGL";
         Title = "SENIOR CROSS-PLATFORM DEVELOPER";
-        Email = "daniel.hufnagl@aon.at";
+        Email = "d.hufnagl@codelisk.com";
         Phone = "+43 664 73221804";
         Location = "Laakirchen, Oesterreich";
     }

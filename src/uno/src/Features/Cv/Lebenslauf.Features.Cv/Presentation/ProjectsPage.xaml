@@ -4,10 +4,22 @@
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:local="using:Lebenslauf.Features.Cv.Presentation"
       xmlns:controls="using:Lebenslauf.Core.Styles.Controls"
+      x:Name="RootPage"
       Background="#FFFFFF">
 
     <Page.Resources>
-        <!-- Black & White Project Styles -->
+        <!-- Page Header Styles -->
+        <Style x:Key="PageTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadlineLargeTextBlockStyle}">
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="CharacterSpacing" Value="100" />
+        </Style>
+
+        <Style x:Key="PageSubtitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyMediumTextBlockStyle}">
+            <Setter Property="Foreground" Value="#888888" />
+        </Style>
+
+        <!-- Project Header Styles -->
         <Style x:Key="ProjectHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadlineMediumTextBlockStyle}">
             <Setter Property="FontWeight" Value="Black" />
             <Setter Property="Foreground" Value="#FFFFFF" />
@@ -16,7 +28,7 @@
 
         <Style x:Key="ProjectFrameworkStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelMediumTextBlockStyle}">
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="Foreground" Value="#AAAAAA" />
+            <Setter Property="Foreground" Value="#888888" />
             <Setter Property="CharacterSpacing" Value="100" />
         </Style>
 
@@ -41,14 +53,44 @@
             <Setter Property="Foreground" Value="#000000" />
         </Style>
 
-        <Style x:Key="ProjectPageTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleLargeTextBlockStyle}">
-            <Setter Property="FontWeight" Value="Black" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-            <Setter Property="CharacterSpacing" Value="100" />
+        <!-- Store Badge Styles -->
+        <Style x:Key="AppStoreBadgeStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
+            <Setter Property="Background" Value="#000000" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
         </Style>
 
-        <Style x:Key="ProjectBackButtonStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
-            <Setter Property="Padding" Value="8" />
+        <Style x:Key="PlayStoreBadgeStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#000000" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+        </Style>
+
+        <Style x:Key="StoreBadgeLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#AAAAAA" />
+            <Setter Property="FontSize" Value="8" />
+        </Style>
+
+        <Style x:Key="StoreBadgeTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+
+        <Style x:Key="StoreBadgeLabelDarkStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="FontSize" Value="8" />
+        </Style>
+
+        <Style x:Key="StoreBadgeTitleDarkStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#000000" />
         </Style>
 
         <Style x:Key="ProjectResponsiveViewStyle" TargetType="utu:ResponsiveView" />
@@ -62,25 +104,16 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- Editorial Masthead - Bold B&W Header -->
-            <Border Background="#000000">
-                <Grid Padding="{utu:Responsive Narrow='24,20', Normal='48,28'}">
-                    <StackPanel>
-                        <TextBlock Text="PROJEKTE"
-                                   Style="{StaticResource DisplayLargeTextBlockStyle}"
-                                   FontSize="{utu:Responsive Narrow=32, Normal=42}"
-                                   FontWeight="Black"
-                                   Foreground="#FFFFFF"
-                                   CharacterSpacing="200" />
-                        <TextBlock Text="Referenzprojekte und Erfahrungen"
-                                   Style="{StaticResource LabelSmallTextBlockStyle}"
-                                   FontSize="{utu:Responsive Narrow=11, Normal=12}"
-                                   FontWeight="Normal"
-                                   Foreground="#CCCCCC"
-                                   CharacterSpacing="100"
-                                   Margin="0,4,0,0" />
-                    </StackPanel>
-                </Grid>
+            <!-- Simple Header - PROJEKTE -->
+            <Border Background="#000000" Padding="{utu:Responsive Narrow='24,24', Normal='48,32'}">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="PROJEKTE"
+                               Style="{StaticResource PageTitleStyle}"
+                               FontSize="{utu:Responsive Narrow=28, Normal=36}" />
+                    <TextBlock Text="Referenzprojekte und Erfahrungen"
+                               Style="{StaticResource PageSubtitleStyle}"
+                               FontSize="{utu:Responsive Narrow=13, Normal=15}" />
+                </StackPanel>
             </Border>
 
             <!-- Content with ResponsiveView -->
@@ -92,64 +125,34 @@
                 <!-- Mobile Layout (Narrow) -->
                 <utu:ResponsiveView.NarrowTemplate>
                     <DataTemplate>
-                        <ScrollViewer Background="#FFFFFF" Padding="16,16">
+                        <ScrollViewer Background="#FFFFFF" Padding="16,20">
                         <ItemsRepeater ItemsSource="{Binding Projects}">
                             <ItemsRepeater.Layout>
                                 <StackLayout Spacing="0" />
                             </ItemsRepeater.Layout>
                             <ItemsRepeater.ItemTemplate>
                                 <DataTemplate x:DataType="local:ProjectDetailModel">
-                                    <Border Background="#FFFFFF"
-                                            BorderBrush="#000000"
-                                            BorderThickness="2"
+                                    <Border Background="#FAFAFA"
+                                            BorderBrush="#E0E0E0"
+                                            BorderThickness="1"
                                             Margin="0,0,0,24">
 
                                         <StackPanel>
                                             <!-- Project Header -->
-                                            <Border Background="#000000"
-                                                    Padding="16,12">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Name}"
-                                                                   Style="{StaticResource ProjectHeaderStyle}"
-                                                                   FontSize="20" />
-                                                        <TextBlock Text="{Binding Framework}"
-                                                                   Style="{StaticResource ProjectFrameworkStyle}"
-                                                                   FontSize="11"
-                                                                   Margin="0,4,0,0" />
-                                                    </StackPanel>
-
-                                                    <!-- Store Links -->
-                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
-                                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                                Background="Transparent"
-                                                                Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                                CommandParameter="{Binding AppStoreUrl}">
-                                                            <FontIcon Glyph="&#xE8A1;" FontSize="16" Foreground="#FFFFFF" />
-                                                        </Button>
-                                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                                Background="Transparent"
-                                                                Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                                CommandParameter="{Binding PlayStoreUrl}">
-                                                            <FontIcon Glyph="&#xE7FC;" FontSize="16" Foreground="#FFFFFF" />
-                                                        </Button>
-                                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                                Background="Transparent"
-                                                                Visibility="{Binding WebsiteUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                                CommandParameter="{Binding WebsiteUrl}">
-                                                            <FontIcon Glyph="&#xE774;" FontSize="16" Foreground="#FFFFFF" />
-                                                        </Button>
-                                                    </StackPanel>
-                                                </Grid>
+                                            <Border Background="#000000" Padding="16,14">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}"
+                                                               Style="{StaticResource ProjectHeaderStyle}"
+                                                               FontSize="18" />
+                                                    <TextBlock Text="{Binding Framework}"
+                                                               Style="{StaticResource ProjectFrameworkStyle}"
+                                                               FontSize="10"
+                                                               Margin="0,4,0,0" />
+                                                </StackPanel>
                                             </Border>
 
                                             <!-- Content - Stacked for Mobile -->
-                                            <StackPanel Padding="16" Spacing="20">
+                                            <StackPanel Padding="16" Spacing="16">
 
                                                 <!-- Functions Section -->
                                                 <StackPanel Spacing="10">
@@ -218,6 +221,44 @@
                                                         </ItemsRepeater.ItemTemplate>
                                                     </ItemsRepeater>
                                                 </StackPanel>
+
+                                                <!-- Divider -->
+                                                <Border Height="1" Background="#E5E5E5" />
+
+                                                <!-- Store Badges Section -->
+                                                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left">
+                                                    <!-- App Store Badge -->
+                                                    <Button Style="{StaticResource AppStoreBadgeStyle}"
+                                                            Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                            Command="{Binding DataContext.OpenUrlCommand, ElementName=RootPage}"
+                                                            CommandParameter="{Binding AppStoreUrl}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE8A9;" FontSize="18" Foreground="#FFFFFF" />
+                                                            <StackPanel Spacing="-2">
+                                                                <TextBlock Text="Laden im"
+                                                                           Style="{StaticResource StoreBadgeLabelStyle}" />
+                                                                <TextBlock Text="App Store"
+                                                                           Style="{StaticResource StoreBadgeTitleStyle}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Button>
+
+                                                    <!-- Google Play Badge -->
+                                                    <Button Style="{StaticResource PlayStoreBadgeStyle}"
+                                                            Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                            Command="{Binding DataContext.OpenUrlCommand, ElementName=RootPage}"
+                                                            CommandParameter="{Binding PlayStoreUrl}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE768;" FontSize="18" Foreground="#000000" />
+                                                            <StackPanel Spacing="-2">
+                                                                <TextBlock Text="Jetzt bei"
+                                                                           Style="{StaticResource StoreBadgeLabelDarkStyle}" />
+                                                                <TextBlock Text="Google Play"
+                                                                           Style="{StaticResource StoreBadgeTitleDarkStyle}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>
@@ -231,66 +272,36 @@
                 <!-- Desktop Layout (Normal/Wide) -->
                 <utu:ResponsiveView.NormalTemplate>
                     <DataTemplate>
-                        <ScrollViewer Background="#FFFFFF" Padding="24,24">
+                        <ScrollViewer Background="#FFFFFF" Padding="24,28">
                         <ItemsRepeater ItemsSource="{Binding Projects}">
                             <ItemsRepeater.Layout>
                                 <StackLayout Spacing="0" />
                             </ItemsRepeater.Layout>
                             <ItemsRepeater.ItemTemplate>
                                 <DataTemplate x:DataType="local:ProjectDetailModel">
-                                    <Border Background="#FFFFFF"
-                                            BorderBrush="#000000"
-                                            BorderThickness="2"
+                                    <Border Background="#FAFAFA"
+                                            BorderBrush="#E0E0E0"
+                                            BorderThickness="1"
                                             MaxWidth="900"
                                             HorizontalAlignment="Center"
                                             Margin="0,0,0,32">
 
                                         <StackPanel>
                                             <!-- Project Header -->
-                                            <Border Background="#000000"
-                                                    Padding="24,16">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Name}"
-                                                                   Style="{StaticResource ProjectHeaderStyle}"
-                                                                   FontSize="28" />
-                                                        <TextBlock Text="{Binding Framework}"
-                                                                   Style="{StaticResource ProjectFrameworkStyle}"
-                                                                   FontSize="12"
-                                                                   Margin="0,6,0,0" />
-                                                    </StackPanel>
-
-                                                    <!-- Store Links -->
-                                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
-                                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                                Background="Transparent"
-                                                                Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                                CommandParameter="{Binding AppStoreUrl}">
-                                                            <FontIcon Glyph="&#xE8A1;" FontSize="20" Foreground="#FFFFFF" />
-                                                        </Button>
-                                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                                Background="Transparent"
-                                                                Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                                CommandParameter="{Binding PlayStoreUrl}">
-                                                            <FontIcon Glyph="&#xE7FC;" FontSize="20" Foreground="#FFFFFF" />
-                                                        </Button>
-                                                        <Button Style="{StaticResource IconButtonStyle}"
-                                                                Background="Transparent"
-                                                                Visibility="{Binding WebsiteUrl, Converter={StaticResource NullToCollapsedConverter}}"
-                                                                CommandParameter="{Binding WebsiteUrl}">
-                                                            <FontIcon Glyph="&#xE774;" FontSize="20" Foreground="#FFFFFF" />
-                                                        </Button>
-                                                    </StackPanel>
-                                                </Grid>
+                                            <Border Background="#000000" Padding="24,18">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}"
+                                                               Style="{StaticResource ProjectHeaderStyle}"
+                                                               FontSize="26" />
+                                                    <TextBlock Text="{Binding Framework}"
+                                                               Style="{StaticResource ProjectFrameworkStyle}"
+                                                               FontSize="12"
+                                                               Margin="0,6,0,0" />
+                                                </StackPanel>
                                             </Border>
 
                                             <!-- Two Column Layout for Desktop -->
-                                            <Grid Padding="24">
+                                            <Grid Padding="24,20">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="24" />
@@ -371,6 +382,45 @@
                                                     </ItemsRepeater>
                                                 </StackPanel>
                                             </Grid>
+
+                                            <!-- Store Badges Section -->
+                                            <Border Background="#F5F5F5" Padding="24,16">
+                                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                                    <!-- App Store Badge -->
+                                                    <Button Style="{StaticResource AppStoreBadgeStyle}"
+                                                            Visibility="{Binding AppStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                            Command="{Binding DataContext.OpenUrlCommand, ElementName=RootPage}"
+                                                            CommandParameter="{Binding AppStoreUrl}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                                            <FontIcon Glyph="&#xE8A9;" FontSize="22" Foreground="#FFFFFF" />
+                                                            <StackPanel Spacing="-1">
+                                                                <TextBlock Text="Laden im"
+                                                                           Style="{StaticResource StoreBadgeLabelStyle}" />
+                                                                <TextBlock Text="App Store"
+                                                                           Style="{StaticResource StoreBadgeTitleStyle}"
+                                                                           FontSize="14" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Button>
+
+                                                    <!-- Google Play Badge -->
+                                                    <Button Style="{StaticResource PlayStoreBadgeStyle}"
+                                                            Visibility="{Binding PlayStoreUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                            Command="{Binding DataContext.OpenUrlCommand, ElementName=RootPage}"
+                                                            CommandParameter="{Binding PlayStoreUrl}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                                            <FontIcon Glyph="&#xE768;" FontSize="22" Foreground="#000000" />
+                                                            <StackPanel Spacing="-1">
+                                                                <TextBlock Text="Jetzt bei"
+                                                                           Style="{StaticResource StoreBadgeLabelDarkStyle}" />
+                                                                <TextBlock Text="Google Play"
+                                                                           Style="{StaticResource StoreBadgeTitleDarkStyle}"
+                                                                           FontSize="14" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Border>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>

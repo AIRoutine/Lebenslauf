@@ -165,7 +165,7 @@ public partial class CvViewModel : PageViewModel, INavigationAware
         PersonalData = new PersonalDataModel(
             Name: "Daniel Hufnagl",
             Title: "Senior Cross-Platform Developer",
-            Email: "daniel.hufnagl@aon.at",
+            Email: "d.hufnagl@codelisk.com",
             Phone: "+43-664-73221804",
             Address: "Stockham 44",
             City: "Laakirchen",
