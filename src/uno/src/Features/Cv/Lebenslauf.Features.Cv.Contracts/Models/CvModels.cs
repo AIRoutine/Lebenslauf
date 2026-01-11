@@ -10,7 +10,8 @@ public record CvData(
     IReadOnlyList<InternshipModel> Internships,
     IReadOnlyList<WorkExperienceModel> WorkExperience,
     IReadOnlyList<SkillCategoryModel> SkillCategories,
-    IReadOnlyList<ProjectModel> Projects
+    IReadOnlyList<ProjectModel> Projects,
+    GitHubContributionsModel GitHub
 );
 
 /// <summary>
@@ -79,7 +80,10 @@ public record ProjectModel(
     Guid Id,
     string Name,
     string? Description,
+    string? Framework,
     IReadOnlyList<string> Technologies,
+    IReadOnlyList<string> Functions,
+    IReadOnlyList<string> TechnicalAspects,
     string? AppStoreUrl,
     string? PlayStoreUrl,
     string? WebsiteUrl,
@@ -107,4 +111,24 @@ public record InternshipModel(
     int? Month,
     int? EndMonth,
     string? Description
+);
+
+/// <summary>
+/// Single contribution day for the contribution graph.
+/// </summary>
+public record GitHubContributionModel(
+    DateOnly Date,
+    int Count,
+    int WeekNumber,
+    int DayOfWeek
+);
+
+/// <summary>
+/// GitHub contributions data for the contribution graph.
+/// </summary>
+public record GitHubContributionsModel(
+    string Username,
+    string ProfileUrl,
+    int TotalContributions,
+    IReadOnlyList<GitHubContributionModel> Contributions
 );

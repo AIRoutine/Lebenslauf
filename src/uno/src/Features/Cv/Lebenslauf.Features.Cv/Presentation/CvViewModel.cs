@@ -77,6 +77,9 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     [ObservableProperty]
     private IReadOnlyList<string> _frameworks = [];
 
+    [ObservableProperty]
+    private GitHubContributionsModel? _gitHubContributions;
+
     public void OnNavigatedTo(object? parameter)
     {
         _ = LoadCvDataAsync();
@@ -139,20 +142,45 @@ public partial class CvViewModel : PageViewModel, INavigationAware
                             sc.Skills.Select(s => new SkillModel(s.Id, s.Name)).ToList()))
                         .ToList();
 
-                    Projects = result.Projects
-                        .Select(p => new ProjectModel(p.Id, p.Name, p.Description, p.Technologies.ToList(), p.AppStoreUrl, p.PlayStoreUrl, p.WebsiteUrl, p.ImageUrl))
+                    Projects = (result.Projects ?? [])
+                        .Select(p => new ProjectModel(
+                            p.Id,
+                            p.Name,
+                            p.Description,
+                            p.Framework,
+                            (p.Technologies ?? []).ToList(),
+                            (p.Functions ?? []).ToList(),
+                            (p.TechnicalAspects ?? []).ToList(),
+                            p.AppStoreUrl,
+                            p.PlayStoreUrl,
+                            p.WebsiteUrl,
+                            p.ImageUrl))
                         .ToList();
 
                     // Extract frameworks from categories
                     var frameworkCategory = SkillCategories.FirstOrDefault(c => c.Name.Contains("Framework", StringComparison.OrdinalIgnoreCase));
                     Frameworks = frameworkCategory?.Skills.Select(s => s.Name).ToList() ?? [];
 
+                    // Map GitHub contributions
+                    if (result.GitHub.TotalContributions > 0)
+                    {
+                        var contributions = result.GitHub.Contributions
+                            .Select(c => new GitHubContributionModel(c.Date, c.Count, c.WeekNumber, c.DayOfWeek))
+                            .ToList();
+
+                        GitHubContributions = new GitHubContributionsModel(
+                            result.GitHub.Username,
+                            result.GitHub.ProfileUrl,
+                            result.GitHub.TotalContributions,
+                            contributions);
+                    }
+
                     return;
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to load CV from API: {ex.Message}");
+                Console.WriteLine($"Failed to load CV from API: {ex.Message}");
             }
 
             // Fallback to mock data if API fails
@@ -252,39 +280,8 @@ public partial class CvViewModel : PageViewModel, INavigationAware
 
         Frameworks = ["ReactiveUI", "Prism", "Shiny", "Git", "Azure DevOps", "Visual Studio"];
 
-        Projects =
-        [
-            new(Guid.NewGuid(), "Orderlyze", "Kassensystem App mit Tischplan, Reservierungen, Berichten",
-                ["Xamarin.Forms", "MAUI", "Prism", "ReactiveUI", "Syncfusion"],
-                "https://apps.apple.com/at/app/orderlyze/id1495015799",
-                "https://play.google.com/store/apps/details?id=orderlyze.com",
-                "https://www.orderlyze.com", null),
-            new(Guid.NewGuid(), "Colop E-Mark", "Stempel-Editor mit mehrfarbigen Abdrucken",
-                ["Xamarin.Forms", "SkiaSharp", "Prism"],
-                "https://apps.apple.com/at/app/colop-e-mark/id1397292575",
-                "https://play.google.com/store/apps/details?id=com.colop.colopemark",
-                "https://www.colop.com/de/digital-produkte", null),
-            new(Guid.NewGuid(), "Sybos", "Feuerwehr-Verwaltung mit Chat und Push",
-                ["Xamarin.Forms", "MAUI", "Prism", "ReactiveUI", "Shiny"],
-                "https://apps.apple.com/at/app/sybos/id1176062382",
-                "https://play.google.com/store/apps/details?id=at.syPhone",
-                "https://www.sybos.net", null),
-            new(Guid.NewGuid(), "Miele", "Smart Home App fuer Hausgeraete",
-                ["MAUI", "Firebase", "Roslyn", "Lottie"],
-                "https://apps.apple.com/at/app/miele-app-smart-home/id930406907",
-                "https://play.google.com/store/apps/details?id=de.miele.infocontrol",
-                "https://www.miele.at/c/miele-app-2594.htm", null),
-            new(Guid.NewGuid(), "Asfinag", "Verkehrsinfo mit 1800+ Webcams",
-                ["MAUI", "Prism", "OpenAPI", "Syncfusion"],
-                "https://apps.apple.com/at/app/asfinag/id453459323",
-                "https://play.google.com/store/apps/details?id=at.asfinag.unterwegs",
-                "https://www.asfinag.at/asfinag-app/", null),
-            new(Guid.NewGuid(), "Ekey Bionyx", "Fingerscanner App mit Bluetooth",
-                ["Xamarin.Forms", "Shiny", "Azure Notification Hub"],
-                "https://apps.apple.com/at/app/ekey-bionyx/id1484053054",
-                "https://play.google.com/store/apps/details?id=net.ekey.bionyx",
-                "https://www.ekey.net/ekey-bionyx-app/", null)
-        ];
+        // Mock data only as fallback - API is single source of truth
+        Projects = [];
     }
 
     [UnoCommand]
@@ -313,5 +310,14 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     private async Task NavigateToProjectsAsync()
     {
         await Navigator.NavigateViewModelAsync<ProjectsViewModel>(this);
+    }
+
+    [UnoCommand]
+    private async Task OpenGitHubProfileAsync()
+    {
+        if (GitHubContributions is not null)
+        {
+            await OpenUrlAsync(GitHubContributions.ProfileUrl);
+        }
     }
 }

@@ -17,7 +17,8 @@ public record GetCvResponse(
     IReadOnlyList<InternshipDto> Internships,
     IReadOnlyList<WorkExperienceDto> WorkExperience,
     IReadOnlyList<SkillCategoryDto> SkillCategories,
-    IReadOnlyList<ProjectDto> Projects
+    IReadOnlyList<ProjectDto> Projects,
+    GitHubContributionsDto GitHub
 );
 
 /// <summary>
@@ -117,4 +118,24 @@ public record InternshipDto(
     int? Month,
     int? EndMonth,
     string? Description
+);
+
+/// <summary>
+/// Single contribution day for the contribution graph.
+/// </summary>
+public record GitHubContributionDto(
+    DateOnly Date,
+    int Count,
+    int WeekNumber,
+    int DayOfWeek
+);
+
+/// <summary>
+/// GitHub contributions data for the contribution graph.
+/// </summary>
+public record GitHubContributionsDto(
+    string Username,
+    string ProfileUrl,
+    int TotalContributions,
+    IReadOnlyList<GitHubContributionDto> Contributions
 );

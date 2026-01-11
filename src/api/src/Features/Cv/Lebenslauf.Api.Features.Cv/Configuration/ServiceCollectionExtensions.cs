@@ -9,6 +9,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddCvFeature(this IServiceCollection services)
     {
         services.AddSeeder<CvSeeder>();
+        services.AddSeeder<GitHubSeeder>();
         return services;
     }
 }

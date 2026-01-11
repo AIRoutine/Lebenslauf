@@ -74,6 +74,18 @@
         </Style>
         <Style x:Key="BtnStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}" />
         <Style x:Key="RespStyle" TargetType="utu:ResponsiveView" />
+
+        <!-- GitHub Contribution Graph Styles -->
+        <Style x:Key="GitHubContributionTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="CharacterSpacing" Value="100" />
+        </Style>
+        <Style x:Key="GitHubContributionCountStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyMediumTextBlockStyle}">
+            <Setter Property="Foreground" Value="#333333" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
     </Page.Resources>
 
     <uf:BusyOverlay IsBusy="{Binding IsBusy}" BusyMessage="{Binding BusyMessage}">
@@ -181,6 +193,35 @@
                                     </DataTemplate>
                                 </ItemsRepeater.ItemTemplate>
                             </ItemsRepeater>
+                        </StackPanel>
+
+                        <Rectangle Height="1" Fill="#E0E0E0" />
+
+                        <!-- GITHUB CONTRIBUTIONS - Mobile -->
+                        <StackPanel Spacing="12" Visibility="{Binding GitHubContributions, Converter={StaticResource NullToCollapsedConverter}, FallbackValue=Collapsed}">
+                            <Button Command="{Binding OpenGitHubProfileCommand}" Style="{StaticResource BtnStyle}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE774;" FontSize="14" Foreground="#000000" />
+                                    <TextBlock Text="GITHUB →" Style="{StaticResource LabelStyle}" Foreground="#000000" />
+                                </StackPanel>
+                            </Button>
+                            <TextBlock Style="{StaticResource SkillStyle}" FontSize="12">
+                                <Run Text="{Binding GitHubContributions.TotalContributions}" /><Run Text=" Contributions in 2025" />
+                            </TextBlock>
+                            <!-- Contribution Graph (simplified for mobile) -->
+                            <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled">
+                                <ItemsRepeater ItemsSource="{Binding GitHubContributions.Contributions}">
+                                    <ItemsRepeater.Layout>
+                                        <UniformGridLayout Orientation="Vertical" MaximumRowsOrColumns="7" MinItemWidth="10" MinItemHeight="10" MinRowSpacing="2" MinColumnSpacing="2" />
+                                    </ItemsRepeater.Layout>
+                                    <ItemsRepeater.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Width="10" Height="10" CornerRadius="2"
+                                                    Background="{Binding Count, Converter={StaticResource ContributionToColorConverter}}" />
+                                        </DataTemplate>
+                                    </ItemsRepeater.ItemTemplate>
+                                </ItemsRepeater>
+                            </ScrollViewer>
                         </StackPanel>
 
                     </StackPanel>
@@ -410,6 +451,70 @@
                                     </StackPanel>
                                 </Border>
                             </Grid>
+                        </StackPanel>
+
+                        <!-- ════════════════════════════════════════════════════════════════ -->
+                        <!-- GITHUB CONTRIBUTIONS - Contribution Graph Section                 -->
+                        <!-- ════════════════════════════════════════════════════════════════ -->
+                        <StackPanel Spacing="20" Visibility="{Binding GitHubContributions, Converter={StaticResource NullToCollapsedConverter}, FallbackValue=Collapsed}">
+                            <StackPanel Orientation="Horizontal" Spacing="20">
+                                <Button Command="{Binding OpenGitHubProfileCommand}" Style="{StaticResource BtnStyle}">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <FontIcon Glyph="&#xE774;" FontSize="12" Foreground="#000000" />
+                                        <TextBlock Text="GITHUB" Style="{StaticResource SectionTitleStyle}" />
+                                        <TextBlock Text="→" Style="{StaticResource SectionTitleStyle}" Margin="4,0,0,0" />
+                                    </StackPanel>
+                                </Button>
+                                <TextBlock Style="{StaticResource GitHubContributionCountStyle}" VerticalAlignment="Center">
+                                    <Run Text="{Binding GitHubContributions.TotalContributions}" /><Run Text=" Contributions in 2025" />
+                                </TextBlock>
+                            </StackPanel>
+
+                            <!-- Contribution Graph -->
+                            <Border Background="#F8F8F8" Padding="20,16" CornerRadius="4">
+                                <StackPanel Spacing="8">
+                                    <!-- Day labels -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="32" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Spacing="2" VerticalAlignment="Top">
+                                            <Border Height="12" />
+                                            <TextBlock Text="Mo" Style="{StaticResource SubtitleStyle}" FontSize="9" Height="12" />
+                                            <Border Height="12" />
+                                            <TextBlock Text="Mi" Style="{StaticResource SubtitleStyle}" FontSize="9" Height="12" />
+                                            <Border Height="12" />
+                                            <TextBlock Text="Fr" Style="{StaticResource SubtitleStyle}" FontSize="9" Height="12" />
+                                            <Border Height="12" />
+                                        </StackPanel>
+                                        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled">
+                                            <ItemsRepeater ItemsSource="{Binding GitHubContributions.Contributions}">
+                                                <ItemsRepeater.Layout>
+                                                    <UniformGridLayout Orientation="Vertical" MaximumRowsOrColumns="7" MinItemWidth="12" MinItemHeight="12" MinRowSpacing="2" MinColumnSpacing="2" />
+                                                </ItemsRepeater.Layout>
+                                                <ItemsRepeater.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Width="12" Height="12" CornerRadius="2"
+                                                                Background="{Binding Count, Converter={StaticResource ContributionToColorConverter}}"
+                                                                ToolTipService.ToolTip="{Binding Count}" />
+                                                    </DataTemplate>
+                                                </ItemsRepeater.ItemTemplate>
+                                            </ItemsRepeater>
+                                        </ScrollViewer>
+                                    </Grid>
+                                    <!-- Legend -->
+                                    <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                        <TextBlock Text="Weniger" Style="{StaticResource SubtitleStyle}" FontSize="10" VerticalAlignment="Center" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#EBEDF0" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#9BE9A8" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#40C463" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#30A14E" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#216E39" />
+                                        <TextBlock Text="Mehr" Style="{StaticResource SubtitleStyle}" FontSize="10" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
 
                     </StackPanel>

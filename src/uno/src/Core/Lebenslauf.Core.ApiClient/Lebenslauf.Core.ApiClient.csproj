@@ -11,11 +11,15 @@
     <WarningsNotAsErrors>CS8669;CS9107</WarningsNotAsErrors>
     <NoWarn>$(NoWarn);CS8669;CS9107</NoWarn>
 
+    <!-- Emit source generator output to disk for debugging -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+
     <UnoFeatures>
       Hosting;
       Http;
       SkiaRenderer;
     </UnoFeatures>
+
   </PropertyGroup>
 
   <ItemGroup>

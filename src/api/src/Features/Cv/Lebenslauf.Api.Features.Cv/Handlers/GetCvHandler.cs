@@ -45,6 +45,10 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
             .OrderBy(x => x.SortOrder)
             .ToListAsync(cancellationToken);
 
+        var gitHubContributions = await dbContext.Set<GitHubContribution>()
+            .OrderBy(x => x.Date)
+            .ToListAsync(cancellationToken);
+
         return new GetCvResponse(
             PersonalData: MapPersonalData(personalData),
             FamilyMembers: familyMembers.Select(MapFamilyMember).ToList(),
@@ -52,7 +56,8 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
             Internships: internships.Select(MapInternship).ToList(),
             WorkExperience: workExperience.Select(MapWorkExperience).ToList(),
             SkillCategories: skillCategories.Select(MapSkillCategory).ToList(),
-            Projects: projects.Select(MapProject).ToList()
+            Projects: projects.Select(MapProject).ToList(),
+            GitHub: MapGitHubContributions(gitHubContributions)
         );
     }
 
@@ -161,6 +166,21 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
             Month: entity.Month,
             EndMonth: entity.EndMonth,
             Description: entity.Description
+        );
+    }
+
+    private static GitHubContributionsDto MapGitHubContributions(List<GitHubContribution> contributions)
+    {
+        return new GitHubContributionsDto(
+            Username: "Codelisk",
+            ProfileUrl: "https://github.com/Codelisk",
+            TotalContributions: contributions.Sum(c => c.Count),
+            Contributions: contributions.Select(c => new GitHubContributionDto(
+                c.Date,
+                c.Count,
+                c.WeekNumber,
+                c.DayOfWeek
+            )).ToList()
         );
     }
 }
