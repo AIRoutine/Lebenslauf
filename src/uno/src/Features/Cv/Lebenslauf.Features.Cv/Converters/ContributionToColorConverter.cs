@@ -10,25 +10,26 @@ namespace Lebenslauf.Features.Cv.Converters;
 /// </summary>
 public class ContributionToColorConverter : IValueConverter
 {
-    // GitHub contribution colors (light to dark green)
-    private static readonly SolidColorBrush Level0 = new(ColorHelper.FromArgb(255, 235, 237, 240)); // #EBEDF0 - No activity
-    private static readonly SolidColorBrush Level1 = new(ColorHelper.FromArgb(255, 155, 233, 168)); // #9BE9A8 - Low
-    private static readonly SolidColorBrush Level2 = new(ColorHelper.FromArgb(255, 64, 196, 99));   // #40C463 - Medium
-    private static readonly SolidColorBrush Level3 = new(ColorHelper.FromArgb(255, 48, 161, 78));   // #30A14E - High
-    private static readonly SolidColorBrush Level4 = new(ColorHelper.FromArgb(255, 33, 110, 57));   // #216E39 - Very High
+    // GitHub contribution colors (dark theme - matching official GitHub)
+    private static readonly SolidColorBrush Level0 = new(ColorHelper.FromArgb(255, 22, 27, 34));   // #161B22 - No activity (dark gray)
+    private static readonly SolidColorBrush Level1 = new(ColorHelper.FromArgb(255, 14, 68, 41));   // #0E4429 - Low (dark green)
+    private static readonly SolidColorBrush Level2 = new(ColorHelper.FromArgb(255, 0, 109, 50));   // #006D32 - Medium
+    private static readonly SolidColorBrush Level3 = new(ColorHelper.FromArgb(255, 38, 166, 65));  // #26A641 - High
+    private static readonly SolidColorBrush Level4 = new(ColorHelper.FromArgb(255, 57, 211, 83));  // #39D353 - Very High (bright green)
 
     public object Convert(object? value, Type targetType, object? parameter, string? language)
     {
         if (value is not int count)
             return Level0;
 
+        // Adjusted thresholds to match GitHub's distribution (more dark, fewer bright)
         return count switch
         {
             0 => Level0,
-            >= 1 and <= 5 => Level1,
-            >= 6 and <= 12 => Level2,
-            >= 13 and <= 20 => Level3,
-            _ => Level4
+            >= 1 and <= 4 => Level1,   // Dark green - most common
+            >= 5 and <= 9 => Level2,   // Medium green
+            >= 10 and <= 16 => Level3, // Bright green
+            _ => Level4                 // Brightest - rare
         };
     }
 

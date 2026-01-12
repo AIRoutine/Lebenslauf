@@ -56,6 +56,7 @@
     <!-- Core Projects -->
     <ProjectReference Include="..\Core\Lebenslauf.Core.Startup\Lebenslauf.Core.Startup.csproj" />
     <ProjectReference Include="..\Core\Lebenslauf.Core.Styles\Lebenslauf.Core.Styles.csproj" />
+    <ProjectReference Include="..\Core\Lebenslauf.Core.ApiClient\Lebenslauf.Core.ApiClient.csproj" />
     <!-- Features -->
     <ProjectReference Include="..\Features\Cv\Lebenslauf.Features.Cv\Lebenslauf.Features.Cv.csproj" />
     <ProjectReference Include="..\Features\Cv\Lebenslauf.Features.Cv.Contracts\Lebenslauf.Features.Cv.Contracts.csproj" />

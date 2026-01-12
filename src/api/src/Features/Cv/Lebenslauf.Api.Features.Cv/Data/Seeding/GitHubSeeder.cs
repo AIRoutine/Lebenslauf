@@ -33,47 +33,90 @@ public class GitHubSeeder(AppDbContext dbContext) : ISeeder
         var startDate = new DateOnly(2025, 1, 1);
         var endDate = new DateOnly(2026, 1, 11); // Current date
 
+        // Target: 5,276 total contributions (including private)
+        // Days: 376 -> ~14 contributions per day on average
+        const int targetTotal = 5276;
+
+        var tempContributions = new List<(DateOnly date, int weekNumber, int dayOfWeek)>();
+
         for (var date = startDate; date <= endDate; date = date.AddDays(1))
         {
-            // Calculate week number (ISO week)
             var weekNumber = GetIsoWeekNumber(date);
             var dayOfWeek = (int)date.DayOfWeek;
+            tempContributions.Add((date, weekNumber, dayOfWeek));
+        }
 
-            // Generate contribution count with realistic pattern
-            // More contributions on weekdays, occasional busy days
-            int count;
+        // Generate base counts - more realistic distribution like real GitHub
+        // Many days with 0 or low contributions, occasional high days
+        var counts = new int[tempContributions.Count];
+        for (var i = 0; i < tempContributions.Count; i++)
+        {
+            var dayOfWeek = tempContributions[i].dayOfWeek;
 
-            // Weekends have fewer contributions
+            // Weekends - often no activity
             if (dayOfWeek == 0 || dayOfWeek == 6)
             {
-                count = random.Next(0, 8); // 0-7 contributions
+                var roll = random.NextDouble();
+                if (roll < 0.40) // 40% no activity
+                    counts[i] = 0;
+                else if (roll < 0.70) // 30% low activity
+                    counts[i] = random.Next(1, 4);
+                else if (roll < 0.90) // 20% medium
+                    counts[i] = random.Next(4, 10);
+                else // 10% high
+                    counts[i] = random.Next(10, 20);
             }
             else
             {
-                // Weekdays - more active
-                var baseContributions = random.Next(2, 15);
-
-                // Some days are very productive (10% chance)
-                if (random.NextDouble() < 0.10)
-                {
-                    count = random.Next(15, 35); // High activity day
-                }
-                // Some days have no activity (15% chance)
-                else if (random.NextDouble() < 0.15)
-                {
-                    count = 0;
-                }
-                else
-                {
-                    count = baseContributions;
-                }
+                // Weekdays - variable activity
+                var roll = random.NextDouble();
+                if (roll < 0.15) // 15% no activity
+                    counts[i] = 0;
+                else if (roll < 0.40) // 25% low activity (1-4)
+                    counts[i] = random.Next(1, 5);
+                else if (roll < 0.70) // 30% medium activity (5-12)
+                    counts[i] = random.Next(5, 13);
+                else if (roll < 0.90) // 20% high activity (13-25)
+                    counts[i] = random.Next(13, 26);
+                else // 10% very high activity (26-50)
+                    counts[i] = random.Next(26, 51);
             }
+        }
 
+        // Scale to target total
+        var currentTotal = counts.Sum();
+        var scale = (double)targetTotal / currentTotal;
+        for (var i = 0; i < counts.Length; i++)
+        {
+            counts[i] = Math.Max(0, (int)Math.Round(counts[i] * scale));
+        }
+
+        // Fine-tune to hit exact target
+        var diff = targetTotal - counts.Sum();
+        while (diff != 0)
+        {
+            var idx = random.Next(counts.Length);
+            if (diff > 0)
+            {
+                counts[idx]++;
+                diff--;
+            }
+            else if (counts[idx] > 0)
+            {
+                counts[idx]--;
+                diff++;
+            }
+        }
+
+        // Create contribution entities
+        for (var i = 0; i < tempContributions.Count; i++)
+        {
+            var (date, weekNumber, dayOfWeek) = tempContributions[i];
             contributions.Add(new GitHubContribution
             {
                 Id = Guid.NewGuid(),
                 Date = date,
-                Count = count,
+                Count = counts[i],
                 WeekNumber = weekNumber,
                 DayOfWeek = dayOfWeek
             });

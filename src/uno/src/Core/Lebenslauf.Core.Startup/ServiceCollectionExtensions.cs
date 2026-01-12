@@ -1,3 +1,4 @@
+using Lebenslauf.Core.ApiClient.Configuration;
 using Lebenslauf.Features.Cv.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shiny.Mediator.Infrastructure;
@@ -13,9 +14,14 @@ public static class ServiceCollectionExtensions
         // Auto-register services with [Service] attribute
         services.AddShinyServiceRegistry();
 
+        // Note: HTTP handlers are automatically registered via source generation
+        // when contracts implement IHttpRequest<T>
         services.AddShinyMediator();
         services.AddSingleton<IEventCollector, UnoEventCollector>();
         services.AddSingleton<BaseServices>();
+
+        // Core
+        services.AddApiClientFeature();
 
         // Features
         services.AddCvFeature();

@@ -106,7 +106,7 @@
                                 </Border.Background>
                             </Border>
                             <TextBlock Text="{Binding PersonalData.Name}" Style="{StaticResource NameStyle}" FontSize="32" />
-                            <TextBlock Text="SENIOR CROSS-PLATFORM DEVELOPER" Style="{StaticResource RoleStyle}" />
+                            <TextBlock Text="APP-ENTWICKLER · MOBILE &amp; DESKTOP" Style="{StaticResource RoleStyle}" />
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <TextBlock Style="{StaticResource ContactStyle}">
                                     <Run Text="Geb. 01.08.1998" /><Run Text=" · " /><Run Text="{Binding Age}" /><Run Text=" Jahre" />
@@ -122,7 +122,7 @@
 
                         <!-- EXPERTISE -->
                         <StackPanel Spacing="12">
-                            <TextBlock Text="EXPERTISE" Style="{StaticResource LabelStyle}" />
+                            <TextBlock Text="FÄHIGKEITEN" Style="{StaticResource LabelStyle}" />
                             <StackPanel Spacing="6">
                                 <TextBlock Text="C# / .NET · XAML · MVVM" Style="{StaticResource SkillStyle}" />
                                 <TextBlock Text="Uno Platform · Xamarin · MAUI" Style="{StaticResource SkillStyle}" />
@@ -206,21 +206,39 @@
                                 </StackPanel>
                             </Button>
                             <TextBlock Style="{StaticResource SkillStyle}" FontSize="12">
-                                <Run Text="{Binding GitHubContributions.TotalContributions}" /><Run Text=" Contributions in 2025" />
+                                <Run Text="{Binding GitHubContributions.TotalContributions}" /><Run Text=" Contributions im letzten Jahr" />
                             </TextBlock>
                             <!-- Contribution Graph (simplified for mobile) -->
                             <ScrollViewer HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled">
-                                <ItemsRepeater ItemsSource="{Binding GitHubContributions.Contributions}">
-                                    <ItemsRepeater.Layout>
-                                        <UniformGridLayout Orientation="Vertical" MaximumRowsOrColumns="7" MinItemWidth="10" MinItemHeight="10" MinRowSpacing="2" MinColumnSpacing="2" />
-                                    </ItemsRepeater.Layout>
-                                    <ItemsRepeater.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Width="10" Height="10" CornerRadius="2"
-                                                    Background="{Binding Count, Converter={StaticResource ContributionToColorConverter}}" />
-                                        </DataTemplate>
-                                    </ItemsRepeater.ItemTemplate>
-                                </ItemsRepeater>
+                                <StackPanel Spacing="4">
+                                    <!-- Month labels -->
+                                    <StackPanel Orientation="Horizontal" Spacing="0">
+                                        <TextBlock Text="Jan" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Feb" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Mär" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Apr" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Mai" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Jun" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Jul" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Aug" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Sep" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Okt" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Nov" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Dez" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="48" />
+                                        <TextBlock Text="Jan" Style="{StaticResource SubtitleStyle}" FontSize="8" Width="24" />
+                                    </StackPanel>
+                                    <ItemsRepeater ItemsSource="{Binding GitHubContributions.Contributions}">
+                                        <ItemsRepeater.Layout>
+                                            <UniformGridLayout Orientation="Vertical" MaximumRowsOrColumns="7" MinItemWidth="10" MinItemHeight="10" MinRowSpacing="2" MinColumnSpacing="2" />
+                                        </ItemsRepeater.Layout>
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Width="10" Height="10" CornerRadius="2"
+                                                        Background="{Binding Count, Converter={StaticResource ContributionToColorConverter}}" />
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </StackPanel>
                             </ScrollViewer>
                         </StackPanel>
 
@@ -273,7 +291,7 @@
 
                             <!-- Expertise rechts -->
                             <StackPanel Grid.Column="2" Spacing="8" VerticalAlignment="Bottom" Margin="24,0,0,0">
-                                <TextBlock Text="EXPERTISE" Style="{StaticResource LabelStyle}" />
+                                <TextBlock Text="FÄHIGKEITEN" Style="{StaticResource LabelStyle}" />
                                 <StackPanel Spacing="2">
                                     <TextBlock Text="C# / .NET · XAML · MVVM" Style="{StaticResource SkillStyle}" FontSize="13" />
                                     <TextBlock Text="Uno Platform · Xamarin · MAUI" Style="{StaticResource SkillStyle}" FontSize="13" />
@@ -466,29 +484,56 @@
                                     </StackPanel>
                                 </Button>
                                 <TextBlock Style="{StaticResource GitHubContributionCountStyle}" VerticalAlignment="Center">
-                                    <Run Text="{Binding GitHubContributions.TotalContributions}" /><Run Text=" Contributions in 2025" />
+                                    <Run Text="{Binding GitHubContributions.TotalContributions}" /><Run Text=" Contributions im letzten Jahr" />
                                 </TextBlock>
                             </StackPanel>
 
                             <!-- Contribution Graph -->
-                            <Border Background="#F8F8F8" Padding="20,16" CornerRadius="4">
+                            <Border Background="#0D1117" Padding="20,16" CornerRadius="4">
                                 <StackPanel Spacing="8">
-                                    <!-- Day labels -->
+                                    <!-- Month labels + Graph -->
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="32" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <StackPanel Spacing="2" VerticalAlignment="Top">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Month labels (above graph) -->
+                                        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled">
+                                            <StackPanel Orientation="Horizontal" Spacing="0" Margin="0,0,0,4">
+                                                <TextBlock Text="Jan" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="56" />
+                                                <TextBlock Text="Feb" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="56" />
+                                                <TextBlock Text="Mär" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="70" />
+                                                <TextBlock Text="Apr" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="56" />
+                                                <TextBlock Text="Mai" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="70" />
+                                                <TextBlock Text="Jun" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="56" />
+                                                <TextBlock Text="Jul" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="70" />
+                                                <TextBlock Text="Aug" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="56" />
+                                                <TextBlock Text="Sep" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="70" />
+                                                <TextBlock Text="Okt" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="56" />
+                                                <TextBlock Text="Nov" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="56" />
+                                                <TextBlock Text="Dez" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="70" />
+                                                <TextBlock Text="Jan" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Width="28" />
+                                            </StackPanel>
+                                        </ScrollViewer>
+
+                                        <!-- Day labels -->
+                                        <StackPanel Grid.Row="1" Spacing="2" VerticalAlignment="Top">
                                             <Border Height="12" />
-                                            <TextBlock Text="Mo" Style="{StaticResource SubtitleStyle}" FontSize="9" Height="12" />
+                                            <TextBlock Text="Mo" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Height="12" />
                                             <Border Height="12" />
-                                            <TextBlock Text="Mi" Style="{StaticResource SubtitleStyle}" FontSize="9" Height="12" />
+                                            <TextBlock Text="Mi" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Height="12" />
                                             <Border Height="12" />
-                                            <TextBlock Text="Fr" Style="{StaticResource SubtitleStyle}" FontSize="9" Height="12" />
+                                            <TextBlock Text="Fr" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="9" Height="12" />
                                             <Border Height="12" />
                                         </StackPanel>
-                                        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled">
+
+                                        <!-- Contribution graph -->
+                                        <ScrollViewer Grid.Row="1" Grid.Column="1" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled">
                                             <ItemsRepeater ItemsSource="{Binding GitHubContributions.Contributions}">
                                                 <ItemsRepeater.Layout>
                                                     <UniformGridLayout Orientation="Vertical" MaximumRowsOrColumns="7" MinItemWidth="12" MinItemHeight="12" MinRowSpacing="2" MinColumnSpacing="2" />
@@ -505,13 +550,13 @@
                                     </Grid>
                                     <!-- Legend -->
                                     <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" Margin="0,8,0,0">
-                                        <TextBlock Text="Weniger" Style="{StaticResource SubtitleStyle}" FontSize="10" VerticalAlignment="Center" />
-                                        <Border Width="12" Height="12" CornerRadius="2" Background="#EBEDF0" />
-                                        <Border Width="12" Height="12" CornerRadius="2" Background="#9BE9A8" />
-                                        <Border Width="12" Height="12" CornerRadius="2" Background="#40C463" />
-                                        <Border Width="12" Height="12" CornerRadius="2" Background="#30A14E" />
-                                        <Border Width="12" Height="12" CornerRadius="2" Background="#216E39" />
-                                        <TextBlock Text="Mehr" Style="{StaticResource SubtitleStyle}" FontSize="10" VerticalAlignment="Center" />
+                                        <TextBlock Text="Weniger" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="10" VerticalAlignment="Center" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#161B22" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#0E4429" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#006D32" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#26A641" />
+                                        <Border Width="12" Height="12" CornerRadius="2" Background="#39D353" />
+                                        <TextBlock Text="Mehr" Style="{StaticResource SubtitleStyle}" Foreground="#8B949E" FontSize="10" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
