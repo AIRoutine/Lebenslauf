@@ -55,12 +55,17 @@ jobs:
           touch ./publish/wwwroot/.nojekyll
           # Custom domain
           echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
+
+          # Fix require.js base URL for subdirectory deployment
+          # Add a script before require.js that configures the baseUrl
+          sed -i 's|<script type="text/javascript" src="/Lebenslauf/package_|<script>var require = { baseUrl: "/Lebenslauf/" };</script>\n    <script type="text/javascript" src="/Lebenslauf/package_|' ./publish/wwwroot/index.html
+
+          # Debug: Show head section of index.html
+          echo "=== INDEX.HTML HEAD ==="
+          head -15 ./publish/wwwroot/index.html
+
           # 404.html for SPA routing (GitHub Pages fallback)
           cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
-          # Debug: Show paths in index.html
-          echo "=== INDEX.HTML PATHS ==="
-          grep -o 'src="[^"]*"' ./publish/wwwroot/index.html | head -5
-          grep -o 'href="[^"]*"' ./publish/wwwroot/index.html | head -5
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
