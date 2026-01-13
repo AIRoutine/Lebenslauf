@@ -33,9 +33,9 @@ public class GitHubSeeder(AppDbContext dbContext) : ISeeder
         var startDate = new DateOnly(2025, 1, 1);
         var endDate = new DateOnly(2026, 1, 11); // Current date
 
-        // Target: 5,276 total contributions (including private)
+        // Target: 5,289 total contributions (including private)
         // Days: 376 -> ~14 contributions per day on average
-        const int targetTotal = 5276;
+        const int targetTotal = 5289;
 
         var tempContributions = new List<(DateOnly date, int weekNumber, int dayOfWeek)>();
 
