@@ -198,7 +198,7 @@
                         <Rectangle Height="1" Fill="#E0E0E0" />
 
                         <!-- GITHUB CONTRIBUTIONS - Mobile -->
-                        <StackPanel Spacing="12" Visibility="{Binding GitHubContributions, Converter={StaticResource NullToCollapsedConverter}, FallbackValue=Collapsed}">
+                        <StackPanel Spacing="12">
                             <Button Command="{Binding OpenGitHubProfileCommand}" Style="{StaticResource BtnStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <FontIcon Glyph="&#xE774;" FontSize="14" Foreground="#000000" />
@@ -474,7 +474,7 @@
                         <!-- ════════════════════════════════════════════════════════════════ -->
                         <!-- GITHUB CONTRIBUTIONS - Contribution Graph Section                 -->
                         <!-- ════════════════════════════════════════════════════════════════ -->
-                        <StackPanel Spacing="20" Visibility="{Binding GitHubContributions, Converter={StaticResource NullToCollapsedConverter}, FallbackValue=Collapsed}">
+                        <StackPanel Spacing="20">
                             <StackPanel Orientation="Horizontal" Spacing="20">
                                 <Button Command="{Binding OpenGitHubProfileCommand}" Style="{StaticResource BtnStyle}">
                                     <StackPanel Orientation="Horizontal" Spacing="10">
