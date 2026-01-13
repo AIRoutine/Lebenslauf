@@ -54,6 +54,10 @@ jobs:
           touch ./publish/wwwroot/.nojekyll
           # Custom domain
           echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
+          # Fix paths for GitHub Pages subdirectory (until custom domain DNS propagates)
+          # Replace absolute paths with relative paths
+          sed -i 's|src="/|src="./|g' ./publish/wwwroot/index.html
+          sed -i 's|href="/|href="./|g' ./publish/wwwroot/index.html
           # 404.html for SPA routing (GitHub Pages fallback)
           cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
 
