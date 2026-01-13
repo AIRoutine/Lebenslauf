@@ -9,11 +9,26 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenApi();
 builder.Services.AddApiServices(builder.Configuration);
 
+// Add CORS for GitHub Pages and custom domain
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(
+                "https://airoutine.github.io",
+                "https://dotnetmaui.at",
+                "https://www.dotnetmaui.at")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 app.Services.EnsureDatabaseCreated();
 await app.RunSeedersAsync();
 
+app.UseCors();
 app.MapDefaultEndpoints();
 app.MapEndpoints();
 
