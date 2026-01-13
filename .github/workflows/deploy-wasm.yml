@@ -33,23 +33,18 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Install workloads
-        run: |
-          dotnet workload install wasm-tools
-          dotnet workload install android ios maccatalyst
+        run: dotnet workload install wasm-tools
 
       - name: Restore dependencies
-        run: dotnet restore src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj
-        env:
-          UNO_SINGLE_TARGET: wasm
+        run: dotnet restore src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj -p:TargetFramework=net10.0-browserwasm
 
       - name: Publish WASM
         run: |
           dotnet publish src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj \
             -c Release \
             -f net10.0-browserwasm \
+            -p:TargetFramework=net10.0-browserwasm \
             -o ./publish
-        env:
-          UNO_SINGLE_TARGET: wasm
 
       - name: Prepare for GitHub Pages
         run: |
