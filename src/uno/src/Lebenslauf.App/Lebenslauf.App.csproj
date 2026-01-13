@@ -8,6 +8,9 @@
     <!-- Suppress IL2026 trimming warnings for Uno.Extensions -->
     <NoWarn>$(NoWarn);IL2026;IL2104;IL2111</NoWarn>
 
+    <!-- Enable reflection-based JSON serialization for WASM (required for Shiny.Mediator HTTP) -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+
     <!-- Display name -->
     <ApplicationTitle>Lebenslauf.App</ApplicationTitle>
     <!-- App Identifier -->

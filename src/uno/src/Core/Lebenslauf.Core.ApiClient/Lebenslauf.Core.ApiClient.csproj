@@ -8,8 +8,12 @@
 
     <!-- Exclude warnings from generated code (Source Generators) -->
     <!-- CS8669: Nullable annotation context, CS9107: Captured parameter, CS0472: null comparison -->
-    <WarningsNotAsErrors>CS8669;CS9107;CS0472</WarningsNotAsErrors>
-    <NoWarn>$(NoWarn);CS8669;CS9107;CS0472</NoWarn>
+    <!-- IL2026: RequiresUnreferencedCode for JSON serialization in WASM -->
+    <WarningsNotAsErrors>CS8669;CS9107;CS0472;IL2026</WarningsNotAsErrors>
+    <NoWarn>$(NoWarn);CS8669;CS9107;CS0472;IL2026</NoWarn>
+
+    <!-- Enable reflection-based JSON serialization for WASM -->
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 
     <!-- Emit source generator output to disk for debugging -->
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
@@ -32,7 +36,7 @@
                   Uri="https://lebenslauf-api.azurewebsites.net/openapi/v1.json"
                   Namespace="Lebenslauf.Core.ApiClient.Generated"
                   ContractPostfix="HttpRequest"
-                  GenerateJsonConverters="true"
+                  GenerateJsonConverters="false"
                   Visible="false" />
   </ItemGroup>
 
