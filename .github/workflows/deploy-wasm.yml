@@ -17,6 +17,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  UNO_SINGLE_TARGET: wasm
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,14 +39,13 @@ jobs:
         run: dotnet workload install wasm-tools
 
       - name: Restore dependencies
-        run: dotnet restore src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj -p:TargetFramework=net10.0-browserwasm
+        run: dotnet restore src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj
 
       - name: Publish WASM
         run: |
           dotnet publish src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj \
             -c Release \
             -f net10.0-browserwasm \
-            -p:TargetFramework=net10.0-browserwasm \
             -o ./publish
 
       - name: Prepare for GitHub Pages
