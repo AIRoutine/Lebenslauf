@@ -46,6 +46,7 @@ jobs:
           dotnet publish src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj \
             -c Release \
             -f net10.0-browserwasm \
+            -p:WasmShellWebAppBasePath=/Lebenslauf/ \
             -o ./publish
 
       - name: Prepare for GitHub Pages
@@ -54,27 +55,12 @@ jobs:
           touch ./publish/wwwroot/.nojekyll
           # Custom domain
           echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
-
-          # Debug: Show original paths
-          echo "=== BEFORE SED ==="
-          grep -o 'src="[^"]*"' ./publish/wwwroot/index.html | head -5
-          grep -o 'href="[^"]*"' ./publish/wwwroot/index.html | head -5
-
-          # Fix absolute paths for GitHub Pages subdirectory
-          # Convert /path to ./path so they work with base href
-          sed -i 's|src="/|src="./|g' ./publish/wwwroot/index.html
-          sed -i 's|href="/|href="./|g' ./publish/wwwroot/index.html
-
-          # Add base href for the subdirectory
-          sed -i 's|<head>|<head>\n    <base href="/Lebenslauf/">|g' ./publish/wwwroot/index.html
-
-          # Debug: Show fixed paths
-          echo "=== AFTER SED ==="
-          grep -o 'src="[^"]*"' ./publish/wwwroot/index.html | head -5
-          grep -o 'href="[^"]*"' ./publish/wwwroot/index.html | head -5
-
           # 404.html for SPA routing (GitHub Pages fallback)
           cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
+          # Debug: Show paths in index.html
+          echo "=== INDEX.HTML PATHS ==="
+          grep -o 'src="[^"]*"' ./publish/wwwroot/index.html | head -5
+          grep -o 'href="[^"]*"' ./publish/wwwroot/index.html | head -5
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
