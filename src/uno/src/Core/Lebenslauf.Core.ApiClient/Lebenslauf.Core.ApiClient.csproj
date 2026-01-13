@@ -29,7 +29,7 @@
   <!-- OpenAPI HTTP Contract Generation from API -->
   <ItemGroup>
     <MediatorHttp Include="ApiContracts"
-                  Uri="http://localhost:5292/openapi/v1.json"
+                  Uri="https://lebenslauf-api.azurewebsites.net/openapi/v1.json"
                   Namespace="Lebenslauf.Core.ApiClient.Generated"
                   ContractPostfix="HttpRequest"
                   GenerateJsonConverters="false"
