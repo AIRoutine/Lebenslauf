@@ -11,6 +11,9 @@
     <!-- Enable reflection-based JSON serialization for WASM (required for Shiny.Mediator HTTP) -->
     <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 
+    <!-- Use partial trimming to preserve constructor metadata for JSON deserialization -->
+    <TrimMode>partial</TrimMode>
+
     <!-- Display name -->
     <ApplicationTitle>Lebenslauf.App</ApplicationTitle>
     <!-- App Identifier -->
