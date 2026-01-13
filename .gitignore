@@ -31,3 +31,17 @@ Thumbs.db
 # MSBuild
 MSBuild_Logs/
 screenshots/
+
+# Secrets & sensitive files
+*.env
+.env.*
+secrets.json
+appsettings.*.local.json
+*.pfx
+*.p12
+
+# Temp files
+temp/
+tmpclaude-*
+*.tmp
+nul
