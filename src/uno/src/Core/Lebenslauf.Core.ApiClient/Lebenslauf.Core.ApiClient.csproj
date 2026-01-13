@@ -32,7 +32,7 @@
                   Uri="https://lebenslauf-api.azurewebsites.net/openapi/v1.json"
                   Namespace="Lebenslauf.Core.ApiClient.Generated"
                   ContractPostfix="HttpRequest"
-                  GenerateJsonConverters="false"
+                  GenerateJsonConverters="true"
                   Visible="false" />
   </ItemGroup>
 
