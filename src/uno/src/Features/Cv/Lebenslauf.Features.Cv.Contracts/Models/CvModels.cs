@@ -86,6 +86,7 @@ public record ProjectModel(
     IReadOnlyList<string> TechnicalAspects,
     string? AppStoreUrl,
     string? PlayStoreUrl,
+    string? AppGalleryUrl,
     string? WebsiteUrl,
     string? ImageUrl
 );

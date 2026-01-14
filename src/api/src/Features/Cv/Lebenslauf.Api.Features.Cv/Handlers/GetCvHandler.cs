@@ -141,6 +141,7 @@ public class GetCvHandler(AppDbContext dbContext) : IRequestHandler<GetCvRequest
             TechnicalAspects: entity.TechnicalAspects.Select(a => a.Description).ToList(),
             AppStoreUrl: entity.AppStoreUrl,
             PlayStoreUrl: entity.PlayStoreUrl,
+            AppGalleryUrl: entity.AppGalleryUrl,
             WebsiteUrl: entity.WebsiteUrl,
             ImageUrl: entity.ImageUrl
         );

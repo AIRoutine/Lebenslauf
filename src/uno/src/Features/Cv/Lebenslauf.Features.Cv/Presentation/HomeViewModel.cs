@@ -1,17 +1,20 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
 using Lebenslauf.Features.Cv.Contracts.Models;
+using Microsoft.Extensions.Logging;
+using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
 using UnoFramework.ViewModels;
 
 namespace Lebenslauf.Features.Cv.Presentation;
 
-public partial class HomeViewModel : PageViewModel
+public partial class HomeViewModel : PageViewModel, INavigationAware
 {
     public HomeViewModel(BaseServices baseServices) : base(baseServices)
     {
-        // Load data immediately
-        _ = LoadPersonalDataAsync();
+        // Trigger initial load - OnNavigatedTo may not be called for the start page
+        OnNavigatingTo();
+        _ = LoadPersonalDataAsync(NavigationToken);
     }
 
     [ObservableProperty]
@@ -32,11 +35,23 @@ public partial class HomeViewModel : PageViewModel
     [ObservableProperty]
     private string _location = "";
 
-    private async Task LoadPersonalDataAsync()
+    public void OnNavigatedTo(object? parameter)
+    {
+        OnNavigatingTo();
+        _ = LoadPersonalDataAsync(NavigationToken);
+    }
+
+    public void OnNavigatedFrom()
+    {
+        OnNavigatingFrom();
+    }
+
+    private async Task LoadPersonalDataAsync(CancellationToken ct)
     {
         try
         {
-            var (_, result) = await Mediator.Request(new GetCvHttpRequest());
+            var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+            ct.ThrowIfCancellationRequested();
 
             if (result?.PersonalData is not null)
             {
@@ -54,9 +69,14 @@ public partial class HomeViewModel : PageViewModel
                 return;
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Navigation cancelled - don't update UI
+            return;
+        }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Failed to load personal data: {ex.Message}");
+            Logger.LogWarning(ex, "Failed to load personal data");
         }
 
         // Fallback to default values

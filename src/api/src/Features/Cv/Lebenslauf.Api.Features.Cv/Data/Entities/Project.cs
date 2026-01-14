@@ -9,6 +9,7 @@ public class Project : BaseEntity
     public string? Framework { get; set; }
     public string? AppStoreUrl { get; set; }
     public string? PlayStoreUrl { get; set; }
+    public string? AppGalleryUrl { get; set; }
     public string? WebsiteUrl { get; set; }
     public string? ImageUrl { get; set; }
     public int SortOrder { get; set; }

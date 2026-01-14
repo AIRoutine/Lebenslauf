@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
 using Lebenslauf.Features.Cv.Contracts.Models;
+using Microsoft.Extensions.Logging;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
 using UnoFramework.ViewModels;
@@ -13,8 +14,9 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     {
         Title = "Lebenslauf";
 
-        // Load data immediately (OnNavigatedTo may not be called with current navigation setup)
-        _ = LoadCvDataAsync();
+        // Trigger initial load - OnNavigatedTo may not be called by navigation system
+        OnNavigatingTo();
+        _ = LoadCvDataAsync(NavigationToken);
     }
 
     [ObservableProperty]
@@ -82,22 +84,24 @@ public partial class CvViewModel : PageViewModel, INavigationAware
 
     public void OnNavigatedTo(object? parameter)
     {
-        _ = LoadCvDataAsync();
+        OnNavigatingTo();
+        _ = LoadCvDataAsync(NavigationToken);
     }
 
     public void OnNavigatedFrom()
     {
-        // Nothing to cleanup
+        OnNavigatingFrom();
     }
 
-    private async Task LoadCvDataAsync()
+    private async Task LoadCvDataAsync(CancellationToken ct)
     {
         using (BeginBusy("Lade Lebenslauf..."))
         {
             try
             {
                 // Call API via Shiny Mediator's generated HTTP contract
-                var (_, result) = await Mediator.Request(new GetCvHttpRequest());
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+                ct.ThrowIfCancellationRequested();
 
                 if (result is not null)
                 {
@@ -153,6 +157,7 @@ public partial class CvViewModel : PageViewModel, INavigationAware
                             (p.TechnicalAspects ?? []).ToList(),
                             p.AppStoreUrl,
                             p.PlayStoreUrl,
+                            p.AppGalleryUrl,
                             p.WebsiteUrl,
                             p.ImageUrl))
                         .ToList();
@@ -178,9 +183,14 @@ public partial class CvViewModel : PageViewModel, INavigationAware
                     return;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                // Navigation cancelled - don't update UI
+                return;
+            }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load CV from API: {ex.Message}");
+                Logger.LogWarning(ex, "Failed to load CV from API");
             }
 
             // Fallback to mock data if API fails

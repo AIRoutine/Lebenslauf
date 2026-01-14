@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
+using Microsoft.Extensions.Logging;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
 using UnoFramework.ViewModels;
@@ -11,7 +12,10 @@ public partial class SkillsViewModel : PageViewModel, INavigationAware
     public SkillsViewModel(BaseServices baseServices) : base(baseServices)
     {
         Title = "Programmierkenntnisse";
-        _ = LoadDataAsync();
+
+        // Trigger initial load - OnNavigatedTo may not be called by navigation system
+        OnNavigatingTo();
+        _ = LoadDataAsync(NavigationToken);
     }
 
     [ObservableProperty]
@@ -47,19 +51,23 @@ public partial class SkillsViewModel : PageViewModel, INavigationAware
 
     public void OnNavigatedTo(object? parameter)
     {
+        OnNavigatingTo();
+        _ = LoadDataAsync(NavigationToken);
     }
 
     public void OnNavigatedFrom()
     {
+        OnNavigatingFrom();
     }
 
-    private async Task LoadDataAsync()
+    private async Task LoadDataAsync(CancellationToken ct)
     {
         using (BeginBusy("Lade Skills..."))
         {
             try
             {
-                var (_, result) = await Mediator.Request(new GetCvHttpRequest());
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+                ct.ThrowIfCancellationRequested();
 
                 if (result?.SkillCategories is not null)
                 {
@@ -95,9 +103,14 @@ public partial class SkillsViewModel : PageViewModel, INavigationAware
                     return;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                // Navigation cancelled - don't update UI
+                return;
+            }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to load skills from API: {ex.Message}");
+                Logger.LogWarning(ex, "Failed to load skills from API");
             }
 
             // Fallback to mock data if API fails

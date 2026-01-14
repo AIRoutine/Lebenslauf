@@ -44,24 +44,15 @@
             </Grid.RowDefinitions>
 
             <!-- Editorial Masthead - Bold B&W Header -->
-            <Border Background="#000000">
-                <Grid Padding="{utu:Responsive Narrow='24,20', Normal='48,28'}">
-                    <StackPanel>
-                        <TextBlock Text="SKILLS"
-                                   Style="{StaticResource DisplayLargeTextBlockStyle}"
-                                   FontSize="{utu:Responsive Narrow=32, Normal=42}"
-                                   FontWeight="Black"
-                                   Foreground="#FFFFFF"
-                                   CharacterSpacing="200" />
-                        <TextBlock Text="Technische Kompetenzen"
-                                   Style="{StaticResource LabelSmallTextBlockStyle}"
-                                   FontSize="{utu:Responsive Narrow=11, Normal=12}"
-                                   FontWeight="Normal"
-                                   Foreground="#CCCCCC"
-                                   CharacterSpacing="100"
-                                   Margin="0,4,0,0" />
-                    </StackPanel>
-                </Grid>
+            <Border Background="#000000" Padding="{utu:Responsive Narrow='16,16', Normal='24,20'}">
+                <StackPanel Spacing="2">
+                    <TextBlock Text="FÄHIGKEITEN"
+                               Style="{StaticResource PageHeaderTitleStyle}"
+                               FontSize="{utu:Responsive Narrow=20, Normal=24}" />
+                    <TextBlock Text="Technische Kompetenzen"
+                               Style="{StaticResource PageHeaderSubtitleStyle}"
+                               FontSize="{utu:Responsive Narrow=11, Normal=12}" />
+                </StackPanel>
             </Border>
 
             <!-- Content -->

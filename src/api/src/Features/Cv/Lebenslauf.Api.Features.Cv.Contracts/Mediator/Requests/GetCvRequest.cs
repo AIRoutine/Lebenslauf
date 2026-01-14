@@ -93,6 +93,7 @@ public record ProjectDto(
     IReadOnlyList<string> TechnicalAspects,
     string? AppStoreUrl,
     string? PlayStoreUrl,
+    string? AppGalleryUrl,
     string? WebsiteUrl,
     string? ImageUrl
 );

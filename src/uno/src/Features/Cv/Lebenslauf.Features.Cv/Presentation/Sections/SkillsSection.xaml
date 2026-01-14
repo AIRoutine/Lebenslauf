@@ -18,9 +18,11 @@
                         Spacing="20">
 
             <!-- Section Header with Icon -->
-            <StackPanel Orientation="Horizontal" Spacing="12">
-                <Border Width="40" Height="40"
-                        CornerRadius="20"
+            <StackPanel Orientation="Horizontal"
+                        Spacing="{utu:Responsive Narrowest=8, Narrow=8, Normal=10, Wide=10, Widest=12}">
+                <Border Width="{utu:Responsive Narrowest=28, Narrow=30, Normal=32, Wide=34, Widest=36}"
+                        Height="{utu:Responsive Narrowest=28, Narrow=30, Normal=32, Wide=34, Widest=36}"
+                        CornerRadius="16"
                         Style="{StaticResource CardBorderStyle}">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -29,13 +31,13 @@
                         </LinearGradientBrush>
                     </Border.Background>
                     <FontIcon Glyph="&#xE74C;"
-                              FontSize="20"
+                              FontSize="{utu:Responsive Narrowest=14, Narrow=15, Normal=16, Wide=17, Widest=18}"
                               Foreground="White"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center" />
                 </Border>
-                <TextBlock Text="Skills"
-                           Style="{StaticResource TitleLargeTextBlockStyle}"
+                <TextBlock Text="Fähigkeiten"
+                           Style="{StaticResource TitleMediumTextBlockStyle}"
                            VerticalAlignment="Center" />
             </StackPanel>
 

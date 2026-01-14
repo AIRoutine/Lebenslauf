@@ -21,6 +21,71 @@
     </Style>
 
     <!-- ================================================================
+         PAGE HEADER STYLES (B&W Editorial Header)
+         ================================================================ -->
+
+    <Style x:Key="PageHeaderTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Black" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="CharacterSpacing" Value="200" />
+    </Style>
+
+    <Style x:Key="PageHeaderSubtitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="#CCCCCC" />
+        <Setter Property="CharacterSpacing" Value="100" />
+    </Style>
+
+    <!-- ================================================================
+         STORE BADGE STYLES
+         ================================================================ -->
+
+    <Style x:Key="StoreBadgeBaseStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="MinWidth" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+    </Style>
+
+    <Style x:Key="AppStoreBadgeStyle" TargetType="Button" BasedOn="{StaticResource StoreBadgeBaseStyle}">
+        <Setter Property="Background" Value="#000000" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style x:Key="PlayStoreBadgeStyle" TargetType="Button" BasedOn="{StaticResource StoreBadgeBaseStyle}">
+        <Setter Property="Background" Value="#FFFFFF" />
+        <Setter Property="BorderBrush" Value="#000000" />
+        <Setter Property="BorderThickness" Value="1.5" />
+    </Style>
+
+    <Style x:Key="HuaweiBadgeStyle" TargetType="Button" BasedOn="{StaticResource StoreBadgeBaseStyle}">
+        <Setter Property="Background" Value="#000000" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style x:Key="StoreBadgeLabelLightStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="8" />
+        <Setter Property="Foreground" Value="#AAAAAA" />
+    </Style>
+
+    <Style x:Key="StoreBadgeTitleLightStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+
+    <Style x:Key="StoreBadgeLabelDarkStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="8" />
+        <Setter Property="Foreground" Value="#666666" />
+    </Style>
+
+    <Style x:Key="StoreBadgeTitleDarkStyle" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="#000000" />
+    </Style>
+
+    <!-- ================================================================
          NAVIGATION BAR STYLES
          ================================================================ -->
 

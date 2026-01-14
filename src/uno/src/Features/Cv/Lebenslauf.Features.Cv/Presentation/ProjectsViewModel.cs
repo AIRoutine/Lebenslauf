@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
 using Lebenslauf.Features.Cv.Contracts.Models;
+using Microsoft.Extensions.Logging;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
 using UnoFramework.ViewModels;
@@ -12,7 +13,10 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
     public ProjectsViewModel(BaseServices baseServices) : base(baseServices)
     {
         Title = "Projektuebersicht";
-        _ = LoadDataAsync();
+
+        // Trigger initial load - OnNavigatedTo may not be called by navigation system
+        OnNavigatingTo();
+        _ = LoadDataAsync(NavigationToken);
     }
 
     [ObservableProperty]
@@ -23,19 +27,23 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
 
     public void OnNavigatedTo(object? parameter)
     {
+        OnNavigatingTo();
+        _ = LoadDataAsync(NavigationToken);
     }
 
     public void OnNavigatedFrom()
     {
+        OnNavigatingFrom();
     }
 
-    private async Task LoadDataAsync()
+    private async Task LoadDataAsync(CancellationToken ct)
     {
         using (BeginBusy("Lade Projekte..."))
         {
             try
             {
-                var (_, result) = await Mediator.Request(new GetCvHttpRequest());
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+                ct.ThrowIfCancellationRequested();
 
                 if (result?.Projects is not null)
                 {
@@ -51,15 +59,21 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
                             (p.TechnicalAspects ?? []).ToList(),
                             p.AppStoreUrl,
                             p.PlayStoreUrl,
+                            p.AppGalleryUrl,
                             p.WebsiteUrl,
                             p.ImageUrl))
                         .ToList();
                     return;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                // Navigation cancelled - don't update UI
+                return;
+            }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Failed to load projects from API: {ex.Message}");
+                Logger.LogWarning(ex, "Failed to load projects from API");
             }
 
             // API is single source of truth - no mock data fallback

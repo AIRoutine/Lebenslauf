@@ -10,18 +10,7 @@
       Background="#FFFFFF">
 
     <Page.Resources>
-        <!-- Page Header Styles -->
-        <Style x:Key="PageTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadlineLargeTextBlockStyle}">
-            <Setter Property="FontWeight" Value="Black" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-            <Setter Property="CharacterSpacing" Value="100" />
-        </Style>
-
-        <Style x:Key="PageSubtitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyMediumTextBlockStyle}">
-            <Setter Property="Foreground" Value="#888888" />
-        </Style>
-
-        <!-- Project Header Styles -->
+        <!-- Project-specific Styles (not shared) -->
         <Style x:Key="ProjectHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource HeadlineMediumTextBlockStyle}">
             <Setter Property="FontWeight" Value="Black" />
             <Setter Property="Foreground" Value="#FFFFFF" />
@@ -55,46 +44,6 @@
             <Setter Property="Foreground" Value="#000000" />
         </Style>
 
-        <!-- Store Badge Styles -->
-        <Style x:Key="AppStoreBadgeStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
-            <Setter Property="Background" Value="#000000" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="12,8" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="MinWidth" Value="0" />
-            <Setter Property="MinHeight" Value="0" />
-        </Style>
-
-        <Style x:Key="PlayStoreBadgeStyle" TargetType="Button" BasedOn="{StaticResource TransparentButtonStyle}">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#000000" />
-            <Setter Property="BorderThickness" Value="1.5" />
-            <Setter Property="Padding" Value="12,8" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="MinWidth" Value="0" />
-            <Setter Property="MinHeight" Value="0" />
-        </Style>
-
-        <Style x:Key="StoreBadgeLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
-            <Setter Property="Foreground" Value="#AAAAAA" />
-            <Setter Property="FontSize" Value="8" />
-        </Style>
-
-        <Style x:Key="StoreBadgeTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
-        </Style>
-
-        <Style x:Key="StoreBadgeLabelDarkStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
-            <Setter Property="Foreground" Value="#666666" />
-            <Setter Property="FontSize" Value="8" />
-        </Style>
-
-        <Style x:Key="StoreBadgeTitleDarkStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#000000" />
-        </Style>
-
         <Style x:Key="ProjectResponsiveViewStyle" TargetType="utu:ResponsiveView" />
     </Page.Resources>
 
@@ -108,14 +57,14 @@
             </Grid.RowDefinitions>
 
             <!-- Simple Header - PROJEKTE -->
-            <Border Background="#000000" Padding="{utu:Responsive Narrow='24,24', Normal='48,32'}">
-                <StackPanel Spacing="4">
+            <Border Background="#000000" Padding="{utu:Responsive Narrow='16,16', Normal='24,20'}">
+                <StackPanel Spacing="2">
                     <TextBlock Text="PROJEKTE"
-                               Style="{StaticResource PageTitleStyle}"
-                               FontSize="{utu:Responsive Narrow=28, Normal=36}" />
+                               Style="{StaticResource PageHeaderTitleStyle}"
+                               FontSize="{utu:Responsive Narrow=20, Normal=24}" />
                     <TextBlock Text="Referenzprojekte und Erfahrungen"
-                               Style="{StaticResource PageSubtitleStyle}"
-                               FontSize="{utu:Responsive Narrow=13, Normal=15}" />
+                               Style="{StaticResource PageHeaderSubtitleStyle}"
+                               FontSize="{utu:Responsive Narrow=11, Normal=12}" />
                 </StackPanel>
             </Border>
 
@@ -239,9 +188,9 @@
                                                             <FontIcon Glyph="&#xE8A9;" FontSize="18" Foreground="#FFFFFF" />
                                                             <StackPanel Spacing="-2">
                                                                 <TextBlock Text="Laden im"
-                                                                           Style="{StaticResource StoreBadgeLabelStyle}" />
+                                                                           Style="{StaticResource StoreBadgeLabelLightStyle}" />
                                                                 <TextBlock Text="App Store"
-                                                                           Style="{StaticResource StoreBadgeTitleStyle}" />
+                                                                           Style="{StaticResource StoreBadgeTitleLightStyle}" />
                                                             </StackPanel>
                                                         </StackPanel>
                                                     </Button>
@@ -258,6 +207,22 @@
                                                                            Style="{StaticResource StoreBadgeLabelDarkStyle}" />
                                                                 <TextBlock Text="Google Play"
                                                                            Style="{StaticResource StoreBadgeTitleDarkStyle}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Button>
+
+                                                    <!-- Huawei AppGallery Badge -->
+                                                    <Button Style="{StaticResource HuaweiBadgeStyle}"
+                                                            Visibility="{Binding AppGalleryUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                            Command="{Binding DataContext.OpenUrlCommand, ElementName=RootPage}"
+                                                            CommandParameter="{Binding AppGalleryUrl}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE8A9;" FontSize="18" Foreground="#FFFFFF" />
+                                                            <StackPanel Spacing="-2">
+                                                                <TextBlock Text="Erkunden in"
+                                                                           Style="{StaticResource StoreBadgeLabelLightStyle}" />
+                                                                <TextBlock Text="AppGallery"
+                                                                           Style="{StaticResource StoreBadgeTitleLightStyle}" />
                                                             </StackPanel>
                                                         </StackPanel>
                                                     </Button>
@@ -398,9 +363,9 @@
                                                             <FontIcon Glyph="&#xE8A9;" FontSize="22" Foreground="#FFFFFF" />
                                                             <StackPanel Spacing="-1">
                                                                 <TextBlock Text="Laden im"
-                                                                           Style="{StaticResource StoreBadgeLabelStyle}" />
+                                                                           Style="{StaticResource StoreBadgeLabelLightStyle}" />
                                                                 <TextBlock Text="App Store"
-                                                                           Style="{StaticResource StoreBadgeTitleStyle}"
+                                                                           Style="{StaticResource StoreBadgeTitleLightStyle}"
                                                                            FontSize="14" />
                                                             </StackPanel>
                                                         </StackPanel>
@@ -418,6 +383,23 @@
                                                                            Style="{StaticResource StoreBadgeLabelDarkStyle}" />
                                                                 <TextBlock Text="Google Play"
                                                                            Style="{StaticResource StoreBadgeTitleDarkStyle}"
+                                                                           FontSize="14" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Button>
+
+                                                    <!-- Huawei AppGallery Badge -->
+                                                    <Button Style="{StaticResource HuaweiBadgeStyle}"
+                                                            Visibility="{Binding AppGalleryUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                            Command="{Binding DataContext.OpenUrlCommand, ElementName=RootPage}"
+                                                            CommandParameter="{Binding AppGalleryUrl}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                                            <FontIcon Glyph="&#xE8A9;" FontSize="22" Foreground="#FFFFFF" />
+                                                            <StackPanel Spacing="-1">
+                                                                <TextBlock Text="Erkunden in"
+                                                                           Style="{StaticResource StoreBadgeLabelLightStyle}" />
+                                                                <TextBlock Text="AppGallery"
+                                                                           Style="{StaticResource StoreBadgeTitleLightStyle}"
                                                                            FontSize="14" />
                                                             </StackPanel>
                                                         </StackPanel>

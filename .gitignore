@@ -45,3 +45,25 @@ temp/
 tmpclaude-*
 *.tmp
 nul
+temp_*.png
+temp_*.txt
+
+# Screenshots in root
+screenshot*.png
+
+# Logs
+logs/
+logs.zip
+
+# SQLite WAL files
+*.db-shm
+*.db-wal
+
+# Publish output
+publish/
+
+# API deployment artifacts
+src/api/src/Lebenslauf.Api/*.zip
+
+# Generated API client
+src/uno/src/Core/Lebenslauf.Core.ApiClient/openapi.json

@@ -19,9 +19,11 @@
                         Spacing="20">
 
             <!-- Section Header with Icon -->
-            <StackPanel Orientation="Horizontal" Spacing="12">
-                <Border Width="40" Height="40"
-                        CornerRadius="20"
+            <StackPanel Orientation="Horizontal"
+                        Spacing="{utu:Responsive Narrowest=8, Narrow=8, Normal=10, Wide=10, Widest=12}">
+                <Border Width="{utu:Responsive Narrowest=28, Narrow=30, Normal=32, Wide=34, Widest=36}"
+                        Height="{utu:Responsive Narrowest=28, Narrow=30, Normal=32, Wide=34, Widest=36}"
+                        CornerRadius="16"
                         Style="{StaticResource CardBorderStyle}">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -30,13 +32,13 @@
                         </LinearGradientBrush>
                     </Border.Background>
                     <FontIcon Glyph="&#xE8A1;"
-                              FontSize="20"
+                              FontSize="{utu:Responsive Narrowest=14, Narrow=15, Normal=16, Wide=17, Widest=18}"
                               Foreground="White"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center" />
                 </Border>
                 <TextBlock Text="Projekte"
-                           Style="{StaticResource TitleLargeTextBlockStyle}"
+                           Style="{StaticResource TitleMediumTextBlockStyle}"
                            VerticalAlignment="Center" />
             </StackPanel>
 
@@ -124,6 +126,16 @@
                                             <StackPanel Orientation="Horizontal" Spacing="4">
                                                 <FontIcon Glyph="&#xE8A9;" FontSize="12" />
                                                 <TextBlock Text="Android" Style="{StaticResource LabelSmallTextBlockStyle}" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Visibility="{Binding AppGalleryUrl, Converter={StaticResource NullToCollapsedConverter}}"
+                                                Style="{StaticResource TextButtonStyle}"
+                                                Padding="8,4"
+                                                Command="{Binding OpenUrlCommand, ElementName=Root}"
+                                                CommandParameter="{Binding AppGalleryUrl}">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <FontIcon Glyph="&#xE8A9;" FontSize="12" />
+                                                <TextBlock Text="Huawei" Style="{StaticResource LabelSmallTextBlockStyle}" />
                                             </StackPanel>
                                         </Button>
                                         <Button Visibility="{Binding WebsiteUrl, Converter={StaticResource NullToCollapsedConverter}}"
