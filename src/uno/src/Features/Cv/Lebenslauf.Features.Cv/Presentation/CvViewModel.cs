@@ -13,10 +13,6 @@ public partial class CvViewModel : PageViewModel, INavigationAware
     public CvViewModel(BaseServices baseServices) : base(baseServices)
     {
         Title = "Lebenslauf";
-
-        // Trigger initial load - OnNavigatedTo may not be called by navigation system
-        OnNavigatingTo();
-        _ = LoadCvDataAsync(NavigationToken);
     }
 
     [ObservableProperty]

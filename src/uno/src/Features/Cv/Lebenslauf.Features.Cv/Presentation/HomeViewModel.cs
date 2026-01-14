@@ -12,9 +12,6 @@ public partial class HomeViewModel : PageViewModel, INavigationAware
 {
     public HomeViewModel(BaseServices baseServices) : base(baseServices)
     {
-        // Trigger initial load - OnNavigatedTo may not be called for the start page
-        OnNavigatingTo();
-        _ = LoadPersonalDataAsync(NavigationToken);
     }
 
     [ObservableProperty]

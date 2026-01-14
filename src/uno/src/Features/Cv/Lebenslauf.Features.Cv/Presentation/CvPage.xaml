@@ -1,12 +1,13 @@
-<Page x:Class="Lebenslauf.Features.Cv.Presentation.CvPage"
+<fw:BasePage x:Class="Lebenslauf.Features.Cv.Presentation.CvPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:fw="using:UnoFramework.Pages"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:uf="using:UnoFramework.Controls"
       xmlns:controls="using:Lebenslauf.Core.Styles.Controls"
       Background="#FFFFFF">
 
-    <Page.Resources>
+    <fw:BasePage.Resources>
         <!-- CLEAN CV DESIGN - B&W Editorial -->
         <Style x:Key="NameStyle" TargetType="TextBlock" BasedOn="{StaticResource DisplayLargeTextBlockStyle}">
             <Setter Property="FontSize" Value="52" />
@@ -86,7 +87,7 @@
             <Setter Property="Foreground" Value="#333333" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
-    </Page.Resources>
+    </fw:BasePage.Resources>
 
     <uf:BusyOverlay IsBusy="{Binding IsBusy}" BusyMessage="{Binding BusyMessage}">
         <Grid>
@@ -577,4 +578,4 @@
                                            VerticalAlignment="Top" />
         </Grid>
     </uf:BusyOverlay>
-</Page>
+</fw:BasePage>

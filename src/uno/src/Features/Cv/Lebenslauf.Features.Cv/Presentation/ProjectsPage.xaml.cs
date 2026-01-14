@@ -1,6 +1,8 @@
+using UnoFramework.Pages;
+
 namespace Lebenslauf.Features.Cv.Presentation;
 
-public sealed partial class ProjectsPage : Page
+public sealed partial class ProjectsPage : BasePage
 {
     public ProjectsPage()
     {

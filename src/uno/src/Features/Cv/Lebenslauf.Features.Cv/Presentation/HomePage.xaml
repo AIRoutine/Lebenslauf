@@ -1,11 +1,12 @@
-<Page x:Class="Lebenslauf.Features.Cv.Presentation.HomePage"
+<fw:BasePage x:Class="Lebenslauf.Features.Cv.Presentation.HomePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:fw="using:UnoFramework.Pages"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:uen="using:Uno.Extensions.Navigation.UI"
       Background="#FFFFFF">
 
-    <Page.Resources>
+    <fw:BasePage.Resources>
         <!-- Typography Styles -->
         <Style x:Key="HomeNameStyle" TargetType="TextBlock" BasedOn="{StaticResource DisplayLargeTextBlockStyle}">
             <Setter Property="FontWeight" Value="Black" />
@@ -42,7 +43,7 @@
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
         </Style>
         <Style x:Key="ResponsiveViewStyle" TargetType="utu:ResponsiveView" />
-    </Page.Resources>
+    </fw:BasePage.Resources>
 
     <utu:ResponsiveView Style="{StaticResource ResponsiveViewStyle}">
         <!-- MOBILE LAYOUT -->
@@ -292,4 +293,4 @@
             </DataTemplate>
         </utu:ResponsiveView.NormalTemplate>
     </utu:ResponsiveView>
-</Page>
+</fw:BasePage>

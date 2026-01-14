@@ -12,10 +12,6 @@ public partial class SkillsViewModel : PageViewModel, INavigationAware
     public SkillsViewModel(BaseServices baseServices) : base(baseServices)
     {
         Title = "Programmierkenntnisse";
-
-        // Trigger initial load - OnNavigatedTo may not be called by navigation system
-        OnNavigatingTo();
-        _ = LoadDataAsync(NavigationToken);
     }
 
     [ObservableProperty]

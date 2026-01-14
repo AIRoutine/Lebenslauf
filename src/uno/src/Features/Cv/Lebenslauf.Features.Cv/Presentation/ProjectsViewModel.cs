@@ -13,10 +13,6 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
     public ProjectsViewModel(BaseServices baseServices) : base(baseServices)
     {
         Title = "Projektuebersicht";
-
-        // Trigger initial load - OnNavigatedTo may not be called by navigation system
-        OnNavigatingTo();
-        _ = LoadDataAsync(NavigationToken);
     }
 
     [ObservableProperty]
