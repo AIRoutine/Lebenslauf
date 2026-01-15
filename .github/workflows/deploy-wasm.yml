@@ -64,21 +64,11 @@ jobs:
           REDIRECT_SCRIPT='<script>!function(){var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b)){var s=p.substring(b.length);if(s&&s!=="/"){sessionStorage.setItem("spa-path",s);location.replace(b+"/")}}}();</script>'
 
           # Inject SPA routing into index.html (before </head>)
-          python3 -c "
-import sys
-with open(sys.argv[1], 'r') as f: c = f.read()
-c = c.replace('</head>', sys.argv[2] + '</head>')
-with open(sys.argv[1], 'w') as f: f.write(c)
-" ./publish/wwwroot/index.html "$SPA_SCRIPT"
+          python3 -c "import sys; c=open(sys.argv[1]).read(); open(sys.argv[1],'w').write(c.replace('</head>',sys.argv[2]+'</head>'))" ./publish/wwwroot/index.html "$SPA_SCRIPT"
 
           # Create 404.html with redirect script at the BEGINNING of head
           # This must execute FIRST before any other scripts load
-          python3 -c "
-import sys
-with open(sys.argv[1], 'r') as f: c = f.read()
-c = c.replace('<head>', '<head>' + sys.argv[2])
-with open(sys.argv[3], 'w') as f: f.write(c)
-" ./publish/wwwroot/index.html "$REDIRECT_SCRIPT" ./publish/wwwroot/404.html
+          python3 -c "import sys; c=open(sys.argv[1]).read(); open(sys.argv[3],'w').write(c.replace('<head>','<head>'+sys.argv[2]))" ./publish/wwwroot/index.html "$REDIRECT_SCRIPT" ./publish/wwwroot/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
