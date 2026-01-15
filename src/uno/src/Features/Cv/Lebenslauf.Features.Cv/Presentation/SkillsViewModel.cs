@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
+using Lebenslauf.Features.Cv.Services;
 using Microsoft.Extensions.Logging;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
@@ -9,8 +10,12 @@ namespace Lebenslauf.Features.Cv.Presentation;
 
 public partial class SkillsViewModel : PageViewModel, INavigationAware
 {
-    public SkillsViewModel(BaseServices baseServices) : base(baseServices)
+    private readonly IProfileStateService _profileStateService;
+
+    public SkillsViewModel(BaseServices baseServices, IProfileStateService profileStateService) : base(baseServices)
     {
+        _profileStateService = profileStateService;
+        _profileStateService.ProfileChanged += OnProfileChanged;
         Title = "Programmierkenntnisse";
     }
 
@@ -56,13 +61,19 @@ public partial class SkillsViewModel : PageViewModel, INavigationAware
         OnNavigatingFrom();
     }
 
+    private void OnProfileChanged(object? sender, ProfileChangedEventArgs e)
+    {
+        // Reload data when profile changes
+        _ = LoadDataAsync(CancellationToken.None);
+    }
+
     private async Task LoadDataAsync(CancellationToken ct)
     {
         using (BeginBusy("Lade Skills..."))
         {
             try
             {
-                var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest { ProfileSlug = _profileStateService.ActiveProfileSlug ?? "" }, ct);
                 ct.ThrowIfCancellationRequested();
 
                 if (result?.SkillCategories is not null)

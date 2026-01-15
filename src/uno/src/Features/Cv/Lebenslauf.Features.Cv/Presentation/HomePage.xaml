@@ -116,11 +116,20 @@
                         </Button>
 
                         <!-- Footer -->
-                        <StackPanel Padding="24,32" Background="#FFFFFF">
+                        <Grid Padding="24,32" Background="#FFFFFF">
                             <TextBlock Text="{Binding Email}"
                                        Style="{StaticResource HomeSubtitleStyle}"
-                                       FontSize="11" />
-                        </StackPanel>
+                                       FontSize="11"
+                                       VerticalAlignment="Center" />
+                            <Button uen:Navigation.Request="Admin"
+                                    Style="{StaticResource IconButtonStyle}"
+                                    HorizontalAlignment="Right"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Padding="8">
+                                <FontIcon Glyph="&#xE713;" FontSize="18" Foreground="#999999" />
+                            </Button>
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </DataTemplate>
@@ -162,7 +171,19 @@
 
                             <!-- Contact Footer - Structured -->
                             <StackPanel Grid.Row="1" Spacing="16">
-                                <Rectangle Height="1" Fill="#E8E8E8" />
+                                <Grid>
+                                    <Rectangle Height="1" Fill="#E8E8E8" />
+                                    <Button uen:Navigation.Request="Admin"
+                                            Style="{StaticResource IconButtonStyle}"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Padding="8"
+                                            Margin="0,-12,0,-12">
+                                        <FontIcon Glyph="&#xE713;" FontSize="16" Foreground="#CCCCCC" />
+                                    </Button>
+                                </Grid>
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />

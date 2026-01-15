@@ -5,9 +5,11 @@
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:uf="using:UnoFramework.Controls"
       xmlns:controls="using:Lebenslauf.Core.Styles.Controls"
+      xmlns:converters="using:Lebenslauf.Features.Cv.Converters"
       Background="#FFFFFF">
 
     <fw:BasePage.Resources>
+        <converters:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter" />
         <!-- B&W Styles -->
         <Style x:Key="SkillsTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource TitleLargeTextBlockStyle}">
             <Setter Property="FontWeight" Value="Black" />
@@ -64,7 +66,7 @@
                     <ScrollViewer Padding="20,16">
                         <StackPanel Spacing="24" MaxWidth="600" HorizontalAlignment="Center">
                             <!-- Expertise -->
-                            <StackPanel Spacing="12">
+                            <StackPanel Spacing="12" Visibility="{Binding ExpertiseSkills, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="EXPERTISE" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding ExpertiseSkills}">
                                     <ItemsRepeater.Layout>
@@ -81,7 +83,7 @@
                             </StackPanel>
 
                             <!-- Basic Knowledge -->
-                            <StackPanel Spacing="12">
+                            <StackPanel Spacing="12" Visibility="{Binding BasicSkills, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="GRUNDLAGEN" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding BasicSkills}">
                                     <ItemsRepeater.Layout>
@@ -98,7 +100,7 @@
                             </StackPanel>
 
                             <!-- App Base -->
-                            <StackPanel Spacing="12">
+                            <StackPanel Spacing="12" Visibility="{Binding AppBaseTechnologies, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="APP-BASIS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding AppBaseTechnologies}">
                                     <ItemsRepeater.Layout>
@@ -116,7 +118,7 @@
                             </StackPanel>
 
                             <!-- DevOps -->
-                            <StackPanel Spacing="12">
+                            <StackPanel Spacing="12" Visibility="{Binding DevTools, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="DEVOPS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding DevTools}">
                                     <ItemsRepeater.Layout>
@@ -133,7 +135,7 @@
                             </StackPanel>
 
                             <!-- AI Tools -->
-                            <StackPanel Spacing="12">
+                            <StackPanel Spacing="12" Visibility="{Binding AiTools, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="AI TOOLS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding AiTools}">
                                     <ItemsRepeater.Layout>
@@ -150,7 +152,7 @@
                             </StackPanel>
 
                             <!-- Frameworks -->
-                            <StackPanel Spacing="12">
+                            <StackPanel Spacing="12" Visibility="{Binding Frameworks, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="FRAMEWORKS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding Frameworks}">
                                     <ItemsRepeater.Layout>
@@ -167,7 +169,7 @@
                             </StackPanel>
 
                             <!-- App Dev Experience -->
-                            <StackPanel Spacing="12">
+                            <StackPanel Spacing="12" Visibility="{Binding AppDevExperience, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="ERFAHRUNG" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding AppDevExperience}">
                                     <ItemsRepeater.Layout>
@@ -195,7 +197,7 @@
                         <StackPanel MaxWidth="800" HorizontalAlignment="Center" Spacing="16">
 
                             <!-- EXPERTISE - Primary + Basic skills combined -->
-                            <StackPanel Spacing="10">
+                            <StackPanel Spacing="10" Visibility="{Binding ExpertiseSkills, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="EXPERTISE" Style="{StaticResource SkillsSectionStyle}" />
                                 <!-- Primary expertise - black chips -->
                                 <ItemsRepeater ItemsSource="{Binding ExpertiseSkills}">
@@ -226,10 +228,10 @@
                             </StackPanel>
 
                             <!-- Thin divider -->
-                            <Rectangle Height="1" Fill="#E0E0E0" />
+                            <Rectangle Height="1" Fill="#E0E0E0" Visibility="{Binding Frameworks, Converter={StaticResource CollectionToVisibilityConverter}}" />
 
                             <!-- FRAMEWORKS - outlined style -->
-                            <StackPanel Spacing="8">
+                            <StackPanel Spacing="8" Visibility="{Binding Frameworks, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="FRAMEWORKS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding Frameworks}">
                                     <ItemsRepeater.Layout>
@@ -246,10 +248,10 @@
                             </StackPanel>
 
                             <!-- Thin divider -->
-                            <Rectangle Height="1" Fill="#E0E0E0" />
+                            <Rectangle Height="1" Fill="#E0E0E0" Visibility="{Binding DevTools, Converter={StaticResource CollectionToVisibilityConverter}}" />
 
                             <!-- DEVOPS & TOOLS -->
-                            <StackPanel Spacing="6">
+                            <StackPanel Spacing="6" Visibility="{Binding DevTools, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="DEVOPS &amp; TOOLS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding DevTools}">
                                     <ItemsRepeater.Layout>
@@ -266,10 +268,10 @@
                             </StackPanel>
 
                             <!-- Thin divider -->
-                            <Rectangle Height="1" Fill="#E0E0E0" />
+                            <Rectangle Height="1" Fill="#E0E0E0" Visibility="{Binding AiTools, Converter={StaticResource CollectionToVisibilityConverter}}" />
 
                             <!-- AI TOOLS -->
-                            <StackPanel Spacing="6">
+                            <StackPanel Spacing="6" Visibility="{Binding AiTools, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="AI TOOLS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding AiTools}">
                                     <ItemsRepeater.Layout>
@@ -286,10 +288,10 @@
                             </StackPanel>
 
                             <!-- Thin divider -->
-                            <Rectangle Height="1" Fill="#E0E0E0" />
+                            <Rectangle Height="1" Fill="#E0E0E0" Visibility="{Binding AppBaseTechnologies, Converter={StaticResource CollectionToVisibilityConverter}}" />
 
                             <!-- APP-BASIS - compact list -->
-                            <StackPanel Spacing="6">
+                            <StackPanel Spacing="6" Visibility="{Binding AppBaseTechnologies, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="APP-BASIS" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding AppBaseTechnologies}">
                                     <ItemsRepeater.Layout>
@@ -307,10 +309,10 @@
                             </StackPanel>
 
                             <!-- Thin divider -->
-                            <Rectangle Height="1" Fill="#E0E0E0" />
+                            <Rectangle Height="1" Fill="#E0E0E0" Visibility="{Binding AppDevExperience, Converter={StaticResource CollectionToVisibilityConverter}}" />
 
                             <!-- ERFAHRUNG - compact checkmark list -->
-                            <StackPanel Spacing="6">
+                            <StackPanel Spacing="6" Visibility="{Binding AppDevExperience, Converter={StaticResource CollectionToVisibilityConverter}}">
                                 <TextBlock Text="ERFAHRUNG" Style="{StaticResource SkillsSectionStyle}" />
                                 <ItemsRepeater ItemsSource="{Binding AppDevExperience}">
                                     <ItemsRepeater.Layout>

@@ -15,4 +15,8 @@ public class PersonalData : BaseEntity
     public required DateOnly BirthDate { get; set; }
     public required string Citizenship { get; set; }
     public string? ProfileImageUrl { get; set; }
+
+    // Profile relationship - each PersonalData belongs to one Profile
+    public Guid ProfileId { get; set; }
+    public Profile Profile { get; set; } = null!;
 }

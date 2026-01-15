@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
 using Lebenslauf.Features.Cv.Contracts.Models;
+using Lebenslauf.Features.Cv.Services;
 using Microsoft.Extensions.Logging;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
@@ -10,8 +11,12 @@ namespace Lebenslauf.Features.Cv.Presentation;
 
 public partial class HomeViewModel : PageViewModel, INavigationAware
 {
-    public HomeViewModel(BaseServices baseServices) : base(baseServices)
+    private readonly IProfileStateService _profileStateService;
+
+    public HomeViewModel(BaseServices baseServices, IProfileStateService profileStateService) : base(baseServices)
     {
+        _profileStateService = profileStateService;
+        _profileStateService.ProfileChanged += OnProfileChanged;
     }
 
     [ObservableProperty]
@@ -43,11 +48,17 @@ public partial class HomeViewModel : PageViewModel, INavigationAware
         OnNavigatingFrom();
     }
 
+    private void OnProfileChanged(object? sender, ProfileChangedEventArgs e)
+    {
+        // Reload data when profile changes
+        _ = LoadPersonalDataAsync(CancellationToken.None);
+    }
+
     private async Task LoadPersonalDataAsync(CancellationToken ct)
     {
         try
         {
-            var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+            var (_, result) = await Mediator.Request(new GetCvHttpRequest { ProfileSlug = _profileStateService.ActiveProfileSlug ?? "" }, ct);
             ct.ThrowIfCancellationRequested();
 
             if (result?.PersonalData is not null)

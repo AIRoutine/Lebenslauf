@@ -20,5 +20,11 @@ public class PersonalDataConfiguration : IEntityTypeConfiguration<PersonalData>
         builder.Property(x => x.Country).HasMaxLength(100).IsRequired();
         builder.Property(x => x.Citizenship).HasMaxLength(100).IsRequired();
         builder.Property(x => x.ProfileImageUrl).HasMaxLength(500);
+
+        // Profile relationship
+        builder.HasOne(x => x.Profile)
+            .WithOne(x => x.PersonalData)
+            .HasForeignKey<PersonalData>(x => x.ProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

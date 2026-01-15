@@ -11,4 +11,7 @@ public class WorkExperience : BaseEntity
     public string? Description { get; set; }
     public bool IsCurrent { get; set; }
     public int SortOrder { get; set; }
+
+    // Navigation properties
+    public ICollection<ProfileWorkExperience> ProfileWorkExperiences { get; set; } = [];
 }

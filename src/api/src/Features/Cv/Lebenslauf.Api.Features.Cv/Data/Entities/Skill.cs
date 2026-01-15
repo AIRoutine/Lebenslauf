@@ -9,4 +9,7 @@ public class Skill : BaseEntity
 
     public Guid CategoryId { get; set; }
     public SkillCategory Category { get; set; } = null!;
+
+    // M:N relationship with profiles
+    public ICollection<ProfileSkill> ProfileSkills { get; set; } = [];
 }

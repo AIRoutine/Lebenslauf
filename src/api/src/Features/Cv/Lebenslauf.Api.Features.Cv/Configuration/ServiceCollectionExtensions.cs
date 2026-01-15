@@ -8,7 +8,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCvFeature(this IServiceCollection services)
     {
-        services.AddSeeder<CvSeeder>();
+        services.AddSeeder<ProfileSeeder>(); // Order 5 - profiles first
+        services.AddSeeder<CvSeeder>();       // Order 10 - uses profiles
         services.AddSeeder<GitHubSeeder>();
         return services;
     }

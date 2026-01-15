@@ -69,7 +69,8 @@ public partial class App : Application
             new ViewMap<HomePage, HomeViewModel>(),
             new ViewMap<CvPage, CvViewModel>(),
             new ViewMap<SkillsPage, SkillsViewModel>(),
-            new ViewMap<ProjectsPage, ProjectsViewModel>()
+            new ViewMap<ProjectsPage, ProjectsViewModel>(),
+            new ViewMap<AdminPage, AdminViewModel>()
         );
 
         routes.Register(
@@ -82,7 +83,8 @@ public partial class App : Application
                             new ("Home", View: views.FindByViewModel<HomeViewModel>(), IsDefault: true),
                             new ("Cv", View: views.FindByViewModel<CvViewModel>()),
                             new ("Skills", View: views.FindByViewModel<SkillsViewModel>()),
-                            new ("Projects", View: views.FindByViewModel<ProjectsViewModel>())
+                            new ("Projects", View: views.FindByViewModel<ProjectsViewModel>()),
+                            new ("Admin", View: views.FindByViewModel<AdminViewModel>())
                         ]
                     )
                 ]

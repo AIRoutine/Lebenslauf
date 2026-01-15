@@ -1,349 +1,216 @@
-# Lebenslauf App - Implementierungsplan
+# Plan: OnNavigatedTo Lifecycle Verbesserung für UnoFramework Submodule
 
-## Ziel
+## Problem-Analyse
 
-Reprasentations-App fuer deine CV-Daten mit einfacher Aenderbarkeit durch zentrale Backend-Datenhaltung.
+Das aktuelle UnoFramework Submodule hat ein `INavigationAware` Interface mit `OnNavigatedTo` und `OnNavigatedFrom` Methoden, aber **niemand ruft diese Methoden auf**. Die ViewModels implementieren das Interface, aber die Navigation triggert es nicht.
 
----
-
-## Architektur-Entscheidung: Multi-Entity Ansatz
-
-**Gruende:**
-1. Erweiterbarkeit - Einzelne Sektionen spaeter editierbar
-2. Normalisierung - Skills koennen Projekten zugeordnet werden
-3. Query-Flexibilitaet - Nur bestimmte Teile laden
-4. Konsistenz - Folgt dem bestehenden Feature-Pattern
-
----
-
-## Datenmodell
-
-```
-+------------------+       +------------------+
-|   PersonalData   |       |    Education     |
-+------------------+       +------------------+
-| Id (Guid)        |       | Id (Guid)        |
-| Name             |       | Institution      |
-| Email            |       | Degree           |
-| Phone            |       | StartYear        |
-| Address          |       | EndYear          |
-| City             |       | Description      |
-| PostalCode       |       | SortOrder        |
-| Country          |       +------------------+
-| BirthDate        |
-| Citizenship      |       +------------------+
-| ProfileImageUrl  |       | WorkExperience   |
-+------------------+       +------------------+
-                           | Id (Guid)        |
-+------------------+       | Company          |
-|  SkillCategory   |       | Role             |
-+------------------+       | StartDate        |
-| Id (Guid)        |       | EndDate          |
-| Name             |       | Description      |
-| SortOrder        |       | IsCurrent        |
-+------------------+       | SortOrder        |
-        |                  +------------------+
-        | 1:n
-        v                  +------------------+
-+------------------+       |     Project      |
-|      Skill       |       +------------------+
-+------------------+       | Id (Guid)        |
-| Id (Guid)        |       | Name             |
-| Name             |       | Description      |
-| CategoryId (FK)  |       | Technologies     |
-| SortOrder        |       | AppStoreUrl      |
-+------------------+       | PlayStoreUrl     |
-                           | WebsiteUrl       |
-                           | ImageUrl         |
-                           | SortOrder        |
-                           +------------------+
+### Aktueller Workaround
+ViewModels laden Daten im Constructor:
+```csharp
+public HomeViewModel(BaseServices baseServices) : base(baseServices)
+{
+    // Trigger initial load - OnNavigatedTo may not be called by navigation system
+    OnNavigatingTo();
+    _ = LoadPersonalDataAsync(NavigationToken);
+}
 ```
 
----
+Das ist problematisch weil:
+1. Daten werden bei jeder ViewModel-Erstellung geladen, nicht nur bei Navigation
+2. Parameter können nicht empfangen werden
+3. Bei gecachten Pages wird OnNavigatedTo nicht aufgerufen
 
-## Projektstruktur
+## Lösungsoptionen
 
-### Backend (API)
+### Option A: Page Code-Behind mit OnNavigatedTo Override (Empfohlen)
 
-```
-src/api/src/Features/Cv/
-|
-+-- Lebenslauf.Api.Features.Cv.Contracts/
-|   +-- README.md
-|   +-- Lebenslauf.Api.Features.Cv.Contracts.csproj
-|   +-- Mediator/
-|       +-- Requests/
-|           +-- GetCvRequest.cs
-|           +-- GetCvResponse.cs (embedded DTOs)
-|
-+-- Lebenslauf.Api.Features.Cv/
-    +-- README.md
-    +-- Lebenslauf.Api.Features.Cv.csproj
-    +-- Configuration/
-    |   +-- ServiceCollectionExtensions.cs
-    +-- Data/
-    |   +-- Entities/
-    |   |   +-- PersonalData.cs
-    |   |   +-- Education.cs
-    |   |   +-- WorkExperience.cs
-    |   |   +-- SkillCategory.cs
-    |   |   +-- Skill.cs
-    |   |   +-- Project.cs
-    |   +-- Configurations/
-    |   |   +-- PersonalDataConfiguration.cs
-    |   |   +-- EducationConfiguration.cs
-    |   |   +-- WorkExperienceConfiguration.cs
-    |   |   +-- SkillCategoryConfiguration.cs
-    |   |   +-- SkillConfiguration.cs
-    |   |   +-- ProjectConfiguration.cs
-    |   +-- Seeding/
-    |       +-- CvSeeder.cs
-    +-- Handlers/
-        +-- GetCvHandler.cs
-```
+**Uno Platform/WinUI unterstützt `Page.OnNavigatedTo` nativ** (laut Docs: WASM, Skia, Mobile).
 
-### Frontend (Uno)
+Die Page-Klasse überschreibt `OnNavigatedTo` und leitet zum ViewModel weiter:
 
-```
-src/uno/src/Features/Cv/
-|
-+-- Lebenslauf.Features.Cv.Contracts/
-|   +-- README.md
-|   +-- Lebenslauf.Features.Cv.Contracts.csproj
-|   +-- (DTOs via OpenAPI generiert)
-|
-+-- Lebenslauf.Features.Cv/
-    +-- README.md
-    +-- Lebenslauf.Features.Cv.csproj
-    +-- Configuration/
-    |   +-- ServiceCollectionExtensions.cs
-    +-- Presentation/
-        +-- CvPage.xaml
-        +-- CvPage.xaml.cs
-        +-- CvViewModel.cs
-        +-- Sections/
-            +-- HeaderSection.xaml(.cs)
-            +-- EducationSection.xaml(.cs)
-            +-- ExperienceSection.xaml(.cs)
-            +-- SkillsSection.xaml(.cs)
-            +-- ProjectsSection.xaml(.cs)
+```csharp
+// HomePage.xaml.cs
+public sealed partial class HomePage : Page
+{
+    public HomePage()
+    {
+        this.InitializeComponent();
+    }
+
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (DataContext is INavigationAware vm)
+        {
+            vm.OnNavigatedTo(e.Parameter);
+        }
+    }
+
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        base.OnNavigatedFrom(e);
+        if (DataContext is INavigationAware vm)
+        {
+            vm.OnNavigatedFrom();
+        }
+    }
+}
 ```
 
----
+**Vorteile:**
+- Nutzt natives WinUI/Uno Platform Lifecycle
+- Funktioniert mit Frame.Navigate und Region Navigation
+- Kein Custom Navigation Framework nötig
+- Parameter werden korrekt übergeben
 
-## UI Layout
+**Nachteile:**
+- Erfordert Code in jeder Page (kann mit Basisklasse vereinfacht werden)
 
-### Mobile (Narrow)
+### Option B: NavigationAwarePage Basisklasse (Empfohlen)
 
-```
-+-------------------------+
-|       HEADER            |
-| +-----+                 |
-| |Foto | Daniel Hufnagl  |
-| +-----+ Laakirchen, AT  |
-|         +43-664-...     |
-|         daniel@...      |
-+-------------------------+
-|     AUSBILDUNG          |
-| o HTL Grieskirchen      |
-| |   2012-2017           |
-| o VS/HS Laakirchen      |
-|     2004-2012           |
-+-------------------------+
-|     ERFAHRUNG           |
-| o Selbstaendig          |
-| |   seit 2019           |
-| o Skopek/Colop          |
-|     2018-2019           |
-+-------------------------+
-|     SKILLS              |
-| [C#] [.NET] [Maui]      |
-| [Xamarin] [MVVM] ...    |
-+-------------------------+
-|     PROJEKTE            |
-| +-------+  +-------+    |
-| |Orderl.|  | Colop |    |
-| +-------+  +-------+    |
-+-------------------------+
-```
+Erstelle eine Basisklasse die das automatisch macht:
 
-### Desktop (Wide)
+```csharp
+// In UnoFramework
+public class NavigationAwarePage : Page
+{
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        if (DataContext is INavigationAware vm)
+        {
+            vm.OnNavigatedTo(e.Parameter);
+        }
+    }
 
-```
-+----------------------------------------------------------+
-|                        HEADER                             |
-| +-------+  Daniel Hufnagl                                 |
-| | Foto  |  Stockham 44, 4663 Laakirchen                  |
-| +-------+  +43-664-73221804 | daniel.hufnagl@aon.at      |
-+----------------------------------------------------------+
-|     AUSBILDUNG           |        ERFAHRUNG              |
-| o HTL Grieskirchen       | o Selbstaendig                |
-| |   Informatik 2012-17   | |   seit Nov 2019             |
-| o VS/HS Laakirchen       | o Skopek GmbH - Colop         |
-|     2004-2012            |     Aug 2018 - Nov 2019       |
-+----------------------------------------------------------+
-|                        SKILLS                             |
-| Expertise: [C#] [.NET] [Maui] [Xamarin] [MVVM] [ASP.NET] |
-| Tools:     [VS] [Rider] [Git] [Azure DevOps] [Jira]      |
-| AI:        [Claude Code] [Copilot] [Codex]               |
-+----------------------------------------------------------+
-|                       PROJEKTE                            |
-| +----------+  +----------+  +----------+  +----------+   |
-| | Orderlyze|  |  Colop   |  |  Sybos   |  |  Miele   |   |
-| +----------+  +----------+  +----------+  +----------+   |
-+----------------------------------------------------------+
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        base.OnNavigatedFrom(e);
+        if (DataContext is INavigationAware vm)
+        {
+            vm.OnNavigatedFrom();
+        }
+    }
+}
 ```
 
----
-
-## Implementierungsschritte
-
-### Phase 1: Backend Setup
-
-```
-[1] API Contracts Projekt erstellen
-     |
-     v
-[2] API Feature Projekt erstellen
-     |
-     v
-[3] Entities definieren (6 Stueck)
-     |
-     v
-[4] Entity Configurations erstellen
-     |
-     v
-[5] CvSeeder mit deinen Daten
-     |
-     v
-[6] GetCvHandler implementieren
-     |
-     v
-[7] API Endpoint registrieren
-     |
-     v
-[8] Core.Startup erweitern
+Dann erben alle Pages davon:
+```xml
+<fw:NavigationAwarePage x:Class="MyApp.HomePage" ...>
 ```
 
-### Phase 2: Database
+### Option C: Uno Extensions Navigation mit DataContext Injection (Komplexer)
 
-```
-[9] dotnet ef migrations add InitialCv
-     |
-     v
-[10] dotnet ef database update
-     |
-     v
-[11] API starten und testen
-```
+Uno Extensions Navigation injiziert automatisch Daten via Constructor:
 
-### Phase 3: Frontend Setup
-
-```
-[12] Uno Contracts Projekt erstellen
-     |
-     v
-[13] Uno Feature Projekt erstellen
-     |
-     v
-[14] CvViewModel implementieren
-     |
-     v
-[15] CvPage.xaml erstellen
+```csharp
+public class SecondViewModel
+{
+    public SecondViewModel(Widget widget) // Parameter via DI
+    {
+        Name = widget.Name;
+    }
+}
 ```
 
-### Phase 4: UI Sections
+Dies erfordert:
+- DataViewMap Registrierung
+- Parameter als Constructor-Dependency
 
+**Nachteil:** Passt nicht gut zum bestehenden INavigationAware Pattern.
+
+## Empfohlene Implementierung
+
+### Schritt 1: NavigationAwarePage in UnoFramework erstellen
+
+**Datei:** `subm/uno/src/UnoFramework/Pages/NavigationAwarePage.cs`
+
+```csharp
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using UnoFramework.Contracts.Navigation;
+
+namespace UnoFramework.Pages;
+
+/// <summary>
+/// Base page class that automatically triggers INavigationAware lifecycle on ViewModel.
+/// </summary>
+public class NavigationAwarePage : Page
+{
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+
+        if (DataContext is INavigationAware navigationAware)
+        {
+            navigationAware.OnNavigatedTo(e.Parameter);
+        }
+    }
+
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        base.OnNavigatedFrom(e);
+
+        if (DataContext is INavigationAware navigationAware)
+        {
+            navigationAware.OnNavigatedFrom();
+        }
+    }
+}
 ```
-[16] HeaderSection
-     |
-     v
-[17] EducationSection
-     |
-     v
-[18] ExperienceSection
-     |
-     v
-[19] SkillsSection
-     |
-     v
-[20] ProjectsSection
+
+### Schritt 2: Pages auf NavigationAwarePage umstellen
+
+**Beispiel HomePage.xaml:**
+```xml
+<fw:NavigationAwarePage
+    x:Class="Lebenslauf.Features.Cv.Presentation.HomePage"
+    xmlns:fw="using:UnoFramework.Pages"
+    ...>
 ```
 
-### Phase 5: Integration
+### Schritt 3: Constructor-Load aus ViewModels entfernen
 
+```csharp
+public partial class HomeViewModel : PageViewModel, INavigationAware
+{
+    public HomeViewModel(BaseServices baseServices) : base(baseServices)
+    {
+        // Keine Daten mehr im Constructor laden
+    }
+
+    public void OnNavigatedTo(object? parameter)
+    {
+        OnNavigatingTo(); // CancellationToken Setup
+        _ = LoadPersonalDataAsync(NavigationToken);
+    }
+
+    public void OnNavigatedFrom()
+    {
+        OnNavigatingFrom(); // Cleanup
+    }
+}
 ```
-[21] Navigation Route konfigurieren
-     |
-     v
-[22] Core.Startup erweitern
-     |
-     v
-[23] App.csproj References
-     |
-     v
-[24] Testen und Styling
-```
 
----
+## Dateien zu ändern
 
-## Deine CV-Daten (fuer Seeder)
+### UnoFramework Submodule
+1. **Neu:** `subm/uno/src/UnoFramework/Pages/NavigationAwarePage.cs`
 
-### PersonalData
-- Name: Daniel Hufnagl
-- Email: daniel.hufnagl@aon.at
-- Phone: +43-664-73221804
-- Address: Stockham 44
-- City: Laakirchen
-- PostalCode: 4663
-- Country: Oesterreich
-- BirthDate: 1998-08-01
-- Citizenship: Oesterreich
+### Lebenslauf Uno App
+1. `src/uno/src/Features/Cv/Presentation/HomePage.xaml` - Base class ändern
+2. `src/uno/src/Features/Cv/Presentation/CvPage.xaml` - Base class ändern
+3. `src/uno/src/Features/Cv/Presentation/SkillsPage.xaml` - Base class ändern
+4. `src/uno/src/Features/Cv/Presentation/ProjectsPage.xaml` - Base class ändern
+5. `src/uno/src/Features/Cv/Presentation/HomeViewModel.cs` - Constructor-Load entfernen
+6. `src/uno/src/Features/Cv/Presentation/CvViewModel.cs` - Constructor-Load entfernen
+7. `src/uno/src/Features/Cv/Presentation/SkillsViewModel.cs` - Constructor-Load entfernen
+8. `src/uno/src/Features/Cv/Presentation/ProjectsViewModel.cs` - Constructor-Load entfernen
 
-### Education
-1. HTL Grieskirchen - Informatik (2012-2017)
-2. VS/HS Laakirchen (2004-2012)
+## Risiken & Überlegungen
 
-### WorkExperience
-1. Vollzeit Einzelunternehmer (2019-heute)
-2. Skopek GmbH - Xamarin Forms bei Colop (2018-2019)
-3. DDL GmbH - C# Entwicklung, Wifi Trainer (2017-2018)
+1. **DataContext Timing:** `OnNavigatedTo` wird VOR dem Visual Tree Load aufgerufen. Der DataContext sollte aber bereits gesetzt sein wenn DI korrekt konfiguriert ist.
 
-### SkillCategories + Skills
-- **Expertise:** C#, .NET, Maui, Xamarin Forms, UnoPlatform, ASP.Net, XAML, MVVM
-- **Grundlagen:** Xamarin.Android, Xamarin.iOS, Java, Swift, C, C++
-- **Frameworks:** ReactiveUI, Prism, Shiny, Syncfusion, SkiaSharp, Lottie, SQLite-net, Refit, ZXing
-- **DevOps:** Visual Studio, VS Code, Rider, Git, Azure DevOps, Gitlab, Github, Jira, Bitbucket, Confluence
-- **AI Tools:** Claude Code, Codex, Github Copilot
+2. **Initial Page:** Die erste Seite (HomePage) wird eventuell anders behandelt. Testen erforderlich.
 
-### Projects
-1. Orderlyze - Kassensystem App
-2. Colop E-Mark - Stempel-Editor
-3. Sybos - Feuerwehr-Verwaltung
-4. PracticeBird - Notenblatt App
-5. Ekey - Fingerscanner/Tuersicherheit
-6. Miele - Smart Home Steuerung
-7. Asfinag - Verkehrsinfo App
-8. Lolyo - Mitarbeiter-Kommunikation
-9. Protimer - Zeiterfassung (Migration)
-
----
-
-## Aenderbarkeit
-
-Die Daten koennen einfach geaendert werden:
-
-1. **Seeder bearbeiten:** `CvSeeder.cs` enthaelt alle Daten
-2. **Datenbank loeschen:** `app.db` loeschen, neu starten
-3. **Oder:** Spaeter Admin-Panel hinzufuegen
-
----
-
-## Offene Fragen
-
-Vor der Implementierung zu klaeren:
-
-1. Soll ein Profilbild angezeigt werden? (Asset hinzufuegen?)
-2. Sollen Store-Links klickbar sein (Browser oeffnen)?
-3. Farbschema: Material Standard oder custom?
-4. Mehrsprachig (DE/EN) erforderlich?
+3. **Region Navigation:** Bei Uno Extensions Region Navigation (nicht Frame.Navigate) könnte das Verhalten anders sein. Die App nutzt jedoch `NavigateViewModelAsync` was intern Frame.Navigate verwendet.
