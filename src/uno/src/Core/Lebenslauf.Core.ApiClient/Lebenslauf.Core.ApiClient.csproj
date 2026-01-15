@@ -31,9 +31,14 @@
   </ItemGroup>
 
   <!-- OpenAPI HTTP Contract Generation from API -->
+  <PropertyGroup>
+    <!-- Use production API for Release builds (GitHub Actions), localhost for Debug -->
+    <OpenApiUri Condition="'$(Configuration)' == 'Release'">https://lebenslauf-api.azurewebsites.net/openapi/v1.json</OpenApiUri>
+    <OpenApiUri Condition="'$(Configuration)' != 'Release'">http://localhost:5292/openapi/v1.json</OpenApiUri>
+  </PropertyGroup>
   <ItemGroup>
     <MediatorHttp Include="ApiContracts"
-                  Uri="http://localhost:5292/openapi/v1.json"
+                  Uri="$(OpenApiUri)"
                   Namespace="Lebenslauf.Core.ApiClient.Generated"
                   ContractPostfix="HttpRequest"
                   GenerateJsonConverters="false"
