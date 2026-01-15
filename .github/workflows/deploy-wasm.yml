@@ -56,41 +56,29 @@ jobs:
           # Custom domain (temporarily disabled until DNS propagates)
           # echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
 
-          # Create SPA routing injection script
-          cat > /tmp/inject-spa.py << 'PYEOF'
-          import sys
-          html_file = sys.argv[1]
-          mode = sys.argv[2]  # 'spa' or '404'
+          # SPA routing script - intercepts History API to add /Lebenslauf/ prefix
+          # and restores path from sessionStorage after 404 redirect
+          SPA_SCRIPT='<script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){return typeof u==="string"&&u.startsWith("/")&&!u.startsWith(b)?b+u:u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>'
 
-          # SPA routing: intercepts History API to add /Lebenslauf/ prefix
-          # Also restores path from sessionStorage after 404 redirect
-          spa_script = '''<script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){return typeof u==="string"&&u.startsWith("/")&&!u.startsWith(b)?b+u:u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>'''
+          # 404 redirect script - saves path and redirects immediately
+          REDIRECT_SCRIPT='<script>!function(){var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b)){var s=p.substring(b.length);if(s&&s!=="/"){sessionStorage.setItem("spa-path",s);location.replace(b+"/")}}}();</script>'
 
-          # 404 redirect: MUST execute FIRST before anything else loads
-          # Saves the path and redirects to base URL immediately
-          redirect_script = '''<script>!function(){var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b)){var s=p.substring(b.length);if(s&&s!=="/"){sessionStorage.setItem("spa-path",s);location.replace(b+"/")}}}();</script>'''
+          # Inject SPA routing into index.html (before </head>)
+          python3 -c "
+import sys
+with open(sys.argv[1], 'r') as f: c = f.read()
+c = c.replace('</head>', sys.argv[2] + '</head>')
+with open(sys.argv[1], 'w') as f: f.write(c)
+" ./publish/wwwroot/index.html "$SPA_SCRIPT"
 
-          with open(html_file, 'r') as f:
-              content = f.read()
-
-          if mode == 'spa':
-              # Inject at end of head for index.html
-              content = content.replace('</head>', spa_script + '</head>')
-          elif mode == '404':
-              # Inject at BEGINNING of head for 404.html - must run FIRST
-              content = content.replace('<head>', '<head>' + redirect_script)
-
-          with open(html_file, 'w') as f:
-              f.write(content)
-          PYEOF
-
-          # Inject SPA routing into index.html (at end of head)
-          python3 /tmp/inject-spa.py ./publish/wwwroot/index.html spa
-
-          # 404.html needs redirect script at the BEGINNING of head (runs first)
-          # Start with fresh copy to avoid duplicate scripts
-          cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
-          python3 /tmp/inject-spa.py ./publish/wwwroot/404.html 404
+          # Create 404.html with redirect script at the BEGINNING of head
+          # This must execute FIRST before any other scripts load
+          python3 -c "
+import sys
+with open(sys.argv[1], 'r') as f: c = f.read()
+c = c.replace('<head>', '<head>' + sys.argv[2])
+with open(sys.argv[3], 'w') as f: f.write(c)
+" ./publish/wwwroot/index.html "$REDIRECT_SCRIPT" ./publish/wwwroot/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
