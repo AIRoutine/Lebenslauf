@@ -58,10 +58,9 @@ jobs:
 
           # Write SPA routing script to temp file (avoids shell quoting issues)
           # This script intercepts History API to add /Lebenslauf/ prefix
-          # Handles strings, URL objects, and relative paths
-          # Added console.log for debugging
+          # Handles FULL URLs like https://host:port/path (not just relative paths)
           cat > /tmp/spa_script.txt << 'SPAEOF'
-          <script>(function(){var b="/Lebenslauf";console.log("[SPA] Script loaded, basePath:",b,"location:",location.pathname);if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");console.log("[SPA] Restoring path:",r);history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){if(u==null)return u;var str=String(u instanceof URL?u.pathname+u.search+u.hash:u);console.log("[SPA] Intercepted URL:",str,"type:",typeof u);if(str.startsWith("/")&&!str.startsWith(b)){var fixed=b+str;console.log("[SPA] Fixed to:",fixed);return fixed}return u}history.pushState=function(a,t,u){console.log("[SPA] pushState called with:",u);return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){console.log("[SPA] replaceState called with:",u);return s.call(this,a,t,f(u))};console.log("[SPA] Interceptors installed")}})();</script>
+          <script>(function(){var b="/Lebenslauf";console.log("[SPA] Script loaded, basePath:",b,"location:",location.pathname);if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");console.log("[SPA] Restoring path:",r);history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){if(u==null)return u;var str=String(u);console.log("[SPA] Intercepted URL:",str);try{var url=new URL(str,location.origin);if(url.hostname===location.hostname&&url.pathname.startsWith("/")&&!url.pathname.startsWith(b)){url.pathname=b+url.pathname;console.log("[SPA] Fixed to:",url.href);return url.href}}catch(e){}return u}history.pushState=function(a,t,u){console.log("[SPA] pushState called with:",u);return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){console.log("[SPA] replaceState called with:",u);return s.call(this,a,t,f(u))};console.log("[SPA] Interceptors installed")}})();</script>
           SPAEOF
 
           # Write 404 redirect script to temp file
