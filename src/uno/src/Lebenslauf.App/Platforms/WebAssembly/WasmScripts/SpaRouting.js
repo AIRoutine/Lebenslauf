@@ -1,15 +1,36 @@
 // SPA Routing support for GitHub Pages
-// Restores the path from sessionStorage after 404 redirect
+// Fixes URL prefix issue: Uno Navigation sets /Main/Home instead of /Lebenslauf/Main/Home
 (function() {
-    var redirectPath = sessionStorage.getItem('spa-path');
-    if (redirectPath) {
-        sessionStorage.removeItem('spa-path');
+    var basePath = '/Lebenslauf';
 
-        // Use History API to restore the original path
-        var basePath = '/Lebenslauf';
-        var fullPath = basePath + redirectPath;
+    // Only apply fix if we're hosted in a subdirectory
+    if (window.location.pathname.startsWith(basePath) ||
+        window.location.hostname === 'airoutine.github.io') {
 
-        // Replace current URL with the original path so Uno sees the correct route
-        window.history.replaceState(null, '', fullPath);
+        // Restore path from 404 redirect
+        var redirectPath = sessionStorage.getItem('spa-path');
+        if (redirectPath) {
+            sessionStorage.removeItem('spa-path');
+            window.history.replaceState(null, '', basePath + redirectPath);
+        }
+
+        // Intercept History API to add base path prefix
+        var originalPushState = history.pushState;
+        var originalReplaceState = history.replaceState;
+
+        function fixUrl(url) {
+            if (typeof url === 'string' && url.startsWith('/') && !url.startsWith(basePath)) {
+                return basePath + url;
+            }
+            return url;
+        }
+
+        history.pushState = function(state, title, url) {
+            return originalPushState.call(this, state, title, fixUrl(url));
+        };
+
+        history.replaceState = function(state, title, url) {
+            return originalReplaceState.call(this, state, title, fixUrl(url));
+        };
     }
 })();
