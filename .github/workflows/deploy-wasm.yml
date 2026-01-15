@@ -58,8 +58,9 @@ jobs:
 
           # Write SPA routing script to temp file (avoids shell quoting issues)
           # This script intercepts History API to add /Lebenslauf/ prefix
+          # Handles strings, URL objects, and relative paths
           cat > /tmp/spa_script.txt << 'SPAEOF'
-          <script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){return typeof u==="string"&&u.startsWith("/")&&!u.startsWith(b)?b+u:u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>
+          <script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){if(u==null)return u;var str=String(u instanceof URL?u.pathname+u.search+u.hash:u);if(str.startsWith("/")&&!str.startsWith(b))return b+str;if(!str.startsWith("/")&&!str.startsWith("http")&&!str.startsWith(b.substring(1))){var resolved=new URL(str,location.href).pathname;if(!resolved.startsWith(b))return b+"/"+str}return u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>
           SPAEOF
 
           # Write 404 redirect script to temp file
