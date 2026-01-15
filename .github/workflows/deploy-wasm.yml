@@ -56,21 +56,34 @@ jobs:
           # Custom domain (temporarily disabled until DNS propagates)
           # echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
 
-          # SPA Routing: Inject History API interception into index.html
-          # This MUST run before Uno Framework loads to intercept pushState/replaceState
-          cat > /tmp/spa-routing.js << 'JSEOF'
-          (function(){var basePath='/Lebenslauf';if(window.location.pathname.startsWith(basePath)||window.location.hostname==='airoutine.github.io'){var redirectPath=sessionStorage.getItem('spa-path');if(redirectPath){sessionStorage.removeItem('spa-path');window.history.replaceState(null,'',basePath+redirectPath);}var originalPushState=history.pushState;var originalReplaceState=history.replaceState;function fixUrl(url){if(typeof url==='string'&&url.startsWith('/')&&!url.startsWith(basePath)){return basePath+url;}return url;}history.pushState=function(state,title,url){return originalPushState.call(this,state,title,fixUrl(url));};history.replaceState=function(state,title,url){return originalReplaceState.call(this,state,title,fixUrl(url));};}})();
-          JSEOF
+          # Create SPA routing injection script
+          cat > /tmp/inject-spa.py << 'PYEOF'
+          import sys
+          html_file = sys.argv[1]
+          mode = sys.argv[2]  # 'spa' or '404'
 
-          # Inject script into index.html (before closing head tag)
-          SPA_SCRIPT=$(cat /tmp/spa-routing.js)
-          sed -i "s|</head>|<script>${SPA_SCRIPT}</script></head>|" ./publish/wwwroot/index.html
+          spa_script = '''<script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){return typeof u==="string"&&u.startsWith("/")&&!u.startsWith(b)?b+u:u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>'''
 
-          # 404.html must be a copy of index.html (after injection) for SPA routing
+          redirect_script = '''<script>var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b))p=p.substring(b.length);if(p&&p!=="/"){sessionStorage.setItem("spa-path",p);location.replace(b+"/")}</script>'''
+
+          with open(html_file, 'r') as f:
+              content = f.read()
+
+          if mode == 'spa':
+              content = content.replace('</head>', spa_script + '</head>')
+          elif mode == '404':
+              content = content.replace('</head>', redirect_script + '</head>')
+
+          with open(html_file, 'w') as f:
+              f.write(content)
+          PYEOF
+
+          # Inject SPA routing into index.html
+          python3 /tmp/inject-spa.py ./publish/wwwroot/index.html spa
+
+          # 404.html is a copy of index.html with additional redirect script
           cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
-
-          # Inject 404 redirect script into 404.html (saves path and redirects to base)
-          sed -i 's|</head>|<script>var p=window.location.pathname;var b="/Lebenslauf";if(p.startsWith(b))p=p.substring(b.length);if(p\&\&p!=="/")\{sessionStorage.setItem("spa-path",p);window.location.replace(b+"/");\}</script></head>|' ./publish/wwwroot/404.html
+          python3 /tmp/inject-spa.py ./publish/wwwroot/404.html 404
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
