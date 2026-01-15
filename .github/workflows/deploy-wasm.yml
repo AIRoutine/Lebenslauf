@@ -59,8 +59,9 @@ jobs:
           # Write SPA routing script to temp file (avoids shell quoting issues)
           # This script intercepts History API to add /Lebenslauf/ prefix
           # Handles strings, URL objects, and relative paths
+          # Added console.log for debugging
           cat > /tmp/spa_script.txt << 'SPAEOF'
-          <script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){if(u==null)return u;var str=String(u instanceof URL?u.pathname+u.search+u.hash:u);if(str.startsWith("/")&&!str.startsWith(b))return b+str;if(!str.startsWith("/")&&!str.startsWith("http")&&!str.startsWith(b.substring(1))){var resolved=new URL(str,location.href).pathname;if(!resolved.startsWith(b))return b+"/"+str}return u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>
+          <script>(function(){var b="/Lebenslauf";console.log("[SPA] Script loaded, basePath:",b,"location:",location.pathname);if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");console.log("[SPA] Restoring path:",r);history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){if(u==null)return u;var str=String(u instanceof URL?u.pathname+u.search+u.hash:u);console.log("[SPA] Intercepted URL:",str,"type:",typeof u);if(str.startsWith("/")&&!str.startsWith(b)){var fixed=b+str;console.log("[SPA] Fixed to:",fixed);return fixed}return u}history.pushState=function(a,t,u){console.log("[SPA] pushState called with:",u);return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){console.log("[SPA] replaceState called with:",u);return s.call(this,a,t,f(u))};console.log("[SPA] Interceptors installed")}})();</script>
           SPAEOF
 
           # Write 404 redirect script to temp file
@@ -69,13 +70,13 @@ jobs:
           <script>!function(){var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b)){var s=p.substring(b.length);if(s&&s!=="/"){sessionStorage.setItem("spa-path",s);location.replace(b+"/")}}}();</script>
           REDIRECTEOF
 
-          # Inject SPA routing into index.html (before </head>)
+          # Inject SPA routing into index.html (at BEGINNING of head, before any other scripts)
           python3 << 'PYEOF'
           with open('/tmp/spa_script.txt') as f:
               spa = f.read().strip()
           with open('./publish/wwwroot/index.html') as f:
               html = f.read()
-          html = html.replace('</head>', spa + '</head>')
+          html = html.replace('<head>', '<head>' + spa)
           with open('./publish/wwwroot/index.html', 'w') as f:
               f.write(html)
           PYEOF
