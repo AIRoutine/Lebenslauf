@@ -56,19 +56,47 @@ jobs:
           # Custom domain (temporarily disabled until DNS propagates)
           # echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
 
-          # SPA routing script - intercepts History API to add /Lebenslauf/ prefix
-          # and restores path from sessionStorage after 404 redirect
-          SPA_SCRIPT='<script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){return typeof u==="string"&&u.startsWith("/")&&!u.startsWith(b)?b+u:u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>'
+          # Write SPA routing script to temp file (avoids shell quoting issues)
+          # This script intercepts History API to add /Lebenslauf/ prefix
+          cat > /tmp/spa_script.txt << 'SPAEOF'
+          <script>(function(){var b="/Lebenslauf";if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){return typeof u==="string"&&u.startsWith("/")&&!u.startsWith(b)?b+u:u}history.pushState=function(a,t,u){return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){return s.call(this,a,t,f(u))}}})();</script>
+          SPAEOF
 
-          # 404 redirect script - saves path and redirects immediately
-          REDIRECT_SCRIPT='<script>!function(){var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b)){var s=p.substring(b.length);if(s&&s!=="/"){sessionStorage.setItem("spa-path",s);location.replace(b+"/")}}}();</script>'
+          # Write 404 redirect script to temp file
+          # This must execute FIRST to save path and redirect before anything else loads
+          cat > /tmp/redirect_script.txt << 'REDIRECTEOF'
+          <script>!function(){var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b)){var s=p.substring(b.length);if(s&&s!=="/"){sessionStorage.setItem("spa-path",s);location.replace(b+"/")}}}();</script>
+          REDIRECTEOF
 
           # Inject SPA routing into index.html (before </head>)
-          python3 -c "import sys; c=open(sys.argv[1]).read(); open(sys.argv[1],'w').write(c.replace('</head>',sys.argv[2]+'</head>'))" ./publish/wwwroot/index.html "$SPA_SCRIPT"
+          python3 << 'PYEOF'
+          with open('/tmp/spa_script.txt') as f:
+              spa = f.read().strip()
+          with open('./publish/wwwroot/index.html') as f:
+              html = f.read()
+          html = html.replace('</head>', spa + '</head>')
+          with open('./publish/wwwroot/index.html', 'w') as f:
+              f.write(html)
+          PYEOF
 
-          # Create 404.html with redirect script at the BEGINNING of head
-          # This must execute FIRST before any other scripts load
-          python3 -c "import sys; c=open(sys.argv[1]).read(); open(sys.argv[3],'w').write(c.replace('<head>','<head>'+sys.argv[2]))" ./publish/wwwroot/index.html "$REDIRECT_SCRIPT" ./publish/wwwroot/404.html
+          # Create 404.html with BOTH scripts:
+          # - Redirect script at BEGINNING of head (must run first)
+          # - SPA script before </head> (for path restoration after redirect)
+          python3 << 'PYEOF'
+          with open('/tmp/redirect_script.txt') as f:
+              redirect = f.read().strip()
+          with open('./publish/wwwroot/index.html') as f:
+              html = f.read()
+          html = html.replace('<head>', '<head>' + redirect)
+          with open('./publish/wwwroot/404.html', 'w') as f:
+              f.write(html)
+          PYEOF
+
+          # Debug: Show what was injected
+          echo "=== Checking index.html head ==="
+          head -20 ./publish/wwwroot/index.html
+          echo "=== Checking 404.html head ==="
+          head -20 ./publish/wwwroot/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
