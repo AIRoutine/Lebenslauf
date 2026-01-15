@@ -45,7 +45,7 @@ jobs:
           dotnet publish src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj \
             -c Release \
             -f net10.0-browserwasm \
-            -p:WasmShellWebAppBasePath=/Lebenslauf/ \
+            -p:WasmShellWebAppBasePath=/ \
             -o ./publish
 
       - name: Prepare for GitHub Pages
@@ -54,14 +54,6 @@ jobs:
           touch ./publish/wwwroot/.nojekyll
           # Custom domain
           echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
-
-          # Fix require.js base URL for subdirectory deployment
-          # Add a script before require.js that configures the baseUrl
-          sed -i 's|<script type="text/javascript" src="/Lebenslauf/package_|<script>var require = { baseUrl: "/Lebenslauf/" };</script>\n    <script type="text/javascript" src="/Lebenslauf/package_|' ./publish/wwwroot/index.html
-
-          # Debug: Show head section of index.html
-          echo "=== INDEX.HTML HEAD ==="
-          head -15 ./publish/wwwroot/index.html
 
           # 404.html for SPA routing (GitHub Pages fallback)
           cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
