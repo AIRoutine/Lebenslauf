@@ -637,6 +637,46 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 ]),
 
             CreateProjectWithId(
+                name: "Red Bull ReMa",
+                description: "iPad-basierte Lagerverwaltungs-App für Red Bull Event-Logistik mit RFID-Integration, Packlisten-Management, Retourenerfassung und Schadensmeldung.",
+                framework: "C# / .NET MAUI",
+                appStoreUrl: null,
+                playStoreUrl: null,
+                appGalleryUrl: null,
+                websiteUrl: "https://sofa1.at/en/project/redbull-en/",
+                sortOrder: 7,
+                startDate: new DateOnly(2025, 6, 1),
+                endDate: null,
+                isCurrent: true,
+                technologies: [".NET MAUI", "C#", "Azure Application Insights", "SignalR", "SQLite", "Zebra SDK", "RFID"],
+                functions: [
+                    "Packlisten-Management fuer Auftragskonfektionierung",
+                    "Retourenerfassung und Ruecklieferungsverfolgung",
+                    "Schadensmeldung mit Dokumentation",
+                    "RFID-Scanning fuer automatische Artikelerfassung",
+                    "Echtzeit-Bestandsuebersicht",
+                    "Seriennummernverwaltung mit Etikettendruck und RFID-Codierung",
+                    "Integration mit Web-Portal (Back Office)"
+                ],
+                technicalAspects: [
+                    "Framework: .NET MAUI",
+                    "Programmiersprachen: C#, XAML",
+                    "Logging: Azure Application Insights",
+                    "Barcode Scanner: Zebra SDK",
+                    "RFID Integration: 7iD Technologies",
+                    "Echtzeit-Updates: SignalR",
+                    "Datenbank: SQLite .NET (Async Pattern)",
+                    "DI: Constructor Injection Pattern"
+                ],
+                subProjects: [
+                    new SubProjectData(
+                        Name: "cs.m.core.ui",
+                        Description: "Wiederverwendbare UI-Komponenten Bibliothek fuer SOFA1 MAUI Anwendungen",
+                        Framework: ".NET MAUI",
+                        Technologies: ["Custom Controls", "NuGet Packaging", "Azure DevOps CI/CD"])
+                ]),
+
+            CreateProjectWithId(
                 name: "PracticeBird",
                 description: "Notenblatt App: Mitspielendes Notenblatt, MusicXML/MIDI Import, Playback mit Klavier/Schlagzeug, Stimmenhervorhebung, Social Login.",
                 framework: "C# / Xamarin.Forms",
@@ -644,7 +684,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 playStoreUrl: "https://play.google.com/store/apps/details?id=phonicscore.phonicscore_lite",
                 appGalleryUrl: null,
                 websiteUrl: null,
-                sortOrder: 7,
+                sortOrder: 8,
                 startDate: new DateOnly(2020, 3, 1),
                 endDate: new DateOnly(2020, 12, 1),
                 isCurrent: false,
@@ -863,6 +903,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         // Backend profile: Projects with backend focus and description overrides
         var backendProjects = new (string Name, bool IsHighlighted, string? DescriptionOverride)[]
         {
+            ("Red Bull ReMa", true, "Enterprise Lagerverwaltung mit SignalR Echtzeit-Updates, RFID-Integration, Azure Application Insights Logging, REST API Anbindung."),
             ("Orderlyze", true, "Backend-Architektur mit REST API, Multi-Device Synchronisation, SQLite Datenbank und Cloud-Integration. Implementierung von Real-Time Updates und Caching-Strategien."),
             ("Sybos", false, "Server-Synchronisation mit RESTful API, Push-Notification Backend mit Firebase/APNs, Chat-Backend mit SignalR fuer Echtzeit-Kommunikation."),
             ("Ekey Bionyx", false, "Azure Notification Hub Integration, Token-basierte Authentifizierung, verschluesselte API-Kommunikation, Backend-Services fuer Geraeteverwaltung."),
@@ -888,6 +929,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         // Mobile profile: All mobile apps with mobile-focused descriptions
         var mobileProjects = new (string Name, bool IsHighlighted, string? DescriptionOverride)[]
         {
+            ("Red Bull ReMa", true, "iPad-Lagerverwaltung mit RFID/Barcode-Scanning via Zebra SDK, Echtzeit-Bestandsuebersicht, Offline-Faehigkeit mit SQLite."),
             ("Orderlyze", true, "Cross-Platform Kassensystem mit Drag & Drop UI, Bluetooth-Druckeranbindung, Offline-First Architektur und intuitivem Touch-Interface."),
             ("Colop E-Mark", true, "Custom Editor mit SkiaSharp, Multi-Touch Gestensteuerung, WLAN-Druckerintegration, mehrsprachige App (7 Sprachen)."),
             ("Sybos", false, "Native Push-Notifications, QR-Code Scanner Integration, Custom Kalender-Komponente, Dark Mode Support."),
