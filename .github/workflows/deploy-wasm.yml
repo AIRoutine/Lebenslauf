@@ -56,7 +56,12 @@ jobs:
           # Custom domain (temporarily disabled until DNS propagates)
           # echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
 
-          # 404.html is already included from wwwroot for SPA routing
+          # 404.html must be a copy of index.html for SPA routing to work
+          # The SpaRouting.js handles path restoration via sessionStorage
+          cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
+
+          # Inject SPA redirect script into 404.html (before closing head tag)
+          sed -i 's|</head>|<script>var p=window.location.pathname;var b="/Lebenslauf";if(p.startsWith(b))p=p.substring(b.length);if(p\&\&p!=="/")\{sessionStorage.setItem("spa-path",p);window.location.replace(b+"/");\}</script></head>|' ./publish/wwwroot/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
