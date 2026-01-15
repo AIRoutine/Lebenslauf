@@ -497,6 +497,13 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     "Implementierung Editor: SkiaSharp",
                     "Implementierung QR-Code Scanner: ZXing",
                     "Datenbank: SQLite .NET (Async Pattern)"
+                ],
+                subProjects: [
+                    new SubProjectData(
+                        Name: "WPF Desktop Designer",
+                        Description: "Desktop-Anwendung mit eigenem Stempel-Editor und WLAN-Verbindung zum E-Mark",
+                        Framework: "WPF",
+                        Technologies: ["SkiaSharp", "MVVM", "WLAN/TCP"])
                 ]),
 
             CreateProjectWithId(
