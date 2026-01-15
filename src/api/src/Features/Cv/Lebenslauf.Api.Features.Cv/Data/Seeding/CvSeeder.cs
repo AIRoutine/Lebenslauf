@@ -305,11 +305,12 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 3,
             Skills =
             [
-                CreateSkill("MAUI/Xamarin Forms als Hauptframework", 1),
+                CreateSkill("MAUI/Uno Platform als Hauptframework", 1),
                 CreateSkill("XAML fuer das Design", 2),
                 CreateSkill("Prism als MVVM Framework", 3),
                 CreateSkill("ReactiveUI fuer Statusveraenderungen", 4),
-                CreateSkill("Shiny Framework", 5)
+                CreateSkill("Shiny Framework", 5),
+                CreateSkill("Shiny Mediator Pattern", 6)
             ]
         };
 
@@ -370,7 +371,8 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 CreateSkill("SkiaSharp", 12),
                 CreateSkill("Lottie", 13),
                 CreateSkill("ZXing", 14),
-                CreateSkill("BarcodeNative", 15)
+                CreateSkill("BarcodeNative", 15),
+                CreateSkill("Cake Build", 16)
             ]
         };
 
@@ -396,7 +398,8 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 CreateSkill("Token Authentifizierung", 12),
                 CreateSkill("Google/Facebook Login", 13),
                 CreateSkill("Kalender Implementierung", 14),
-                CreateSkill("Caching mit Sync (Request Pattern)", 15)
+                CreateSkill("Caching mit Sync (Request Pattern)", 15),
+                CreateSkill("App Store Verwaltung (Play Store, App Store, Huawei AppGallery)", 16)
             ]
         };
 
@@ -855,14 +858,15 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         {
             "C#", ".NET", "MAUI", "Xamarin Forms", "Uno Platform", "XAML", "MVVM Pattern",
             "Xamarin.Android", "Xamarin.iOS",
-            "MAUI/Xamarin Forms als Hauptframework", "XAML fuer das Design",
-            "Prism als MVVM Framework", "ReactiveUI fuer Statusveraenderungen", "Shiny Framework",
+            "MAUI/Uno Platform als Hauptframework", "XAML fuer das Design",
+            "Prism als MVVM Framework", "ReactiveUI fuer Statusveraenderungen", "Shiny Framework", "Shiny Mediator Pattern",
             "Visual Studio", "Rider", "Git",
             "MAUI Essentials", "MAUI Community Toolkit", "Syncfusion",
-            "ReactiveUI", "Prism", "Shiny", "SkiaSharp", "Lottie", "ZXing", "BarcodeNative",
+            "ReactiveUI", "Prism", "Shiny", "SkiaSharp", "Lottie", "ZXing", "BarcodeNative", "Cake Build",
             "Bluetooth Drucker Anbindung", "QR-Code Scanner Anbindung",
             "Push Notifications (Cross Platform)", "Lokale Datenbank in App",
-            "Dark Mode Design", "Google Maps Einbindung"
+            "Dark Mode Design", "Google Maps Einbindung",
+            "App Store Verwaltung (Play Store, App Store, Huawei AppGallery)"
         };
         sortOrder = 1;
         foreach (var skillName in mobileSkills)
