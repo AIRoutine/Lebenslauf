@@ -45,15 +45,16 @@ jobs:
           dotnet publish src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj \
             -c Release \
             -f net10.0-browserwasm \
-            -p:WasmShellWebAppBasePath=/ \
+            -p:WasmShellWebAppBasePath=/Lebenslauf/ \
             -o ./publish
 
       - name: Prepare for GitHub Pages
         run: |
           # .nojekyll to allow underscores in file names
           touch ./publish/wwwroot/.nojekyll
-          # Custom domain
-          echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
+
+          # Custom domain (temporarily disabled until DNS propagates)
+          # echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
 
           # 404.html for SPA routing (GitHub Pages fallback)
           cp ./publish/wwwroot/index.html ./publish/wwwroot/404.html
