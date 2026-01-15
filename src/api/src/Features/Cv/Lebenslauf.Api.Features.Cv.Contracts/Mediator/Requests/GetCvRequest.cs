@@ -5,7 +5,8 @@ namespace Lebenslauf.Api.Features.Cv.Contracts.Mediator.Requests;
 /// <summary>
 /// Request to get the complete CV data.
 /// </summary>
-public record GetCvRequest : IRequest<GetCvResponse>;
+/// <param name="ProfileSlug">Optional profile slug (e.g., "default", "backend", "mobile"). If null, uses default profile.</param>
+public record GetCvRequest(string? ProfileSlug = null) : IRequest<GetCvResponse>;
 
 /// <summary>
 /// Complete CV response with all sections.
@@ -60,7 +61,8 @@ public record WorkExperienceDto(
     DateOnly StartDate,
     DateOnly? EndDate,
     string? Description,
-    bool IsCurrent
+    bool IsCurrent,
+    bool IsHighlighted = false
 );
 
 /// <summary>
@@ -77,7 +79,8 @@ public record SkillCategoryDto(
 /// </summary>
 public record SkillDto(
     Guid Id,
-    string Name
+    string Name,
+    bool IsHighlighted = false
 );
 
 /// <summary>
@@ -91,11 +94,27 @@ public record ProjectDto(
     IReadOnlyList<string> Technologies,
     IReadOnlyList<string> Functions,
     IReadOnlyList<string> TechnicalAspects,
+    IReadOnlyList<SubProjectDto> SubProjects,
     string? AppStoreUrl,
     string? PlayStoreUrl,
     string? AppGalleryUrl,
     string? WebsiteUrl,
-    string? ImageUrl
+    string? ImageUrl,
+    DateOnly? StartDate,
+    DateOnly? EndDate,
+    bool IsCurrent,
+    bool IsHighlighted = false
+);
+
+/// <summary>
+/// Sub-project within a main project.
+/// </summary>
+public record SubProjectDto(
+    Guid Id,
+    string Name,
+    string? Description,
+    string? Framework,
+    IReadOnlyList<string> Technologies
 );
 
 /// <summary>

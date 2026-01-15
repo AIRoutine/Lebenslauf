@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
 using Lebenslauf.Features.Cv.Contracts.Models;
+using Lebenslauf.Features.Cv.Services;
 using Microsoft.Extensions.Logging;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
@@ -10,8 +11,12 @@ namespace Lebenslauf.Features.Cv.Presentation;
 
 public partial class ProjectsViewModel : PageViewModel, INavigationAware
 {
-    public ProjectsViewModel(BaseServices baseServices) : base(baseServices)
+    private readonly IProfileStateService _profileStateService;
+
+    public ProjectsViewModel(BaseServices baseServices, IProfileStateService profileStateService) : base(baseServices)
     {
+        _profileStateService = profileStateService;
+        _profileStateService.ProfileChanged += OnProfileChanged;
         Title = "Projektuebersicht";
     }
 
@@ -32,13 +37,19 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
         OnNavigatingFrom();
     }
 
+    private void OnProfileChanged(object? sender, ProfileChangedEventArgs e)
+    {
+        // Reload data when profile changes
+        _ = LoadDataAsync(CancellationToken.None);
+    }
+
     private async Task LoadDataAsync(CancellationToken ct)
     {
         using (BeginBusy("Lade Projekte..."))
         {
             try
             {
-                var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest { ProfileSlug = _profileStateService.ActiveProfileSlug ?? "" }, ct);
                 ct.ThrowIfCancellationRequested();
 
                 if (result?.Projects is not null)
@@ -53,11 +64,21 @@ public partial class ProjectsViewModel : PageViewModel, INavigationAware
                             (p.Technologies ?? []).ToList(),
                             (p.Functions ?? []).ToList(),
                             (p.TechnicalAspects ?? []).ToList(),
+                            (p.SubProjects ?? []).Select(sp => new SubProjectModel(
+                                sp.Id,
+                                sp.Name,
+                                sp.Description,
+                                sp.Framework,
+                                (sp.Technologies ?? []).ToList()
+                            )).ToList(),
                             p.AppStoreUrl,
                             p.PlayStoreUrl,
                             p.AppGalleryUrl,
                             p.WebsiteUrl,
-                            p.ImageUrl))
+                            p.ImageUrl,
+                            p.StartDate,
+                            p.EndDate,
+                            p.IsCurrent))
                         .ToList();
                     return;
                 }

@@ -84,11 +84,46 @@ public record ProjectModel(
     IReadOnlyList<string> Technologies,
     IReadOnlyList<string> Functions,
     IReadOnlyList<string> TechnicalAspects,
+    IReadOnlyList<SubProjectModel> SubProjects,
     string? AppStoreUrl,
     string? PlayStoreUrl,
     string? AppGalleryUrl,
     string? WebsiteUrl,
-    string? ImageUrl
+    string? ImageUrl,
+    DateOnly? StartDate,
+    DateOnly? EndDate,
+    bool IsCurrent
+)
+{
+    /// <summary>
+    /// Formatted timeline string (e.g., "Jan 2018 - Heute" or "Jan 2019 - Maerz 2020").
+    /// Returns null if no start date is available.
+    /// </summary>
+    public string? TimelineDisplay
+    {
+        get
+        {
+            if (!StartDate.HasValue)
+                return null;
+
+            var monthNames = new[] { "", "Jan", "Feb", "Maerz", "Apr", "Mai", "Juni", "Juli", "Aug", "Sep", "Okt", "Nov", "Dez" };
+            var start = $"{monthNames[StartDate.Value.Month]} {StartDate.Value.Year}";
+            var end = IsCurrent ? "Heute" : EndDate.HasValue ? $"{monthNames[EndDate.Value.Month]} {EndDate.Value.Year}" : null;
+
+            return end is null ? start : $"{start} - {end}";
+        }
+    }
+}
+
+/// <summary>
+/// Sub-project within a main project.
+/// </summary>
+public record SubProjectModel(
+    Guid Id,
+    string Name,
+    string? Description,
+    string? Framework,
+    IReadOnlyList<string> Technologies
 );
 
 /// <summary>
@@ -132,4 +167,15 @@ public record GitHubContributionsModel(
     string ProfileUrl,
     int TotalContributions,
     IReadOnlyList<GitHubContributionModel> Contributions
+);
+
+/// <summary>
+/// CV Profile for admin selection.
+/// </summary>
+public record ProfileModel(
+    Guid Id,
+    string Slug,
+    string Name,
+    string? Description,
+    bool IsDefault
 );

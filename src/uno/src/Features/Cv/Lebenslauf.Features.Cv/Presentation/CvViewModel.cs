@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Lebenslauf.Core.ApiClient.Generated;
 using Lebenslauf.Features.Cv.Contracts.Models;
+using Lebenslauf.Features.Cv.Services;
 using Microsoft.Extensions.Logging;
 using UnoFramework.Contracts.Navigation;
 using UnoFramework.Generators;
@@ -10,8 +11,12 @@ namespace Lebenslauf.Features.Cv.Presentation;
 
 public partial class CvViewModel : PageViewModel, INavigationAware
 {
-    public CvViewModel(BaseServices baseServices) : base(baseServices)
+    private readonly IProfileStateService _profileStateService;
+
+    public CvViewModel(BaseServices baseServices, IProfileStateService profileStateService) : base(baseServices)
     {
+        _profileStateService = profileStateService;
+        _profileStateService.ProfileChanged += OnProfileChanged;
         Title = "Lebenslauf";
     }
 
@@ -89,6 +94,12 @@ public partial class CvViewModel : PageViewModel, INavigationAware
         OnNavigatingFrom();
     }
 
+    private void OnProfileChanged(object? sender, ProfileChangedEventArgs e)
+    {
+        // Reload data when profile changes
+        _ = LoadCvDataAsync(CancellationToken.None);
+    }
+
     private async Task LoadCvDataAsync(CancellationToken ct)
     {
         using (BeginBusy("Lade Lebenslauf..."))
@@ -96,7 +107,7 @@ public partial class CvViewModel : PageViewModel, INavigationAware
             try
             {
                 // Call API via Shiny Mediator's generated HTTP contract
-                var (_, result) = await Mediator.Request(new GetCvHttpRequest(), ct);
+                var (_, result) = await Mediator.Request(new GetCvHttpRequest { ProfileSlug = _profileStateService.ActiveProfileSlug ?? "" }, ct);
                 ct.ThrowIfCancellationRequested();
 
                 if (result is not null)
@@ -151,11 +162,21 @@ public partial class CvViewModel : PageViewModel, INavigationAware
                             (p.Technologies ?? []).ToList(),
                             (p.Functions ?? []).ToList(),
                             (p.TechnicalAspects ?? []).ToList(),
+                            (p.SubProjects ?? []).Select(sp => new SubProjectModel(
+                                sp.Id,
+                                sp.Name,
+                                sp.Description,
+                                sp.Framework,
+                                (sp.Technologies ?? []).ToList()
+                            )).ToList(),
                             p.AppStoreUrl,
                             p.PlayStoreUrl,
                             p.AppGalleryUrl,
                             p.WebsiteUrl,
-                            p.ImageUrl))
+                            p.ImageUrl,
+                            p.StartDate,
+                            p.EndDate,
+                            p.IsCurrent))
                         .ToList();
 
                     // Extract frameworks from categories

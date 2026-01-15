@@ -14,8 +14,17 @@ public class Project : BaseEntity
     public string? ImageUrl { get; set; }
     public int SortOrder { get; set; }
 
+    // Timeline
+    public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
+    public bool IsCurrent { get; set; }
+
     // Navigation properties (normalized)
     public ICollection<ProjectTechnology> Technologies { get; set; } = [];
     public ICollection<ProjectFunction> Functions { get; set; } = [];
     public ICollection<ProjectTechnicalAspect> TechnicalAspects { get; set; } = [];
+    public ICollection<ProjectSubProject> SubProjects { get; set; } = [];
+
+    // M:N relationship with profiles
+    public ICollection<ProfileProject> ProfileProjects { get; set; } = [];
 }

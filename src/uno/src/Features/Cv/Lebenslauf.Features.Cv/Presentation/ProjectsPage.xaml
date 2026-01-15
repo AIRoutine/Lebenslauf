@@ -45,6 +45,25 @@
             <Setter Property="Foreground" Value="#000000" />
         </Style>
 
+        <Style x:Key="SubProjectNameStyle" TargetType="TextBlock" BasedOn="{StaticResource BodySmallTextBlockStyle}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+
+        <Style x:Key="SubProjectFrameworkStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#888888" />
+        </Style>
+
+        <Style x:Key="SubProjectTechChipStyle" TargetType="Border">
+            <Setter Property="Background" Value="#F0F0F0" />
+            <Setter Property="Padding" Value="8,3" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+
+        <Style x:Key="SubProjectTechTextStyle" TargetType="TextBlock" BasedOn="{StaticResource LabelSmallTextBlockStyle}">
+            <Setter Property="Foreground" Value="#555555" />
+        </Style>
+
         <Style x:Key="ProjectResponsiveViewStyle" TargetType="utu:ResponsiveView" />
     </fw:BasePage.Resources>
 
@@ -97,10 +116,19 @@
                                                     <TextBlock Text="{Binding Name}"
                                                                Style="{StaticResource ProjectHeaderStyle}"
                                                                FontSize="18" />
-                                                    <TextBlock Text="{Binding Framework}"
-                                                               Style="{StaticResource ProjectFrameworkStyle}"
-                                                               FontSize="10"
-                                                               Margin="0,4,0,0" />
+                                                    <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,4,0,0">
+                                                        <TextBlock Text="{Binding Framework}"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="10" />
+                                                        <TextBlock Text="|"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="10"
+                                                                   Visibility="{Binding TimelineDisplay, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                        <TextBlock Text="{Binding TimelineDisplay}"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="10"
+                                                                   Visibility="{Binding TimelineDisplay, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </Border>
 
@@ -170,6 +198,62 @@
                                                                                Text="{Binding}"
                                                                                Style="{StaticResource ProjectTechTextStyle}" />
                                                                 </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsRepeater.ItemTemplate>
+                                                    </ItemsRepeater>
+                                                </StackPanel>
+
+                                                <!-- SubProjects Section (Mobile) -->
+                                                <StackPanel Spacing="10"
+                                                            Visibility="{Binding SubProjects, Converter={StaticResource CollectionToVisibilityConverter}}">
+                                                    <!-- Divider -->
+                                                    <Border Height="1" Background="#E5E5E5" />
+
+                                                    <Border BorderBrush="#000000"
+                                                            BorderThickness="0,0,0,2"
+                                                            Padding="0,0,0,6">
+                                                        <TextBlock Text="TEILPROJEKTE"
+                                                                   Style="{StaticResource ProjectSectionTitleStyle}" />
+                                                    </Border>
+
+                                                    <ItemsRepeater ItemsSource="{Binding SubProjects}">
+                                                        <ItemsRepeater.Layout>
+                                                            <StackLayout Spacing="12" />
+                                                        </ItemsRepeater.Layout>
+                                                        <ItemsRepeater.ItemTemplate>
+                                                            <DataTemplate x:DataType="models:SubProjectModel">
+                                                                <Border Background="#FFFFFF"
+                                                                        BorderBrush="#E8E8E8"
+                                                                        BorderThickness="1"
+                                                                        Padding="12"
+                                                                        CornerRadius="6">
+                                                                    <StackPanel Spacing="6">
+                                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                                            <TextBlock Text="{Binding Name}"
+                                                                                       Style="{StaticResource SubProjectNameStyle}" />
+                                                                            <TextBlock Text="{Binding Framework}"
+                                                                                       Style="{StaticResource SubProjectFrameworkStyle}"
+                                                                                       VerticalAlignment="Center"
+                                                                                       Visibility="{Binding Framework, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                                        </StackPanel>
+                                                                        <TextBlock Text="{Binding Description}"
+                                                                                   Style="{StaticResource ProjectTechTextStyle}"
+                                                                                   Visibility="{Binding Description, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                                        <ItemsRepeater ItemsSource="{Binding Technologies}" Margin="0,4,0,0">
+                                                                            <ItemsRepeater.Layout>
+                                                                                <StackLayout Spacing="6" Orientation="Horizontal" />
+                                                                            </ItemsRepeater.Layout>
+                                                                            <ItemsRepeater.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Border Style="{StaticResource SubProjectTechChipStyle}">
+                                                                                        <TextBlock Text="{Binding}"
+                                                                                                   Style="{StaticResource SubProjectTechTextStyle}" />
+                                                                                    </Border>
+                                                                                </DataTemplate>
+                                                                            </ItemsRepeater.ItemTemplate>
+                                                                        </ItemsRepeater>
+                                                                    </StackPanel>
+                                                                </Border>
                                                             </DataTemplate>
                                                         </ItemsRepeater.ItemTemplate>
                                                     </ItemsRepeater>
@@ -262,10 +346,19 @@
                                                     <TextBlock Text="{Binding Name}"
                                                                Style="{StaticResource ProjectHeaderStyle}"
                                                                FontSize="26" />
-                                                    <TextBlock Text="{Binding Framework}"
-                                                               Style="{StaticResource ProjectFrameworkStyle}"
-                                                               FontSize="12"
-                                                               Margin="0,6,0,0" />
+                                                    <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,6,0,0">
+                                                        <TextBlock Text="{Binding Framework}"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="12" />
+                                                        <TextBlock Text="|"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="12"
+                                                                   Visibility="{Binding TimelineDisplay, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                        <TextBlock Text="{Binding TimelineDisplay}"
+                                                                   Style="{StaticResource ProjectFrameworkStyle}"
+                                                                   FontSize="12"
+                                                                   Visibility="{Binding TimelineDisplay, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </Border>
 
@@ -351,6 +444,64 @@
                                                     </ItemsRepeater>
                                                 </StackPanel>
                                             </Grid>
+
+                                            <!-- SubProjects Section (Desktop) -->
+                                            <Border Padding="24,16,24,20"
+                                                    Visibility="{Binding SubProjects, Converter={StaticResource CollectionToVisibilityConverter}}">
+                                                <StackPanel Spacing="16">
+                                                    <Border BorderBrush="#000000"
+                                                            BorderThickness="0,0,0,2"
+                                                            Padding="0,0,0,8">
+                                                        <TextBlock Text="TEILPROJEKTE"
+                                                                   Style="{StaticResource ProjectSectionTitleStyle}" />
+                                                    </Border>
+
+                                                    <ItemsRepeater ItemsSource="{Binding SubProjects}">
+                                                        <ItemsRepeater.Layout>
+                                                            <StackLayout Spacing="16" />
+                                                        </ItemsRepeater.Layout>
+                                                        <ItemsRepeater.ItemTemplate>
+                                                            <DataTemplate x:DataType="models:SubProjectModel">
+                                                                <Border Background="#FFFFFF"
+                                                                        BorderBrush="#E8E8E8"
+                                                                        BorderThickness="1"
+                                                                        Padding="16"
+                                                                        CornerRadius="8"
+                                                                        Width="400">
+                                                                    <StackPanel Spacing="8">
+                                                                        <StackPanel Orientation="Horizontal" Spacing="12">
+                                                                            <TextBlock Text="{Binding Name}"
+                                                                                       Style="{StaticResource SubProjectNameStyle}"
+                                                                                       FontSize="15" />
+                                                                            <TextBlock Text="{Binding Framework}"
+                                                                                       Style="{StaticResource SubProjectFrameworkStyle}"
+                                                                                       VerticalAlignment="Center"
+                                                                                       Visibility="{Binding Framework, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                                        </StackPanel>
+                                                                        <TextBlock Text="{Binding Description}"
+                                                                                   Style="{StaticResource ProjectTechTextStyle}"
+                                                                                   FontSize="13"
+                                                                                   Visibility="{Binding Description, Converter={StaticResource NullToCollapsedConverter}}" />
+                                                                        <ItemsRepeater ItemsSource="{Binding Technologies}" Margin="0,4,0,0">
+                                                                            <ItemsRepeater.Layout>
+                                                                                <StackLayout Spacing="8" Orientation="Horizontal" />
+                                                                            </ItemsRepeater.Layout>
+                                                                            <ItemsRepeater.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Border Style="{StaticResource SubProjectTechChipStyle}">
+                                                                                        <TextBlock Text="{Binding}"
+                                                                                                   Style="{StaticResource SubProjectTechTextStyle}" />
+                                                                                    </Border>
+                                                                                </DataTemplate>
+                                                                            </ItemsRepeater.ItemTemplate>
+                                                                        </ItemsRepeater>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsRepeater.ItemTemplate>
+                                                    </ItemsRepeater>
+                                                </StackPanel>
+                                            </Border>
 
                                             <!-- Store Badges Section -->
                                             <Border Background="#F5F5F5" Padding="24,16">

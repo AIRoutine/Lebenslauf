@@ -9,6 +9,13 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
 {
     public int Order => 10;
 
+    // Store skill IDs for profile linking
+    private readonly Dictionary<string, Guid> _skillIds = new();
+    // Store project IDs for profile linking
+    private readonly Dictionary<string, Guid> _projectIds = new();
+    // Store work experience IDs for profile linking
+    private readonly Dictionary<string, Guid> _workExperienceIds = new();
+
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
         // Check if already seeded
@@ -23,28 +30,72 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         await SeedSkillsAsync(cancellationToken);
         await SeedProjectsAsync(cancellationToken);
 
+        // Save first to get IDs, then add profile links
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        await SeedProfileSkillsAsync(cancellationToken);
+        await SeedProfileProjectsAsync(cancellationToken);
+        await SeedProfileWorkExperiencesAsync(cancellationToken);
+
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     private async Task SeedPersonalDataAsync(CancellationToken cancellationToken)
     {
-        var personalData = new PersonalData
+        // Create PersonalData for each profile with customized titles
+        var personalDataList = new List<PersonalData>
         {
-            Id = Guid.NewGuid(),
-            Name = "Daniel Hufnagl",
-            Title = "Senior Cross-Platform Developer",
-            Email = "d.hufnagl@codelisk.com",
-            Phone = "+43-664-73221804",
-            Address = "Stockham 44",
-            City = "Laakirchen",
-            PostalCode = "4663",
-            Country = "Oesterreich",
-            BirthDate = new DateOnly(1998, 8, 1),
-            Citizenship = "Oesterreich",
-            ProfileImageUrl = null
+            new()
+            {
+                Id = Guid.NewGuid(),
+                ProfileId = ProfileSeeder.DefaultProfileId,
+                Name = "Daniel Hufnagl",
+                Title = "Senior Cross-Platform Developer",
+                Email = "d.hufnagl@codelisk.com",
+                Phone = "+43-664-73221804",
+                Address = "Stockham 44",
+                City = "Laakirchen",
+                PostalCode = "4663",
+                Country = "Oesterreich",
+                BirthDate = new DateOnly(1998, 8, 1),
+                Citizenship = "Oesterreich",
+                ProfileImageUrl = null
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                ProfileId = ProfileSeeder.BackendProfileId,
+                Name = "Daniel Hufnagl",
+                Title = "Senior .NET Backend Developer",
+                Email = "d.hufnagl@codelisk.com",
+                Phone = "+43-664-73221804",
+                Address = "Stockham 44",
+                City = "Laakirchen",
+                PostalCode = "4663",
+                Country = "Oesterreich",
+                BirthDate = new DateOnly(1998, 8, 1),
+                Citizenship = "Oesterreich",
+                ProfileImageUrl = null
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                ProfileId = ProfileSeeder.MobileProfileId,
+                Name = "Daniel Hufnagl",
+                Title = "Senior Mobile App Developer",
+                Email = "d.hufnagl@codelisk.com",
+                Phone = "+43-664-73221804",
+                Address = "Stockham 44",
+                City = "Laakirchen",
+                PostalCode = "4663",
+                Country = "Oesterreich",
+                BirthDate = new DateOnly(1998, 8, 1),
+                Citizenship = "Oesterreich",
+                ProfileImageUrl = null
+            }
         };
 
-        await dbContext.Set<PersonalData>().AddAsync(personalData, cancellationToken);
+        await dbContext.Set<PersonalData>().AddRangeAsync(personalDataList, cancellationToken);
     }
 
     private async Task SeedFamilyMembersAsync(CancellationToken cancellationToken)
@@ -150,41 +201,51 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
 
     private async Task SeedWorkExperienceAsync(CancellationToken cancellationToken)
     {
+        // Helper to create work experience and store its ID
+        WorkExperience CreateWorkExp(string company, string role, DateOnly startDate, DateOnly? endDate,
+            bool isCurrent, string description, int sortOrder)
+        {
+            var id = Guid.NewGuid();
+            _workExperienceIds[company] = id;
+            return new WorkExperience
+            {
+                Id = id,
+                Company = company,
+                Role = role,
+                StartDate = startDate,
+                EndDate = endDate,
+                IsCurrent = isCurrent,
+                Description = description,
+                SortOrder = sortOrder
+            };
+        }
+
         var workExperience = new List<WorkExperience>
         {
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Company = "Selbstaendig",
-                Role = "Vollzeit Einzelunternehmer",
-                StartDate = new DateOnly(2019, 11, 30),
-                EndDate = null,
-                IsCurrent = true,
-                Description = "Cross-Platform App-Entwicklung mit Xamarin Forms, .NET MAUI und Uno Platform. Kunden: Miele, Asfinag, Ekey, und weitere.",
-                SortOrder = 1
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Company = "Skopek GmbH & CO KG",
-                Role = "Xamarin Forms Entwickler bei Colop Stempelerzeugung",
-                StartDate = new DateOnly(2018, 8, 20),
-                EndDate = new DateOnly(2019, 11, 30),
-                IsCurrent = false,
-                Description = "Entwicklung der Colop E-Mark App mit eigenem Editor fuer mehrfarbige Abdrucke.",
-                SortOrder = 2
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Company = "DDL GmbH",
-                Role = "C# Entwickler & Wifi Trainer",
-                StartDate = new DateOnly(2017, 11, 27),
-                EndDate = new DateOnly(2018, 7, 15),
-                IsCurrent = false,
-                Description = "Datenverwaltung von Ver- und Entsorgungsnetzen, Programmieren von C# Anwendungen, Wifi Trainer fuer C# (Gruppen von 20-30 Personen).",
-                SortOrder = 3
-            }
+            CreateWorkExp(
+                company: "Selbstaendig",
+                role: "Vollzeit Einzelunternehmer",
+                startDate: new DateOnly(2019, 11, 30),
+                endDate: null,
+                isCurrent: true,
+                description: "Cross-Platform App-Entwicklung mit Xamarin Forms, .NET MAUI und Uno Platform. Kunden: Miele, Asfinag, Ekey, und weitere.",
+                sortOrder: 1),
+            CreateWorkExp(
+                company: "Skopek GmbH & CO KG",
+                role: "Xamarin Forms Entwickler bei Colop Stempelerzeugung",
+                startDate: new DateOnly(2018, 8, 20),
+                endDate: new DateOnly(2019, 11, 30),
+                isCurrent: false,
+                description: "Entwicklung der Colop E-Mark App mit eigenem Editor fuer mehrfarbige Abdrucke.",
+                sortOrder: 2),
+            CreateWorkExp(
+                company: "DDL GmbH",
+                role: "C# Entwickler & Wifi Trainer",
+                startDate: new DateOnly(2017, 11, 27),
+                endDate: new DateOnly(2018, 7, 15),
+                isCurrent: false,
+                description: "Datenverwaltung von Ver- und Entsorgungsnetzen, Programmieren von C# Anwendungen, Wifi Trainer fuer C# (Gruppen von 20-30 Personen).",
+                sortOrder: 3)
         };
 
         await dbContext.Set<WorkExperience>().AddRangeAsync(workExperience, cancellationToken);
@@ -192,6 +253,14 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
 
     private async Task SeedSkillsAsync(CancellationToken cancellationToken)
     {
+        // Helper to create skill and store its ID
+        Skill CreateSkill(string name, int sortOrder)
+        {
+            var id = Guid.NewGuid();
+            _skillIds[name] = id;
+            return new Skill { Id = id, Name = name, SortOrder = sortOrder };
+        }
+
         // 1. Expertise Category
         var expertiseCategory = new SkillCategory
         {
@@ -200,14 +269,14 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 1,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "C#", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = ".NET", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "MAUI", SortOrder = 3 },
-                new() { Id = Guid.NewGuid(), Name = "Xamarin Forms", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "Uno Platform", SortOrder = 5 },
-                new() { Id = Guid.NewGuid(), Name = "ASP.NET", SortOrder = 6 },
-                new() { Id = Guid.NewGuid(), Name = "XAML", SortOrder = 7 },
-                new() { Id = Guid.NewGuid(), Name = "MVVM Pattern", SortOrder = 8 }
+                CreateSkill("C#", 1),
+                CreateSkill(".NET", 2),
+                CreateSkill("MAUI", 3),
+                CreateSkill("Xamarin Forms", 4),
+                CreateSkill("Uno Platform", 5),
+                CreateSkill("ASP.NET", 6),
+                CreateSkill("XAML", 7),
+                CreateSkill("MVVM Pattern", 8)
             ]
         };
 
@@ -219,12 +288,12 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 2,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "Xamarin.Android", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "Xamarin.iOS", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "Java", SortOrder = 3 },
-                new() { Id = Guid.NewGuid(), Name = "Swift", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "C", SortOrder = 5 },
-                new() { Id = Guid.NewGuid(), Name = "C++", SortOrder = 6 }
+                CreateSkill("Xamarin.Android", 1),
+                CreateSkill("Xamarin.iOS", 2),
+                CreateSkill("Java", 3),
+                CreateSkill("Swift", 4),
+                CreateSkill("C", 5),
+                CreateSkill("C++", 6)
             ]
         };
 
@@ -236,11 +305,11 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 3,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "MAUI/Xamarin Forms als Hauptframework", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "XAML fuer das Design", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "Prism als MVVM Framework", SortOrder = 3 },
-                new() { Id = Guid.NewGuid(), Name = "ReactiveUI fuer Statusveraenderungen", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "Shiny Framework", SortOrder = 5 }
+                CreateSkill("MAUI/Xamarin Forms als Hauptframework", 1),
+                CreateSkill("XAML fuer das Design", 2),
+                CreateSkill("Prism als MVVM Framework", 3),
+                CreateSkill("ReactiveUI fuer Statusveraenderungen", 4),
+                CreateSkill("Shiny Framework", 5)
             ]
         };
 
@@ -252,16 +321,16 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 4,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "Visual Studio", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "Visual Studio Code", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "Rider", SortOrder = 3 },
-                new() { Id = Guid.NewGuid(), Name = "Git", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "Microsoft Azure DevOps", SortOrder = 5 },
-                new() { Id = Guid.NewGuid(), Name = "GitLab", SortOrder = 6 },
-                new() { Id = Guid.NewGuid(), Name = "GitHub", SortOrder = 7 },
-                new() { Id = Guid.NewGuid(), Name = "Jira", SortOrder = 8 },
-                new() { Id = Guid.NewGuid(), Name = "Bitbucket", SortOrder = 9 },
-                new() { Id = Guid.NewGuid(), Name = "Confluence", SortOrder = 10 }
+                CreateSkill("Visual Studio", 1),
+                CreateSkill("Visual Studio Code", 2),
+                CreateSkill("Rider", 3),
+                CreateSkill("Git", 4),
+                CreateSkill("Microsoft Azure DevOps", 5),
+                CreateSkill("GitLab", 6),
+                CreateSkill("GitHub", 7),
+                CreateSkill("Jira", 8),
+                CreateSkill("Bitbucket", 9),
+                CreateSkill("Confluence", 10)
             ]
         };
 
@@ -273,9 +342,9 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 5,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "Claude Code", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "Codex", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "GitHub Copilot", SortOrder = 3 }
+                CreateSkill("Claude Code", 1),
+                CreateSkill("Codex", 2),
+                CreateSkill("GitHub Copilot", 3)
             ]
         };
 
@@ -287,21 +356,21 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 6,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "MAUI Essentials", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "MAUI Community Toolkit", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "Syncfusion", SortOrder = 3 },
-                new() { Id = Guid.NewGuid(), Name = "SignalR", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "SQLite-net", SortOrder = 5 },
-                new() { Id = Guid.NewGuid(), Name = "ReactiveUI", SortOrder = 6 },
-                new() { Id = Guid.NewGuid(), Name = "Refit REST Library", SortOrder = 7 },
-                new() { Id = Guid.NewGuid(), Name = "Prism", SortOrder = 8 },
-                new() { Id = Guid.NewGuid(), Name = "Shiny", SortOrder = 9 },
-                new() { Id = Guid.NewGuid(), Name = "Shiny Mediator", SortOrder = 10 },
-                new() { Id = Guid.NewGuid(), Name = "SharpNado", SortOrder = 11 },
-                new() { Id = Guid.NewGuid(), Name = "SkiaSharp", SortOrder = 12 },
-                new() { Id = Guid.NewGuid(), Name = "Lottie", SortOrder = 13 },
-                new() { Id = Guid.NewGuid(), Name = "ZXing", SortOrder = 14 },
-                new() { Id = Guid.NewGuid(), Name = "BarcodeNative", SortOrder = 15 }
+                CreateSkill("MAUI Essentials", 1),
+                CreateSkill("MAUI Community Toolkit", 2),
+                CreateSkill("Syncfusion", 3),
+                CreateSkill("SignalR", 4),
+                CreateSkill("SQLite-net", 5),
+                CreateSkill("ReactiveUI", 6),
+                CreateSkill("Refit REST Library", 7),
+                CreateSkill("Prism", 8),
+                CreateSkill("Shiny", 9),
+                CreateSkill("Shiny Mediator", 10),
+                CreateSkill("SharpNado", 11),
+                CreateSkill("SkiaSharp", 12),
+                CreateSkill("Lottie", 13),
+                CreateSkill("ZXing", 14),
+                CreateSkill("BarcodeNative", 15)
             ]
         };
 
@@ -313,21 +382,21 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             SortOrder = 7,
             Skills =
             [
-                new() { Id = Guid.NewGuid(), Name = "Bluetooth Drucker Anbindung", SortOrder = 1 },
-                new() { Id = Guid.NewGuid(), Name = "QR-Code Scanner Anbindung", SortOrder = 2 },
-                new() { Id = Guid.NewGuid(), Name = "Push Notifications (Cross Platform)", SortOrder = 3 },
-                new() { Id = Guid.NewGuid(), Name = "REST Service Kommunikation", SortOrder = 4 },
-                new() { Id = Guid.NewGuid(), Name = "Lokale Datenbank in App", SortOrder = 5 },
-                new() { Id = Guid.NewGuid(), Name = "Raspberry Pi Kommunikation", SortOrder = 6 },
-                new() { Id = Guid.NewGuid(), Name = "Eigener Editor", SortOrder = 7 },
-                new() { Id = Guid.NewGuid(), Name = "Google Maps Einbindung", SortOrder = 8 },
-                new() { Id = Guid.NewGuid(), Name = "Dark Mode Design", SortOrder = 9 },
-                new() { Id = Guid.NewGuid(), Name = "Kontaktverwaltung", SortOrder = 10 },
-                new() { Id = Guid.NewGuid(), Name = "WebView Integration", SortOrder = 11 },
-                new() { Id = Guid.NewGuid(), Name = "Token Authentifizierung", SortOrder = 12 },
-                new() { Id = Guid.NewGuid(), Name = "Google/Facebook Login", SortOrder = 13 },
-                new() { Id = Guid.NewGuid(), Name = "Kalender Implementierung", SortOrder = 14 },
-                new() { Id = Guid.NewGuid(), Name = "Caching mit Sync (Request Pattern)", SortOrder = 15 }
+                CreateSkill("Bluetooth Drucker Anbindung", 1),
+                CreateSkill("QR-Code Scanner Anbindung", 2),
+                CreateSkill("Push Notifications (Cross Platform)", 3),
+                CreateSkill("REST Service Kommunikation", 4),
+                CreateSkill("Lokale Datenbank in App", 5),
+                CreateSkill("Raspberry Pi Kommunikation", 6),
+                CreateSkill("Eigener Editor", 7),
+                CreateSkill("Google Maps Einbindung", 8),
+                CreateSkill("Dark Mode Design", 9),
+                CreateSkill("Kontaktverwaltung", 10),
+                CreateSkill("WebView Integration", 11),
+                CreateSkill("Token Authentifizierung", 12),
+                CreateSkill("Google/Facebook Login", 13),
+                CreateSkill("Kalender Implementierung", 14),
+                CreateSkill("Caching mit Sync (Request Pattern)", 15)
             ]
         };
 
@@ -340,15 +409,18 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
     {
         var projects = new List<Project>
         {
-            CreateProject(
+            CreateProjectWithId(
                 name: "Orderlyze",
                 description: "Kassensystem App: Rechnungen erstellen, Tischplan mit Drag & Drop, Reservierungen, Berichte, Mitarbeiterverwaltung, Statistiken, Multi-Device Sync.",
-                framework: "Xamarin.Forms / MAUI",
+                framework: "C# / MAUI",
                 appStoreUrl: "https://apps.apple.com/at/app/orderlyze/id1495015799",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=orderlyze.com",
                 appGalleryUrl: "https://appgallery.huawei.com/app/C103291527",
                 websiteUrl: "https://www.orderlyze.com",
                 sortOrder: 1,
+                startDate: new DateOnly(2018, 1, 1),
+                endDate: null,
+                isCurrent: true,
                 technologies: ["Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Syncfusion", "SQLite", "Shiny.BLE"],
                 functions: [
                     "Rechnungen erstellen und ausdrucken",
@@ -372,17 +444,42 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     "Bluetooth Module: Shiny.BLE",
                     "Datenbank: sqlite-net (Async Pattern)",
                     "UI Komponenten: Syncfusion"
+                ],
+                subProjects: [
+                    new SubProjectData(
+                        Name: "REST API",
+                        Description: "Backend-Service fuer Datensynchronisation und Cloud-Funktionen",
+                        Framework: ".NET 10",
+                        Technologies: ["ASP.NET Core", "Entity Framework", "OpenAPI", "SQLite"]),
+                    new SubProjectData(
+                        Name: "Printing Service",
+                        Description: "Druckserver fuer Bon- und Etikettendrucker",
+                        Framework: ".NET 10",
+                        Technologies: ["ZPL/EPL", "ESC/POS", "USB/Network"]),
+                    new SubProjectData(
+                        Name: "MCP Server",
+                        Description: "AI Support Chatbot mit Dokumentationssuche",
+                        Framework: ".NET 10",
+                        Technologies: ["MCP Protocol", "Docker", "Semantic Search"]),
+                    new SubProjectData(
+                        Name: "Documentation",
+                        Description: "Benutzerhandbuch und technische Dokumentation",
+                        Framework: "MkDocs",
+                        Technologies: ["Material Theme", "Markdown", "GitHub Pages"])
                 ]),
 
-            CreateProject(
+            CreateProjectWithId(
                 name: "Colop E-Mark",
                 description: "Stempel-Editor App: Eigener Editor fuer mehrfarbige Abdrucke, QR/Barcode Generator, WLAN-Druckerverbindung, mehrsprachig (7 Sprachen).",
-                framework: "Xamarin.Forms",
+                framework: "C# / Xamarin.Forms",
                 appStoreUrl: "https://apps.apple.com/at/app/colop-e-mark/id1397292575",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=com.colop.colopemark",
                 appGalleryUrl: null,
                 websiteUrl: "https://www.colop.com/de/digital-produkte",
                 sortOrder: 2,
+                startDate: new DateOnly(2019, 1, 1),
+                endDate: new DateOnly(2020, 3, 1),
+                isCurrent: false,
                 technologies: ["Xamarin.Forms", "C#", "Prism", "SkiaSharp", "ZXing", "SQLite"],
                 functions: [
                     "Eigener Editor um vielseitige mehrfarbige Abdruecke selbst zu gestalten",
@@ -402,15 +499,18 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     "Datenbank: SQLite .NET (Async Pattern)"
                 ]),
 
-            CreateProject(
+            CreateProjectWithId(
                 name: "Sybos",
                 description: "Feuerwehr-Verwaltung: Chat mit Push-Notifications, QR-Code Scanner, Kalender, Zusatzalarmierung, Materialverwaltung, Server-Synchronisation.",
-                framework: "Xamarin.Forms / MAUI",
+                framework: "C# / MAUI",
                 appStoreUrl: "https://apps.apple.com/at/app/sybos/id1176062382",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=at.syPhone",
                 appGalleryUrl: null,
                 websiteUrl: "https://www.sybos.net",
                 sortOrder: 3,
+                startDate: new DateOnly(2020, 9, 1),
+                endDate: new DateOnly(2023, 6, 1),
+                isCurrent: false,
                 technologies: ["Xamarin.Forms", "MAUI", "C#", "Prism", "ReactiveUI", "Refit", "ZXing", "Shiny"],
                 functions: [
                     "Chat fuer Feuerwehrmitglieder mit Push-Notifications",
@@ -433,15 +533,18 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     "Push Notifications: Cross Platform mit Shiny Library"
                 ]),
 
-            CreateProject(
+            CreateProjectWithId(
                 name: "Ekey Bionyx",
                 description: "Fingerscanner App: Push-Nachrichten, hohe Sicherheit mit Verschluesselung, Bluetooth-Anbindung zu Tuerschloessern, umfangreiches Benutzermanagement.",
-                framework: "Xamarin.Forms",
+                framework: "C# / Xamarin.Forms",
                 appStoreUrl: "https://apps.apple.com/at/app/ekey-bionyx/id1484053054",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=net.ekey.bionyx",
                 appGalleryUrl: null,
                 websiteUrl: "https://www.ekey.net/ekey-bionyx-app/",
                 sortOrder: 4,
+                startDate: new DateOnly(2021, 8, 1),
+                endDate: new DateOnly(2022, 2, 1),
+                isCurrent: false,
                 technologies: ["Xamarin.Forms", "C#", "Prism", "Shiny", "Azure Notification Hub", "Lottie"],
                 functions: [
                     "Automatische Push-Nachrichten",
@@ -460,15 +563,18 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     "Animationen: Lottie"
                 ]),
 
-            CreateProject(
+            CreateProjectWithId(
                 name: "Miele Smart Home",
                 description: "Smart Home App: Hausgeraete mobil steuern, Push-Nachrichten ueber Geraetestatus, verschiedene Assistenten als Nuget-Module, eigener Shop.",
-                framework: "MAUI",
+                framework: "C# / MAUI",
                 appStoreUrl: "https://apps.apple.com/at/app/miele-app-smart-home/id930406907",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=de.miele.infocontrol",
                 appGalleryUrl: null,
                 websiteUrl: "https://www.miele.at/c/miele-app-2594.htm",
                 sortOrder: 5,
+                startDate: new DateOnly(2022, 2, 1),
+                endDate: new DateOnly(2024, 12, 1),
+                isCurrent: false,
                 technologies: ["MAUI", "C#", "MVVM", "Azure Notification Hub", "Lottie"],
                 functions: [
                     "Hausgeraete mobil steuern: Bedienen Sie Ihre Hausgeraete bequem per App",
@@ -487,15 +593,18 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     "Animationen: Lottie"
                 ]),
 
-            CreateProject(
+            CreateProjectWithId(
                 name: "Asfinag",
                 description: "Verkehrsinfo App: Personalisierter Homescreen, 1800+ Webcams, Verkehrsinfos & Baustellen, E-Ladestationen, Digitale Vignette, Routenplaner, 12 Sprachen.",
-                framework: "MAUI",
+                framework: "C# / MAUI",
                 appStoreUrl: "https://apps.apple.com/at/app/asfinag/id453459323",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=at.asfinag.unterwegs",
                 appGalleryUrl: null,
                 websiteUrl: "https://www.asfinag.at/asfinag-app/",
                 sortOrder: 6,
+                startDate: new DateOnly(2023, 1, 1),
+                endDate: new DateOnly(2024, 12, 1),
+                isCurrent: false,
                 technologies: ["MAUI", "C#", "Prism", "OpenAPI", "Polly", "Scalar", "Syncfusion", "SQLite"],
                 functions: [
                     "Personalisierter Homescreen",
@@ -520,15 +629,18 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     "Push Notifications: Cross Platform"
                 ]),
 
-            CreateProject(
+            CreateProjectWithId(
                 name: "PracticeBird",
                 description: "Notenblatt App: Mitspielendes Notenblatt, MusicXML/MIDI Import, Playback mit Klavier/Schlagzeug, Stimmenhervorhebung, Social Login.",
-                framework: "Xamarin.Forms",
+                framework: "C# / Xamarin.Forms",
                 appStoreUrl: "https://apps.apple.com/us/app/practice-bird-interactive-sheet-music-and-scores/id1253492926",
                 playStoreUrl: "https://play.google.com/store/apps/details?id=phonicscore.phonicscore_lite",
                 appGalleryUrl: null,
                 websiteUrl: null,
                 sortOrder: 7,
+                startDate: new DateOnly(2020, 3, 1),
+                endDate: new DateOnly(2020, 12, 1),
+                isCurrent: false,
                 technologies: ["Xamarin.Forms", "C#", "Prism", "ReactiveUI", "SkiaSharp", "Refit"],
                 functions: [
                     "Eigenes mitspielendes Notenblatt",
@@ -550,7 +662,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         await dbContext.Set<Project>().AddRangeAsync(projects, cancellationToken);
     }
 
-    private static Project CreateProject(
+    private Project CreateProjectWithId(
         string name,
         string description,
         string framework,
@@ -559,13 +671,20 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         string? appGalleryUrl,
         string? websiteUrl,
         int sortOrder,
+        DateOnly startDate,
+        DateOnly? endDate,
+        bool isCurrent,
         string[] technologies,
         string[] functions,
-        string[] technicalAspects)
+        string[] technicalAspects,
+        SubProjectData[]? subProjects = null)
     {
+        var id = Guid.NewGuid();
+        _projectIds[name] = id;
+
         var project = new Project
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             Name = name,
             Description = description,
             Framework = framework,
@@ -573,7 +692,10 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             PlayStoreUrl = playStoreUrl,
             AppGalleryUrl = appGalleryUrl,
             WebsiteUrl = websiteUrl,
-            SortOrder = sortOrder
+            SortOrder = sortOrder,
+            StartDate = startDate,
+            EndDate = endDate,
+            IsCurrent = isCurrent
         };
 
         for (var i = 0; i < technologies.Length; i++)
@@ -606,6 +728,250 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             });
         }
 
+        if (subProjects is not null)
+        {
+            for (var i = 0; i < subProjects.Length; i++)
+            {
+                var sp = subProjects[i];
+                var subProject = new ProjectSubProject
+                {
+                    Id = Guid.NewGuid(),
+                    Name = sp.Name,
+                    Description = sp.Description,
+                    Framework = sp.Framework,
+                    SortOrder = i + 1
+                };
+
+                for (var j = 0; j < sp.Technologies.Length; j++)
+                {
+                    subProject.Technologies.Add(new ProjectSubProjectTechnology
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = sp.Technologies[j],
+                        SortOrder = j + 1
+                    });
+                }
+
+                project.SubProjects.Add(subProject);
+            }
+        }
+
         return project;
+    }
+
+    private record SubProjectData(string Name, string? Description, string? Framework, string[] Technologies);
+
+    private async Task SeedProfileSkillsAsync(CancellationToken cancellationToken)
+    {
+        var profileSkills = new List<ProfileSkill>();
+
+        // Default profile: All skills
+        var sortOrder = 1;
+        foreach (var skillId in _skillIds.Values)
+        {
+            profileSkills.Add(new ProfileSkill
+            {
+                ProfileId = ProfileSeeder.DefaultProfileId,
+                SkillId = skillId,
+                SortOrder = sortOrder++,
+                IsHighlighted = false
+            });
+        }
+
+        // Backend profile: Backend-focused skills
+        var backendSkills = new[]
+        {
+            "C#", ".NET", "ASP.NET", "MVVM Pattern",
+            "Visual Studio", "Visual Studio Code", "Rider", "Git",
+            "Microsoft Azure DevOps", "GitLab", "GitHub",
+            "Claude Code", "Codex", "GitHub Copilot",
+            "SignalR", "SQLite-net", "Refit REST Library", "Shiny Mediator",
+            "REST Service Kommunikation", "Token Authentifizierung"
+        };
+        sortOrder = 1;
+        foreach (var skillName in backendSkills)
+        {
+            if (_skillIds.TryGetValue(skillName, out var skillId))
+            {
+                profileSkills.Add(new ProfileSkill
+                {
+                    ProfileId = ProfileSeeder.BackendProfileId,
+                    SkillId = skillId,
+                    SortOrder = sortOrder++,
+                    IsHighlighted = skillName is "C#" or ".NET" or "ASP.NET"
+                });
+            }
+        }
+
+        // Mobile profile: Mobile-focused skills
+        var mobileSkills = new[]
+        {
+            "C#", ".NET", "MAUI", "Xamarin Forms", "Uno Platform", "XAML", "MVVM Pattern",
+            "Xamarin.Android", "Xamarin.iOS",
+            "MAUI/Xamarin Forms als Hauptframework", "XAML fuer das Design",
+            "Prism als MVVM Framework", "ReactiveUI fuer Statusveraenderungen", "Shiny Framework",
+            "Visual Studio", "Rider", "Git",
+            "MAUI Essentials", "MAUI Community Toolkit", "Syncfusion",
+            "ReactiveUI", "Prism", "Shiny", "SkiaSharp", "Lottie", "ZXing", "BarcodeNative",
+            "Bluetooth Drucker Anbindung", "QR-Code Scanner Anbindung",
+            "Push Notifications (Cross Platform)", "Lokale Datenbank in App",
+            "Dark Mode Design", "Google Maps Einbindung"
+        };
+        sortOrder = 1;
+        foreach (var skillName in mobileSkills)
+        {
+            if (_skillIds.TryGetValue(skillName, out var skillId))
+            {
+                profileSkills.Add(new ProfileSkill
+                {
+                    ProfileId = ProfileSeeder.MobileProfileId,
+                    SkillId = skillId,
+                    SortOrder = sortOrder++,
+                    IsHighlighted = skillName is "MAUI" or "Xamarin Forms" or "Uno Platform"
+                });
+            }
+        }
+
+        await dbContext.Set<ProfileSkill>().AddRangeAsync(profileSkills, cancellationToken);
+    }
+
+    private async Task SeedProfileProjectsAsync(CancellationToken cancellationToken)
+    {
+        var profileProjects = new List<ProfileProject>();
+
+        // Default profile: All projects (no description overrides)
+        var sortOrder = 1;
+        foreach (var projectId in _projectIds.Values)
+        {
+            profileProjects.Add(new ProfileProject
+            {
+                ProfileId = ProfileSeeder.DefaultProfileId,
+                ProjectId = projectId,
+                SortOrder = sortOrder++,
+                IsHighlighted = false,
+                DescriptionOverride = null
+            });
+        }
+
+        // Backend profile: Projects with backend focus and description overrides
+        var backendProjects = new (string Name, bool IsHighlighted, string? DescriptionOverride)[]
+        {
+            ("Orderlyze", true, "Backend-Architektur mit REST API, Multi-Device Synchronisation, SQLite Datenbank und Cloud-Integration. Implementierung von Real-Time Updates und Caching-Strategien."),
+            ("Sybos", false, "Server-Synchronisation mit RESTful API, Push-Notification Backend mit Firebase/APNs, Chat-Backend mit SignalR fuer Echtzeit-Kommunikation."),
+            ("Ekey Bionyx", false, "Azure Notification Hub Integration, Token-basierte Authentifizierung, verschluesselte API-Kommunikation, Backend-Services fuer Geraeteverwaltung."),
+            ("Miele Smart Home", false, "Smart Home Backend-Integration, IoT-Geraetekommunikation, Cloud-Services Anbindung, RESTful API Design."),
+            ("Asfinag", true, "Umfangreiche API-Integration mit OpenAPI, Polly fuer Resilience Patterns, Caching-Strategien, Multi-Source Datenaggregation.")
+        };
+        sortOrder = 1;
+        foreach (var (projectName, isHighlighted, descOverride) in backendProjects)
+        {
+            if (_projectIds.TryGetValue(projectName, out var projectId))
+            {
+                profileProjects.Add(new ProfileProject
+                {
+                    ProfileId = ProfileSeeder.BackendProfileId,
+                    ProjectId = projectId,
+                    SortOrder = sortOrder++,
+                    IsHighlighted = isHighlighted,
+                    DescriptionOverride = descOverride
+                });
+            }
+        }
+
+        // Mobile profile: All mobile apps with mobile-focused descriptions
+        var mobileProjects = new (string Name, bool IsHighlighted, string? DescriptionOverride)[]
+        {
+            ("Orderlyze", true, "Cross-Platform Kassensystem mit Drag & Drop UI, Bluetooth-Druckeranbindung, Offline-First Architektur und intuitivem Touch-Interface."),
+            ("Colop E-Mark", true, "Custom Editor mit SkiaSharp, Multi-Touch Gestensteuerung, WLAN-Druckerintegration, mehrsprachige App (7 Sprachen)."),
+            ("Sybos", false, "Native Push-Notifications, QR-Code Scanner Integration, Custom Kalender-Komponente, Dark Mode Support."),
+            ("Ekey Bionyx", false, "Bluetooth Low Energy Anbindung, Biometrische Sicherheit, Lottie Animationen, Benutzerfreundliche Rollenverwaltung."),
+            ("Miele Smart Home", true, "IoT-Geraetesteuerung, Push-Benachrichtigungen, modulare Architektur mit NuGet-Paketen, Rich Animations."),
+            ("Asfinag", false, "Responsive UI fuer alle Geraetegroessen, Offline-Karten, 12 Sprachen, barrierefreies Design."),
+            ("PracticeBird", false, "SkiaSharp Notenblatt-Rendering, Audio-Playback Synchronisation, Social Login Integration.")
+        };
+        sortOrder = 1;
+        foreach (var (projectName, isHighlighted, descOverride) in mobileProjects)
+        {
+            if (_projectIds.TryGetValue(projectName, out var projectId))
+            {
+                profileProjects.Add(new ProfileProject
+                {
+                    ProfileId = ProfileSeeder.MobileProfileId,
+                    ProjectId = projectId,
+                    SortOrder = sortOrder++,
+                    IsHighlighted = isHighlighted,
+                    DescriptionOverride = descOverride
+                });
+            }
+        }
+
+        await dbContext.Set<ProfileProject>().AddRangeAsync(profileProjects, cancellationToken);
+    }
+
+    private async Task SeedProfileWorkExperiencesAsync(CancellationToken cancellationToken)
+    {
+        var profileWorkExperiences = new List<ProfileWorkExperience>();
+
+        // Default profile: All work experiences
+        var sortOrder = 1;
+        foreach (var workExpId in _workExperienceIds.Values)
+        {
+            profileWorkExperiences.Add(new ProfileWorkExperience
+            {
+                ProfileId = ProfileSeeder.DefaultProfileId,
+                WorkExperienceId = workExpId,
+                SortOrder = sortOrder++,
+                IsHighlighted = false,
+                DescriptionOverride = null
+            });
+        }
+
+        // Backend profile: Emphasize backend aspects
+        var backendWorkExp = new (string Company, bool IsHighlighted, string? DescriptionOverride)[]
+        {
+            ("Selbstaendig", true, "Backend-Entwicklung mit ASP.NET Core, API Design, Datenbankarchitektur mit Entity Framework Core. Cloud-Services Integration (Azure, AWS). CI/CD Pipelines."),
+            ("Skopek GmbH & CO KG", false, "Backend-Entwicklung fuer die Colop E-Mark Infrastruktur, REST API Design, Datenbankmodellierung."),
+            ("DDL GmbH", true, "C# Backend-Entwicklung fuer Datenverwaltungssysteme, SQL Server Datenbanken, Trainer fuer C# Grundlagen und fortgeschrittene Konzepte.")
+        };
+        sortOrder = 1;
+        foreach (var (company, isHighlighted, descOverride) in backendWorkExp)
+        {
+            if (_workExperienceIds.TryGetValue(company, out var workExpId))
+            {
+                profileWorkExperiences.Add(new ProfileWorkExperience
+                {
+                    ProfileId = ProfileSeeder.BackendProfileId,
+                    WorkExperienceId = workExpId,
+                    SortOrder = sortOrder++,
+                    IsHighlighted = isHighlighted,
+                    DescriptionOverride = descOverride
+                });
+            }
+        }
+
+        // Mobile profile: Emphasize mobile aspects
+        var mobileWorkExp = new (string Company, bool IsHighlighted, string? DescriptionOverride)[]
+        {
+            ("Selbstaendig", true, "Cross-Platform Mobile Entwicklung mit Xamarin Forms, .NET MAUI und Uno Platform. UI/UX Design, Native Platform Features, App Store Deployments. Kunden: Miele, Asfinag, Ekey."),
+            ("Skopek GmbH & CO KG", true, "Entwicklung der Colop E-Mark App mit Custom Editor (SkiaSharp), Multi-Touch Gestures, Bluetooth-Druckeranbindung."),
+            ("DDL GmbH", false, "C# Entwicklung, erste Erfahrungen mit mobilen Anwendungen, Trainer fuer Programmiergrundlagen.")
+        };
+        sortOrder = 1;
+        foreach (var (company, isHighlighted, descOverride) in mobileWorkExp)
+        {
+            if (_workExperienceIds.TryGetValue(company, out var workExpId))
+            {
+                profileWorkExperiences.Add(new ProfileWorkExperience
+                {
+                    ProfileId = ProfileSeeder.MobileProfileId,
+                    WorkExperienceId = workExpId,
+                    SortOrder = sortOrder++,
+                    IsHighlighted = isHighlighted,
+                    DescriptionOverride = descOverride
+                });
+            }
+        }
+
+        await dbContext.Set<ProfileWorkExperience>().AddRangeAsync(profileWorkExperiences, cancellationToken);
     }
 }
