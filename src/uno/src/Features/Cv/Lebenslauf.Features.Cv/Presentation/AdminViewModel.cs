@@ -11,6 +11,7 @@ namespace Lebenslauf.Features.Cv.Presentation;
 
 public partial class AdminViewModel : PageViewModel, INavigationAware
 {
+    private const string AdminPassword = "Admin!";
     private readonly IProfileStateService _profileStateService;
 
     public AdminViewModel(BaseServices baseServices, IProfileStateService profileStateService) : base(baseServices)
@@ -27,11 +28,29 @@ public partial class AdminViewModel : PageViewModel, INavigationAware
     [ObservableProperty]
     private string? _activeProfileSlug;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotAuthenticated))]
+    private bool _isAuthenticated;
+
+    public bool IsNotAuthenticated => !IsAuthenticated;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasPasswordError))]
+    private string _passwordInput = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasPasswordError))]
+    private string? _passwordError;
+
+    public bool HasPasswordError => !string.IsNullOrEmpty(PasswordError);
+
     public void OnNavigatedTo(object? parameter)
     {
         OnNavigatingTo();
+        IsAuthenticated = false;
+        PasswordInput = string.Empty;
+        PasswordError = null;
         ActiveProfileSlug = _profileStateService.ActiveProfileSlug;
-        _ = LoadProfilesAsync(NavigationToken);
     }
 
     public void OnNavigatedFrom()
@@ -100,5 +119,23 @@ public partial class AdminViewModel : PageViewModel, INavigationAware
     private async Task GoBackAsync()
     {
         await Navigator.NavigateBackAsync(this);
+    }
+
+    [UnoCommand]
+    private async Task LoginAsync()
+    {
+        if (PasswordInput == AdminPassword)
+        {
+            IsAuthenticated = true;
+            PasswordError = null;
+            _ = LoadProfilesAsync(NavigationToken);
+        }
+        else
+        {
+            PasswordError = "Falsches Passwort";
+            PasswordInput = string.Empty;
+        }
+
+        await Task.CompletedTask;
     }
 }

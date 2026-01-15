@@ -79,8 +79,53 @@
                 </Grid>
             </Border>
 
-            <!-- Content -->
-            <ScrollViewer Grid.Row="1" Padding="{utu:Responsive Narrow='20,16', Normal='32,24'}">
+            <!-- Login Panel - shown when not authenticated -->
+            <Grid Grid.Row="1"
+                  Visibility="{Binding IsNotAuthenticated}"
+                  Background="#FFFFFF">
+                <StackPanel MaxWidth="400"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="24"
+                            Padding="32">
+
+                    <StackPanel Spacing="8" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE72E;" FontSize="48" Foreground="#000000" />
+                        <TextBlock Text="Passwort erforderlich"
+                                   Style="{StaticResource AdminTitleStyle}"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="Bitte gib das Admin-Passwort ein"
+                                   Style="{StaticResource AdminDescStyle}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="12">
+                        <PasswordBox x:Name="PasswordBox"
+                                     Style="{StaticResource FilledPasswordBoxStyle}"
+                                     Password="{Binding PasswordInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     PlaceholderText="Passwort"
+                                     MaxWidth="300"
+                                     HorizontalAlignment="Stretch" />
+
+                        <TextBlock Text="{Binding PasswordError}"
+                                   Style="{StaticResource AdminDescStyle}"
+                                   Foreground="#D32F2F"
+                                   HorizontalAlignment="Center"
+                                   Visibility="{Binding HasPasswordError}" />
+
+                        <Button Content="Anmelden"
+                                Command="{Binding LoginCommand}"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource FilledButtonStyle}"
+                                Padding="32,12" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <!-- Content - shown when authenticated -->
+            <ScrollViewer Grid.Row="1"
+                          Padding="{utu:Responsive Narrow='20,16', Normal='32,24'}"
+                          Visibility="{Binding IsAuthenticated}">
                 <StackPanel MaxWidth="600" HorizontalAlignment="Center" Spacing="24">
 
                     <!-- Current Profile Info -->
