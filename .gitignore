@@ -67,3 +67,6 @@ src/api/src/Lebenslauf.Api/*.zip
 
 # Generated API client
 src/uno/src/Core/Lebenslauf.Core.ApiClient/openapi.json
+# Playwright artifacts
+.playwright/
+.playwright-mcp/

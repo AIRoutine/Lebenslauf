@@ -10,6 +10,7 @@ public class PersonalDataConfiguration : IEntityTypeConfiguration<PersonalData>
     {
         builder.ToTable("PersonalData");
 
+        builder.Property(x => x.AcademicTitle).HasMaxLength(50);
         builder.Property(x => x.Name).HasMaxLength(200).IsRequired();
         builder.Property(x => x.Title).HasMaxLength(200).IsRequired();
         builder.Property(x => x.Email).HasMaxLength(200).IsRequired();

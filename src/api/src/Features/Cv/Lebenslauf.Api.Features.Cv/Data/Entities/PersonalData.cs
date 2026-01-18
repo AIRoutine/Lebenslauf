@@ -4,6 +4,7 @@ namespace Lebenslauf.Api.Features.Cv.Data.Entities;
 
 public class PersonalData : BaseEntity
 {
+    public string? AcademicTitle { get; set; }
     public required string Name { get; set; }
     public required string Title { get; set; }
     public required string Email { get; set; }

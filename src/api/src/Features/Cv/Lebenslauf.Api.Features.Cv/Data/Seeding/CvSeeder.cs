@@ -49,6 +49,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             {
                 Id = Guid.NewGuid(),
                 ProfileId = ProfileSeeder.DefaultProfileId,
+                AcademicTitle = "Ing.",
                 Name = "Daniel Hufnagl",
                 Title = "Senior Cross-Platform Developer",
                 Email = "d.hufnagl@codelisk.com",
@@ -65,6 +66,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             {
                 Id = Guid.NewGuid(),
                 ProfileId = ProfileSeeder.BackendProfileId,
+                AcademicTitle = "Ing.",
                 Name = "Daniel Hufnagl",
                 Title = "Senior .NET Backend Developer",
                 Email = "d.hufnagl@codelisk.com",
@@ -81,6 +83,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             {
                 Id = Guid.NewGuid(),
                 ProfileId = ProfileSeeder.MobileProfileId,
+                AcademicTitle = "Ing.",
                 Name = "Daniel Hufnagl",
                 Title = "Senior Mobile App Developer",
                 Email = "d.hufnagl@codelisk.com",
