@@ -45,7 +45,7 @@ jobs:
           dotnet publish src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj \
             -c Release \
             -f net10.0-browserwasm \
-            -p:WasmShellWebAppBasePath=/Lebenslauf/ \
+            -p:WasmShellWebAppBasePath=/ \
             -o ./publish
 
       - name: Prepare for GitHub Pages
@@ -53,38 +53,34 @@ jobs:
           # .nojekyll to allow underscores in file names
           touch ./publish/wwwroot/.nojekyll
 
-          # Custom domain (temporarily disabled until DNS propagates)
-          # echo "dotnetmaui.at" > ./publish/wwwroot/CNAME
+          # Custom domain
+          echo "dotnetmaui.de" > ./publish/wwwroot/CNAME
 
-          # Write SPA routing script to temp file (avoids shell quoting issues)
-          # This script intercepts History API to add /Lebenslauf/ prefix
-          # Handles FULL URLs like https://host:port/path (not just relative paths)
-          cat > /tmp/spa_script.txt << 'SPAEOF'
-          <script>(function(){var b="/Lebenslauf";console.log("[SPA] Script loaded, basePath:",b,"location:",location.pathname);if(location.pathname.startsWith(b)||location.hostname==="airoutine.github.io"){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");console.log("[SPA] Restoring path:",r);history.replaceState(null,"",b+r)}var p=history.pushState,s=history.replaceState;function f(u){if(u==null)return u;var str=String(u);console.log("[SPA] Intercepted URL:",str);try{var url=new URL(str,location.origin);if(url.hostname===location.hostname&&url.pathname.startsWith("/")&&!url.pathname.startsWith(b)){url.pathname=b+url.pathname;console.log("[SPA] Fixed to:",url.href);return url.href}}catch(e){}return u}history.pushState=function(a,t,u){console.log("[SPA] pushState called with:",u);return p.call(this,a,t,f(u))};history.replaceState=function(a,t,u){console.log("[SPA] replaceState called with:",u);return s.call(this,a,t,f(u))};console.log("[SPA] Interceptors installed")}})();</script>
+          # Create 404.html for SPA routing (redirects all routes to index.html)
+          # GitHub Pages serves 404.html for unknown routes - we use it to restore SPA paths
+          cat > /tmp/spa_404.txt << 'SPAEOF'
+          <script>!function(){var p=location.pathname;if(p&&p!=="/"){sessionStorage.setItem("spa-path",p);location.replace("/")}else{location.replace("/")}}();</script>
           SPAEOF
 
-          # Write 404 redirect script to temp file
-          # This must execute FIRST to save path and redirect before anything else loads
-          cat > /tmp/redirect_script.txt << 'REDIRECTEOF'
-          <script>!function(){var p=location.pathname,b="/Lebenslauf";if(p.startsWith(b)){var s=p.substring(b.length);if(s&&s!=="/"){sessionStorage.setItem("spa-path",s);location.replace(b+"/")}}}();</script>
-          REDIRECTEOF
+          # SPA path restoration script for index.html
+          cat > /tmp/spa_restore.txt << 'RESTOREEOF'
+          <script>(function(){var r=sessionStorage.getItem("spa-path");if(r){sessionStorage.removeItem("spa-path");history.replaceState(null,"",r)}})();</script>
+          RESTOREEOF
 
-          # Inject SPA routing into index.html (at BEGINNING of head, before any other scripts)
+          # Inject restore script into index.html
           python3 << 'PYEOF'
-          with open('/tmp/spa_script.txt') as f:
-              spa = f.read().strip()
+          with open('/tmp/spa_restore.txt') as f:
+              restore = f.read().strip()
           with open('./publish/wwwroot/index.html') as f:
               html = f.read()
-          html = html.replace('<head>', '<head>' + spa)
+          html = html.replace('<head>', '<head>' + restore)
           with open('./publish/wwwroot/index.html', 'w') as f:
               f.write(html)
           PYEOF
 
-          # Create 404.html with BOTH scripts:
-          # - Redirect script at BEGINNING of head (must run first)
-          # - SPA script before </head> (for path restoration after redirect)
+          # Create 404.html with redirect script
           python3 << 'PYEOF'
-          with open('/tmp/redirect_script.txt') as f:
+          with open('/tmp/spa_404.txt') as f:
               redirect = f.read().strip()
           with open('./publish/wwwroot/index.html') as f:
               html = f.read()
@@ -93,11 +89,11 @@ jobs:
               f.write(html)
           PYEOF
 
-          # Debug: Show what was injected
-          echo "=== Checking index.html head ==="
-          head -20 ./publish/wwwroot/index.html
-          echo "=== Checking 404.html head ==="
-          head -20 ./publish/wwwroot/404.html
+          # Debug output
+          echo "=== index.html head ==="
+          head -15 ./publish/wwwroot/index.html
+          echo "=== 404.html head ==="
+          head -15 ./publish/wwwroot/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
