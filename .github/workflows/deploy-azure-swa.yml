@@ -44,7 +44,7 @@ jobs:
           {
             "navigationFallback": {
               "rewrite": "/index.html",
-              "exclude": ["/_framework/*", "/package_*/*", "*.wasm", "*.js", "*.css", "*.png", "*.jpg", "*.svg", "*.ttf", "*.dat"]
+              "exclude": ["*.wasm", "*.js", "*.css", "*.png", "*.jpg", "*.svg", "*.ttf", "*.dat", "*.json", "*.txt"]
             },
             "mimeTypes": {
               ".wasm": "application/wasm",
@@ -52,15 +52,7 @@ jobs:
             },
             "globalHeaders": {
               "Cache-Control": "public, max-age=31536000, immutable"
-            },
-            "routes": [
-              {
-                "route": "/_framework/*",
-                "headers": {
-                  "Cache-Control": "public, max-age=31536000, immutable"
-                }
-              }
-            ]
+            }
           }
           EOF
 
