@@ -1,0 +1,78 @@
+name: Deploy to Azure Static Web Apps
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  UNO_SINGLE_TARGET: wasm
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install workloads
+        run: dotnet workload install wasm-tools
+
+      - name: Restore dependencies
+        run: dotnet restore src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj
+
+      - name: Publish WASM
+        run: |
+          dotnet publish src/uno/src/Lebenslauf.App/Lebenslauf.App.csproj \
+            -c Release \
+            -f net10.0-browserwasm \
+            -o ./publish
+
+      - name: Prepare for deployment
+        run: |
+          # Create staticwebapp.config.json for SPA routing and compression
+          cat > ./publish/wwwroot/staticwebapp.config.json << 'EOF'
+          {
+            "navigationFallback": {
+              "rewrite": "/index.html",
+              "exclude": ["/_framework/*", "/package_*/*", "*.wasm", "*.js", "*.css", "*.png", "*.jpg", "*.svg", "*.ttf", "*.dat"]
+            },
+            "mimeTypes": {
+              ".wasm": "application/wasm",
+              ".dat": "application/octet-stream"
+            },
+            "globalHeaders": {
+              "Cache-Control": "public, max-age=31536000, immutable"
+            },
+            "routes": [
+              {
+                "route": "/_framework/*",
+                "headers": {
+                  "Cache-Control": "public, max-age=31536000, immutable"
+                }
+              }
+            ]
+          }
+          EOF
+
+          echo "=== wwwroot contents ==="
+          ls -la ./publish/wwwroot/
+
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "./publish/wwwroot"
+          skip_app_build: true
+          skip_api_build: true
