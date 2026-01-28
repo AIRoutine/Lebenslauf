@@ -277,9 +277,11 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 CreateSkill("MAUI", 3),
                 CreateSkill("Xamarin Forms", 4),
                 CreateSkill("Uno Platform", 5),
-                CreateSkill("ASP.NET", 6),
-                CreateSkill("XAML", 7),
-                CreateSkill("MVVM Pattern", 8)
+                CreateSkill("ASP.NET Core", 6),
+                CreateSkill("Entity Framework Core", 7),
+                CreateSkill("XAML", 8),
+                CreateSkill("MVVM Pattern", 9),
+                CreateSkill("REST API Design", 10)
             ]
         };
 
@@ -375,16 +377,38 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 CreateSkill("Lottie", 13),
                 CreateSkill("ZXing", 14),
                 CreateSkill("BarcodeNative", 15),
-                CreateSkill("Cake Build", 16)
+                CreateSkill("Cake Build", 16),
+                CreateSkill("Polly (Resilience)", 17),
+                CreateSkill("Swagger/OpenAPI", 18),
+                CreateSkill("ClosedXML", 19),
+                CreateSkill("Stimulsoft Reports", 20)
             ]
         };
 
-        // 7. App Development Experience Category
+        // 7. Database & Backend Category
+        var databaseCategory = new SkillCategory
+        {
+            Id = Guid.NewGuid(),
+            Name = "Datenbanken & Backend",
+            SortOrder = 7,
+            Skills =
+            [
+                CreateSkill("PostgreSQL", 1),
+                CreateSkill("SQLite", 2),
+                CreateSkill("SQL Server", 3),
+                CreateSkill("JWT Authentication", 4),
+                CreateSkill("Multi-Tenant Architektur", 5),
+                CreateSkill("Repository Pattern", 6),
+                CreateSkill("Code Generation", 7)
+            ]
+        };
+
+        // 8. App Development Experience Category
         var appDevCategory = new SkillCategory
         {
             Id = Guid.NewGuid(),
             Name = "App Entwicklungserfahrung",
-            SortOrder = 7,
+            SortOrder = 8,
             Skills =
             [
                 CreateSkill("Bluetooth Drucker Anbindung", 1),
@@ -407,7 +431,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         };
 
         await dbContext.Set<SkillCategory>().AddRangeAsync(
-            [expertiseCategory, basicCategory, appBaseCategory, devOpsCategory, aiCategory, frameworksCategory, appDevCategory],
+            [expertiseCategory, basicCategory, appBaseCategory, devOpsCategory, aiCategory, frameworksCategory, databaseCategory, appDevCategory],
             cancellationToken);
     }
 
@@ -643,6 +667,59 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 ]),
 
             CreateProjectWithId(
+                name: "Communalaudit",
+                description: "Enterprise REST API fuer oesterreichisches Kommunalaudit-System: Audit-Management fuer Gemeinden, Integration mit Austrian Statistics (Statcube), hierarchische Report-Generierung, Multi-Tenant Architektur mit Mandantentrennung.",
+                framework: "C# / ASP.NET Core",
+                appStoreUrl: null,
+                playStoreUrl: null,
+                appGalleryUrl: null,
+                websiteUrl: "https://www.communalaudit.at/",
+                sortOrder: 7,
+                startDate: new DateOnly(2024, 7, 1),
+                endDate: new DateOnly(2025, 5, 1),
+                isCurrent: false,
+                technologies: [".NET 8.0", "ASP.NET Core", "Entity Framework Core", "PostgreSQL", "Shiny.Mediator", "JWT Authentication", "Swagger/OpenAPI", "Stimulsoft Reports", "Refit", "Polly", "ClosedXML", "CsvHelper"],
+                functions: [
+                    "REST API fuer Audit-Verwaltung und -Durchfuehrung",
+                    "Integration mit Austrian Statistics (Statcube API) fuer statistische Daten",
+                    "Multi-Tenant Architektur mit Mandantentrennung pro Gemeinde",
+                    "Hierarchische Audit-Reports mit konfigurierbaren Formeln",
+                    "Dashboard-Visualisierungen mit verschiedenen Chart-Typen",
+                    "Excel- und CSV-Import/Export fuer Massendaten",
+                    "Report-Generierung mit Stimulsoft Reports Engine",
+                    "JWT-basierte Authentifizierung mit Rollensystem",
+                    "Automatische Code-Generierung fuer CRUD-Operationen"
+                ],
+                technicalAspects: [
+                    "Framework: ASP.NET Core 8.0.5 mit .NET 8.0 LTS",
+                    "Datenbank: PostgreSQL mit Entity Framework Core 8.0",
+                    "Architektur: Repository Pattern + Manager Pattern (Business Logic Layer)",
+                    "Mediator: Shiny.Mediator fuer Request/Response Handling",
+                    "Authentifizierung: JWT Bearer Token + ASP.NET Identity",
+                    "API-Dokumentation: Swagger/OpenAPI mit Swashbuckle",
+                    "Resilience: Polly fuer Retry-Policies und Circuit Breaker",
+                    "Code Generation: Codelisk Framework fuer Controller, Manager, Repositories",
+                    "Testing: XUnit mit AutoFixture und In-Memory Database"
+                ],
+                subProjects: [
+                    new SubProjectData(
+                        Name: "Communalaudit Report Library",
+                        Description: "Domain Model Library fuer hierarchische Audit-Reports mit Questionnaire-Support und Chart-Konfiguration",
+                        Framework: ".NET 8.0",
+                        Technologies: ["Domain-Driven Design", "Nullable Reference Types", "Hierarchical Data Model"]),
+                    new SubProjectData(
+                        Name: "Statcube API Client",
+                        Description: "Type-safe REST Client fuer Austrian Statistics API mit Resilience Patterns",
+                        Framework: ".NET 8.0",
+                        Technologies: ["Refit", "Polly", "Dependency Injection"]),
+                    new SubProjectData(
+                        Name: "Code Generation Framework",
+                        Description: "Source Generators fuer automatische Erstellung von Controllern, Managern und Repositories",
+                        Framework: ".NET 8.0",
+                        Technologies: ["Roslyn Source Generators", "T4 Templates", "Reflection"])
+                ]),
+
+            CreateProjectWithId(
                 name: "Red Bull ReMa",
                 description: "iPad-basierte Lagerverwaltungs-App für Red Bull Event-Logistik mit RFID-Integration, Packlisten-Management, Retourenerfassung und Schadensmeldung.",
                 framework: "C# / .NET MAUI",
@@ -650,7 +727,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 playStoreUrl: null,
                 appGalleryUrl: null,
                 websiteUrl: "https://sofa1.at/en/project/redbull-en/",
-                sortOrder: 7,
+                sortOrder: 8,
                 startDate: new DateOnly(2025, 6, 1),
                 endDate: null,
                 isCurrent: true,
@@ -690,7 +767,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 playStoreUrl: "https://play.google.com/store/apps/details?id=phonicscore.phonicscore_lite",
                 appGalleryUrl: null,
                 websiteUrl: null,
-                sortOrder: 8,
+                sortOrder: 9,
                 startDate: new DateOnly(2020, 3, 1),
                 endDate: new DateOnly(2020, 12, 1),
                 isCurrent: false,
@@ -834,11 +911,14 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         // Backend profile: Backend-focused skills
         var backendSkills = new[]
         {
-            "C#", ".NET", "ASP.NET", "MVVM Pattern",
+            "C#", ".NET", "ASP.NET Core", "Entity Framework Core", "MVVM Pattern", "REST API Design",
             "Visual Studio", "Visual Studio Code", "Rider", "Git",
             "Microsoft Azure DevOps", "GitLab", "GitHub",
             "Claude Code", "Codex", "GitHub Copilot",
             "SignalR", "SQLite-net", "Refit REST Library", "Shiny Mediator",
+            "Polly (Resilience)", "Swagger/OpenAPI", "ClosedXML", "Stimulsoft Reports",
+            "PostgreSQL", "SQLite", "SQL Server", "JWT Authentication",
+            "Multi-Tenant Architektur", "Repository Pattern", "Code Generation",
             "REST Service Kommunikation", "Token Authentifizierung"
         };
         sortOrder = 1;
@@ -851,7 +931,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                     ProfileId = ProfileSeeder.BackendProfileId,
                     SkillId = skillId,
                     SortOrder = sortOrder++,
-                    IsHighlighted = skillName is "C#" or ".NET" or "ASP.NET"
+                    IsHighlighted = skillName is "C#" or ".NET" or "ASP.NET Core" or "Entity Framework Core" or "PostgreSQL"
                 });
             }
         }
@@ -910,6 +990,7 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
         // Backend profile: Projects with backend focus and description overrides
         var backendProjects = new (string Name, bool IsHighlighted, string? DescriptionOverride)[]
         {
+            ("Communalaudit", true, "Enterprise REST API fuer oesterreichisches Kommunalaudit-System: PostgreSQL mit Entity Framework Core, Multi-Tenant Architektur, Shiny.Mediator Pattern, JWT Authentication, Integration mit Austrian Statistics API (Statcube), Stimulsoft Reports, Code Generation Framework fuer Boilerplate-Reduktion."),
             ("Red Bull ReMa", true, "Enterprise Lagerverwaltung mit SignalR Echtzeit-Updates, RFID-Integration, Azure Application Insights Logging, REST API Anbindung."),
             ("Orderlyze", true, "Backend-Architektur mit REST API, Multi-Device Synchronisation, SQLite Datenbank und Cloud-Integration. Implementierung von Real-Time Updates und Caching-Strategien."),
             ("Sybos", false, "Server-Synchronisation mit RESTful API, Push-Notification Backend mit Firebase/APNs, Chat-Backend mit SignalR fuer Echtzeit-Kommunikation."),
