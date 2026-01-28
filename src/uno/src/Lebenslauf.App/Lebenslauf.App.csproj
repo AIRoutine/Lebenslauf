@@ -11,8 +11,13 @@
     <!-- Enable reflection-based JSON serialization for WASM (required for Shiny.Mediator HTTP) -->
     <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
 
-    <!-- Use partial trimming to preserve constructor metadata for JSON deserialization -->
+    <!-- IL Trimming for smaller bundle size -->
+    <PublishTrimmed>true</PublishTrimmed>
     <TrimMode>partial</TrimMode>
+
+    <!-- Enable Brotli compression for WASM -->
+    <WasmBuildNative>true</WasmBuildNative>
+    <BlazorEnableCompression>true</BlazorEnableCompression>
 
     <!-- Display name -->
     <ApplicationTitle>Lebenslauf.App</ApplicationTitle>
