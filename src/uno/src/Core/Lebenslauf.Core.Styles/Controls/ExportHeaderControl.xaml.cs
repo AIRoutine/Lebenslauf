@@ -1,7 +1,9 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Net.Http;
-#if !__WASM__
+#if __WASM__
+using System.Runtime.InteropServices.JavaScript;
+#else
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
@@ -125,9 +127,7 @@ public sealed partial class ExportHeaderControl : UserControl
 
             // Trigger browser download via JavaScript interop
             var base64 = Convert.ToBase64String(bytes);
-            var script = $"(function(){{var a=document.createElement('a');a.href='data:{mimeType};base64,{base64}';a.download='{fileName}';document.body.appendChild(a);a.click();document.body.removeChild(a);}})();";
-
-            await Uno.Foundation.WebAssemblyRuntime.InvokeAsync(script);
+            JsInterop.TriggerBrowserDownload(base64, mimeType, fileName);
         }
         catch (Exception ex)
         {
