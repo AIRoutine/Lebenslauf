@@ -1007,7 +1007,9 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             ("Sybos", false, "Server-Synchronisation mit RESTful API, Push-Notification Backend mit Firebase/APNs, Chat-Backend mit SignalR fuer Echtzeit-Kommunikation."),
             ("Ekey Bionyx", false, "Azure Notification Hub Integration, Token-basierte Authentifizierung, verschluesselte API-Kommunikation, Backend-Services fuer Geraeteverwaltung."),
             ("Miele Smart Home", false, "Smart Home Backend-Integration, IoT-Geraetekommunikation, Cloud-Services Anbindung, RESTful API Design."),
-            ("Asfinag", true, "Umfangreiche API-Integration mit OpenAPI, Polly fuer Resilience Patterns, Caching-Strategien, Multi-Source Datenaggregation.")
+            ("Asfinag", true, "Umfangreiche API-Integration mit OpenAPI, Polly fuer Resilience Patterns, Caching-Strategien, Multi-Source Datenaggregation."),
+            ("Colop E-Mark", false, "WPF Desktop Designer mit Backend-Kommunikation, WLAN/TCP Druckersteuerung, Datenpersistierung mit SQLite."),
+            ("PracticeBird", false, "REST API Integration mit Refit, Cloud-Synchronisation von MusicXML/MIDI Dateien, Social Login Backend-Anbindung (Facebook, Google OAuth).")
         };
         sortOrder = 1;
         foreach (var (projectName, isHighlighted, descOverride) in backendProjects)

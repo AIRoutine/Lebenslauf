@@ -166,8 +166,8 @@
                                             <TextBlock Style="{StaticResource YearStyle}">
                                                 <Run Text="{Binding StartYear}" /><Run Text="—" /><Run Text="{Binding EndYear}" />
                                             </TextBlock>
-                                            <TextBlock Text="{Binding Degree}" Style="{StaticResource TitleStyle}" />
-                                            <TextBlock Text="{Binding Institution}" Style="{StaticResource SubtitleStyle}" />
+                                            <TextBlock Text="{Binding Institution}" Style="{StaticResource TitleStyle}" />
+                                            <TextBlock Text="{Binding Degree}" Style="{StaticResource SubtitleStyle}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ItemsRepeater.ItemTemplate>
@@ -386,43 +386,25 @@
                         <StackPanel Spacing="20">
                             <TextBlock Text="BERUFSERFAHRUNG" Style="{StaticResource SectionTitleStyle}" />
 
-                            <Grid ColumnSpacing="32" RowSpacing="20">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Selbstaendig -->
-                                <Border Background="#F8F8F8" Padding="20,18" CornerRadius="2">
-                                    <StackPanel Spacing="8">
-                                        <TextBlock Text="2019 – heute" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
-                                        <TextBlock Text="Vollzeit Einzelunternehmer" Style="{StaticResource TitleStyle}" />
-                                        <TextBlock Text="Selbstaendig" Style="{StaticResource SubtitleStyle}" />
-                                        <TextBlock Text="Cross-Platform App-Entwicklung mit Xamarin Forms, .NET MAUI und Uno Platform. Kunden: Miele, Asfinag, Ekey, u.a." Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- Colop -->
-                                <Border Grid.Column="1" Background="#F8F8F8" Padding="20,18" CornerRadius="2">
-                                    <StackPanel Spacing="8">
-                                        <TextBlock Text="2018 – 2019" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
-                                        <TextBlock Text="Xamarin Forms Entwickler" Style="{StaticResource TitleStyle}" />
-                                        <TextBlock Text="Colop (Skopek GmbH)" Style="{StaticResource SubtitleStyle}" />
-                                        <TextBlock Text="Entwicklung der Colop E-Mark App mit eigenem Editor fuer mehrfarbige Abdrucke." Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- DDL -->
-                                <Border Grid.Column="2" Background="#F8F8F8" Padding="20,18" CornerRadius="2">
-                                    <StackPanel Spacing="8">
-                                        <TextBlock Text="2017 – 2018" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
-                                        <TextBlock Text="C# Entwickler &amp; Wifi Trainer" Style="{StaticResource TitleStyle}" />
-                                        <TextBlock Text="DDL GmbH" Style="{StaticResource SubtitleStyle}" />
-                                        <TextBlock Text="Datenverwaltung, C# Anwendungen, Wifi Trainer fuer C# (20-30 Personen)." Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" />
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
+                            <ItemsRepeater ItemsSource="{Binding WorkExperience}">
+                                <ItemsRepeater.Layout>
+                                    <UniformGridLayout MinItemWidth="250" MinRowSpacing="20" MinColumnSpacing="32" MaximumRowsOrColumns="3" ItemsStretch="Fill" />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#F8F8F8" Padding="20,18" CornerRadius="2">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11">
+                                                    <Run Text="{Binding StartDate.Year}" /><Run Text=" – " /><Run Text="{Binding EndDate.Year, TargetNullValue='heute'}" />
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding Role}" Style="{StaticResource TitleStyle}" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Company}" Style="{StaticResource SubtitleStyle}" />
+                                                <TextBlock Text="{Binding Description}" Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
                         </StackPanel>
 
                         <!-- ════════════════════════════════════════════════════════════════ -->
@@ -431,45 +413,27 @@
                         <StackPanel Spacing="20">
                             <TextBlock Text="AUSBILDUNG" Style="{StaticResource SectionTitleStyle}" />
 
-                            <Grid ColumnSpacing="32">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <!-- HTL -->
-                                <Border Background="#F8F8F8" Padding="20,18" CornerRadius="2">
-                                    <Grid ColumnSpacing="24">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="2012 – 2017" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" VerticalAlignment="Top" Width="70" />
-                                        <StackPanel Grid.Column="1" Spacing="6">
-                                            <TextBlock Text="Reife- und Diplompruefung Informatik" Style="{StaticResource TitleStyle}" />
-                                            <TextBlock Text="HTL Grieskirchen" Style="{StaticResource SubtitleStyle}" />
-                                            <TextBlock Text="Diplomarbeit: Verwaltungssystem fuer Aerzte und Mitarbeiter inkl. IP-TV Anzeige fuer Kurheim Bad Schallerbach" Style="{StaticResource DescStyle}" FontSize="12" Margin="0,6,0,0" />
-                                            <StackPanel Orientation="Horizontal" Spacing="24" Margin="0,8,0,0">
-                                                <TextBlock Style="{StaticResource SubtitleStyle}" FontSize="11">
-                                                    <Run Text="Praktikum 2015:" FontWeight="SemiBold" /><Run Text=" Elektro Steinschaden" />
+                            <ItemsRepeater ItemsSource="{Binding Education}">
+                                <ItemsRepeater.Layout>
+                                    <UniformGridLayout MinItemWidth="280" MinRowSpacing="20" MinColumnSpacing="32" MaximumRowsOrColumns="2" ItemsStretch="Fill" />
+                                </ItemsRepeater.Layout>
+                                <ItemsRepeater.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#F8F8F8" Padding="20,18" CornerRadius="2">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11">
+                                                    <Run Text="{Binding StartYear}" /><Run Text=" – " /><Run Text="{Binding EndYear}" />
                                                 </TextBlock>
-                                                <TextBlock Style="{StaticResource SubtitleStyle}" FontSize="11">
-                                                    <Run Text="Praktikum 2014:" FontWeight="SemiBold" /><Run Text=" Fa. Stoeber (Programmierung)" />
-                                                </TextBlock>
+                                                <TextBlock Text="{Binding Institution}" Style="{StaticResource TitleStyle}" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Degree}" Style="{StaticResource SubtitleStyle}" />
+                                                <TextBlock Text="{Binding Description}"
+                                                           Visibility="{Binding Description, Converter={StaticResource NullToCollapsedConverter}}"
+                                                           Style="{StaticResource DescStyle}" FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap" />
                                             </StackPanel>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-
-                                <!-- VS/HS -->
-                                <Border Grid.Column="1" Background="#F8F8F8" Padding="20,18" CornerRadius="2">
-                                    <StackPanel Spacing="8">
-                                        <TextBlock Text="2004 – 2012" Style="{StaticResource YearStyle}" Foreground="#888888" FontSize="11" />
-                                        <TextBlock Text="Volksschule &amp; Hauptschule" Style="{StaticResource TitleStyle}" />
-                                        <TextBlock Text="VS, HS Laakirchen" Style="{StaticResource SubtitleStyle}" />
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsRepeater.ItemTemplate>
+                            </ItemsRepeater>
                         </StackPanel>
 
                         <!-- ════════════════════════════════════════════════════════════════ -->

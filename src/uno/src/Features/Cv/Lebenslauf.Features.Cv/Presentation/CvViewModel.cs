@@ -243,8 +243,8 @@ public partial class CvViewModel : PageViewModel, INavigationAware
 
         Education =
         [
-            new(Guid.NewGuid(), "HTL Grieskirchen", "Reife- und Diplompruefung Informatik", 2012, 2017,
-                "Diplomarbeit: Programmierung eines Verwaltungssystems fuer Aerzte und Mitarbeiter"),
+            new(Guid.NewGuid(), "HTL Grieskirchen", "Informatik", 2012, 2017,
+                "Diplomarbeit: Verwaltungssystem fuer Aerzte und Mitarbeiter inkl. IP-TV Anzeige fuer Kurheim Bad Schallerbach."),
             new(Guid.NewGuid(), "VS, HS Laakirchen", "Volksschule und Hauptschule", 2004, 2012, null)
         ];
 
