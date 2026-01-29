@@ -1,11 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System.Net.Http;
 #if !__WASM__
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using SkiaSharp;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
@@ -13,6 +9,9 @@ using Windows.Storage.Provider;
 
 namespace Lebenslauf.Core.Styles.Controls;
 
+/// <summary>
+/// Export control that downloads PDF/DOCX from the backend API.
+/// </summary>
 public sealed partial class ExportHeaderControl : UserControl
 {
 #if !__WASM__
@@ -23,10 +22,26 @@ public sealed partial class ExportHeaderControl : UserControl
     public static Window? MainWindow { get; set; }
 #endif
 
-    public static readonly DependencyProperty ExportTargetProperty =
+    private static readonly HttpClient HttpClient = new();
+
+    private static readonly string DefaultApiBaseUrl =
+#if DEBUG
+        "http://localhost:5292";
+#else
+        "https://lebenslauf-api.azurewebsites.net";
+#endif
+
+    public static readonly DependencyProperty ApiBaseUrlProperty =
         DependencyProperty.Register(
-            nameof(ExportTarget),
-            typeof(FrameworkElement),
+            nameof(ApiBaseUrl),
+            typeof(string),
+            typeof(ExportHeaderControl),
+            new PropertyMetadata(DefaultApiBaseUrl));
+
+    public static readonly DependencyProperty ProfileSlugProperty =
+        DependencyProperty.Register(
+            nameof(ProfileSlug),
+            typeof(string),
             typeof(ExportHeaderControl),
             new PropertyMetadata(null));
 
@@ -35,118 +50,110 @@ public sealed partial class ExportHeaderControl : UserControl
             nameof(FileName),
             typeof(string),
             typeof(ExportHeaderControl),
-            new PropertyMetadata("Export"));
+            new PropertyMetadata("Lebenslauf"));
 
-    public FrameworkElement? ExportTarget
+    public static readonly DependencyProperty ExportPathProperty =
+        DependencyProperty.Register(
+            nameof(ExportPath),
+            typeof(string),
+            typeof(ExportHeaderControl),
+            new PropertyMetadata("/api/cv/export"));
+
+    /// <summary>
+    /// Base URL of the API (e.g., https://lebenslauf-api.azurewebsites.net).
+    /// </summary>
+    public string ApiBaseUrl
     {
-        get => (FrameworkElement?)GetValue(ExportTargetProperty);
-        set => SetValue(ExportTargetProperty, value);
+        get => (string)GetValue(ApiBaseUrlProperty);
+        set => SetValue(ApiBaseUrlProperty, value);
     }
 
+    /// <summary>
+    /// Optional profile slug for profile-specific exports.
+    /// </summary>
+    public string? ProfileSlug
+    {
+        get => (string?)GetValue(ProfileSlugProperty);
+        set => SetValue(ProfileSlugProperty, value);
+    }
+
+    /// <summary>
+    /// Base filename for downloads (without extension).
+    /// </summary>
     public string FileName
     {
         get => (string)GetValue(FileNameProperty);
         set => SetValue(FileNameProperty, value);
     }
 
+    /// <summary>
+    /// API export path (e.g., /api/cv/export or /api/cv/projects/export).
+    /// </summary>
+    public string ExportPath
+    {
+        get => (string)GetValue(ExportPathProperty);
+        set => SetValue(ExportPathProperty, value);
+    }
+
     public ExportHeaderControl()
     {
         this.InitializeComponent();
-#if __WASM__
-        // Hide export button on WebAssembly - RenderTargetBitmap not supported
-        this.Loaded += (s, e) =>
-        {
-            if (FindName("ExportButton") is Button btn)
-            {
-                btn.Visibility = Visibility.Collapsed;
-            }
-        };
-#endif
     }
 
 #if __WASM__
-    private void OnExportClick(object sender, RoutedEventArgs e)
+    private async void OnPdfClick(object sender, RoutedEventArgs e)
     {
-        // Export not supported on WebAssembly
+        await DownloadViaJavaScriptAsync("pdf", "application/pdf");
     }
-#else
-    private async void OnExportClick(object sender, RoutedEventArgs e)
-    {
-        var target = ExportTarget;
-        if (target is null)
-        {
-            return;
-        }
 
+    private async void OnDocxClick(object sender, RoutedEventArgs e)
+    {
+        await DownloadViaJavaScriptAsync("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+    }
+
+    private async Task DownloadViaJavaScriptAsync(string format, string mimeType)
+    {
         try
         {
-            ExportButton.IsEnabled = false;
+            SetButtonsEnabled(false);
 
-            // Find ScrollViewer to expand its content to full size
-            var scrollViewer = FindScrollViewer(target);
-            double originalWidth = double.NaN;
-            double originalHeight = double.NaN;
-            double originalTargetHeight = double.NaN;
-            FrameworkElement? scrollContent = null;
+            var url = BuildExportUrl(format);
+            var fileName = $"{FileName}.{format}";
 
-            if (scrollViewer?.Content is FrameworkElement content)
-            {
-                scrollContent = content;
+            // Download file bytes from API
+            var bytes = await HttpClient.GetByteArrayAsync(url);
 
-                // Save original sizes
-                originalWidth = content.Width;
-                originalHeight = content.Height;
-                originalTargetHeight = target.Height;
+            // Trigger browser download via JavaScript interop
+            var base64 = Convert.ToBase64String(bytes);
+            var script = $"(function(){{var a=document.createElement('a');a.href='data:{mimeType};base64,{base64}';a.download='{fileName}';document.body.appendChild(a);a.click();document.body.removeChild(a);}})();";
 
-                // Measure content at infinite size to get full desired size
-                content.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                var desiredSize = content.DesiredSize;
+            await Uno.Foundation.WebAssemblyRuntime.InvokeAsync(script);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Download failed: {ex.Message}");
+        }
+        finally
+        {
+            SetButtonsEnabled(true);
+        }
+    }
+#else
+    private async void OnPdfClick(object sender, RoutedEventArgs e)
+    {
+        await DownloadAndSaveAsync("pdf", "PDF Document", ".pdf");
+    }
 
-                // Set explicit size to render full content
-                var fullContentHeight = Math.Max(desiredSize.Height, scrollViewer.ExtentHeight);
-                content.Width = Math.Max(desiredSize.Width, scrollViewer.ViewportWidth);
-                content.Height = fullContentHeight;
+    private async void OnDocxClick(object sender, RoutedEventArgs e)
+    {
+        await DownloadAndSaveAsync("docx", "Word Document", ".docx");
+    }
 
-                // Also expand the target if it's a wrapper (to include header + full content)
-                if (target != scrollViewer && target != content)
-                {
-                    // Calculate extra height from header/other elements
-                    var headerHeight = target.ActualHeight - scrollViewer.ActualHeight;
-                    target.Height = headerHeight + fullContentHeight;
-                }
-
-                // Force layout update
-                content.UpdateLayout();
-                target.UpdateLayout();
-
-                // Small delay to ensure layout is complete
-                await Task.Delay(150);
-            }
-
-            // Render the ENTIRE target (including header wrapper)
-            var renderTargetBitmap = new RenderTargetBitmap();
-            await renderTargetBitmap.RenderAsync(target);
-
-            // Restore original sizes
-            if (scrollContent is not null)
-            {
-                scrollContent.Width = originalWidth;
-                scrollContent.Height = originalHeight;
-                scrollContent.UpdateLayout();
-            }
-            if (!double.IsNaN(originalTargetHeight))
-            {
-                target.Height = originalTargetHeight;
-                target.UpdateLayout();
-            }
-
-            // Get pixel data
-            var pixelBuffer = await renderTargetBitmap.GetPixelsAsync();
-            var pixels = pixelBuffer.ToArray();
-
-            // Get dimensions
-            var width = renderTargetBitmap.PixelWidth;
-            var height = renderTargetBitmap.PixelHeight;
+    private async Task DownloadAndSaveAsync(string format, string fileTypeDescription, string extension)
+    {
+        try
+        {
+            SetButtonsEnabled(false);
 
             // Show save file picker
             var savePicker = new FileSavePicker
@@ -154,7 +161,7 @@ public sealed partial class ExportHeaderControl : UserControl
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
                 SuggestedFileName = FileName
             };
-            savePicker.FileTypeChoices.Add("PDF Document", [".pdf"]);
+            savePicker.FileTypeChoices.Add(fileTypeDescription, [extension]);
 
             // Initialize picker with window handle (required for WinUI)
             if (MainWindow is not null)
@@ -169,12 +176,13 @@ public sealed partial class ExportHeaderControl : UserControl
                 return;
             }
 
-            // Defer updates to prevent file access issues
+            // Download from API
+            var url = BuildExportUrl(format);
+            var bytes = await HttpClient.GetByteArrayAsync(url);
+
+            // Save to file
             CachedFileManager.DeferUpdates(file);
-
-            await SaveAsPdfAsync(file, pixels, width, height);
-
-            // Complete the file updates
+            await FileIO.WriteBytesAsync(file, bytes);
             await CachedFileManager.CompleteUpdatesAsync(file);
         }
         catch (Exception ex)
@@ -183,65 +191,22 @@ public sealed partial class ExportHeaderControl : UserControl
         }
         finally
         {
-            ExportButton.IsEnabled = true;
+            SetButtonsEnabled(true);
         }
     }
 #endif
 
-#if !__WASM__
-    private static ScrollViewer? FindScrollViewer(DependencyObject element)
+    private string BuildExportUrl(string format)
     {
-        if (element is ScrollViewer sv)
-        {
-            return sv;
-        }
+        var baseUrl = ApiBaseUrl.TrimEnd('/');
+        var exportPath = ExportPath.TrimStart('/').TrimEnd('/');
 
-        var childCount = VisualTreeHelper.GetChildrenCount(element);
-        for (var i = 0; i < childCount; i++)
-        {
-            var child = VisualTreeHelper.GetChild(element, i);
-            var result = FindScrollViewer(child);
-            if (result is not null)
-            {
-                return result;
-            }
-        }
-
-        return null;
+        return $"{baseUrl}/{exportPath}/{format}";
     }
 
-    private static async Task SaveAsPdfAsync(StorageFile file, byte[] pixels, int width, int height)
+    private void SetButtonsEnabled(bool enabled)
     {
-        await Task.Run(async () =>
-        {
-            // Create SKBitmap from pixel data (BGRA format from RenderTargetBitmap)
-            using var bitmap = new SKBitmap(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
-            var handle = System.Runtime.InteropServices.GCHandle.Alloc(pixels, System.Runtime.InteropServices.GCHandleType.Pinned);
-            try
-            {
-                bitmap.InstallPixels(
-                    new SKImageInfo(width, height, SKColorType.Bgra8888, SKAlphaType.Premul),
-                    handle.AddrOfPinnedObject(),
-                    width * 4);
-
-                // Create PDF document
-                using var stream = await file.OpenStreamForWriteAsync();
-                stream.SetLength(0); // Clear existing content
-
-                using var document = SKDocument.CreatePdf(stream);
-                using var canvas = document.BeginPage(width, height);
-
-                // Draw the bitmap onto the PDF canvas
-                canvas.DrawBitmap(bitmap, 0, 0);
-
-                document.EndPage();
-                document.Close();
-            }
-            finally
-            {
-                handle.Free();
-            }
-        });
+        PdfButton.IsEnabled = enabled;
+        DocxButton.IsEnabled = enabled;
     }
-#endif
 }

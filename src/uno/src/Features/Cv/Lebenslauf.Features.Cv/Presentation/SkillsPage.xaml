@@ -335,13 +335,6 @@
             </utu:ResponsiveView.NormalTemplate>
         </utu:ResponsiveView>
         </Grid>
-
-            <!-- Floating PDF Export Button (rendered on top) -->
-            <controls:ExportHeaderControl ExportTarget="{x:Bind SkillsExportArea}"
-                                           FileName="Skills_Daniel_Hufnagl"
-                                           Margin="0,16,48,0"
-                                           HorizontalAlignment="Right"
-                                           VerticalAlignment="Top" />
         </Grid>
     </uf:BusyOverlay>
 </fw:BasePage>

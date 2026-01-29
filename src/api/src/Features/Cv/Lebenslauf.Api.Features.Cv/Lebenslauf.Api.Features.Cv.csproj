@@ -13,6 +13,8 @@
     <PackageReference Include="Shiny.Mediator.AspNet" />
     <PackageReference Include="Shiny.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="QuestPDF" />
+    <PackageReference Include="DocumentFormat.OpenXml" />
   </ItemGroup>
 
   <ItemGroup>

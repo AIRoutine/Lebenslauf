@@ -49,6 +49,10 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(MicrosoftVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftVersion)" />
 
+    <!-- Document Generation -->
+    <PackageVersion Include="QuestPDF" Version="2025.1.1" />
+    <PackageVersion Include="DocumentFormat.OpenXml" Version="3.3.0" />
+
     <!-- UI Testing -->
     <PackageVersion Include="Uno.UITest" Version="1.1.0-dev.92" />
     <PackageVersion Include="Uno.UITest.Helpers" Version="1.1.0-dev.70" />
