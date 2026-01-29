@@ -127,7 +127,9 @@ public sealed partial class ExportHeaderControl : UserControl
 
             // Trigger browser download via JavaScript interop
             var base64 = Convert.ToBase64String(bytes);
+#pragma warning disable CA1416 // Platform compatibility - only called when __WASM__ is defined
             JsInterop.TriggerBrowserDownload(base64, mimeType, fileName);
+#pragma warning restore CA1416
         }
         catch (Exception ex)
         {
