@@ -3,22 +3,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:utu="using:Uno.Toolkit.UI">
 
-    <!-- Minimal floating export button - stays outside PDF export area -->
-    <Button x:Name="ExportButton"
-            Click="OnExportClick"
-            Background="#000000"
-            BorderThickness="0"
-            Padding="16,10"
-            CornerRadius="0"
-            HorizontalAlignment="Right">
-        <StackPanel Orientation="Horizontal" Spacing="10">
-            <FontIcon Glyph="&#xE78C;" FontSize="14" Foreground="#FFFFFF" />
-            <TextBlock Text="PDF"
-                       Foreground="#FFFFFF"
-                       FontSize="11"
-                       FontWeight="Bold"
-                       CharacterSpacing="80"
-                       VerticalAlignment="Center" />
-        </StackPanel>
-    </Button>
+    <!-- Export buttons - PDF and DOCX downloads from API -->
+    <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button x:Name="PdfButton"
+                Click="OnPdfClick"
+                Background="#000000"
+                BorderThickness="0"
+                Padding="16,10"
+                CornerRadius="0">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <FontIcon Glyph="&#xE78C;" FontSize="14" Foreground="#FFFFFF" />
+                <TextBlock Text="PDF"
+                           Foreground="#FFFFFF"
+                           FontSize="11"
+                           FontWeight="Bold"
+                           CharacterSpacing="80"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="DocxButton"
+                Click="OnDocxClick"
+                Background="#2B579A"
+                BorderThickness="0"
+                Padding="16,10"
+                CornerRadius="0">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <FontIcon Glyph="&#xE8A5;" FontSize="14" Foreground="#FFFFFF" />
+                <TextBlock Text="DOCX"
+                           Foreground="#FFFFFF"
+                           FontSize="11"
+                           FontWeight="Bold"
+                           CharacterSpacing="80"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
+    </StackPanel>
 </UserControl>
