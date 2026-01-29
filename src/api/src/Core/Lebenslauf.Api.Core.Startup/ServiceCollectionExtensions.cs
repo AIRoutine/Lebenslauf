@@ -100,6 +100,20 @@ public static class ServiceCollectionExtensions
         })
         .WithName("ExportCvDocxDefault")
         .WithDescription("Export default CV as Word document");
+
+        // Projects PDF Export
+        exportGroup.MapGet("/projects/export/pdf", async (
+            IMediator mediator,
+            CancellationToken ct) =>
+        {
+            var (_, response) = await mediator.Request(new ExportProjectsPdfRequest(null), ct);
+            return Results.File(
+                response.FileBytes,
+                response.ContentType,
+                response.FileName);
+        })
+        .WithName("ExportProjectsPdf")
+        .WithDescription("Export projects overview as PDF document");
     }
 
     public static async Task RunSeedersAsync(this WebApplication app)

@@ -24,12 +24,19 @@ public sealed partial class ExportHeaderControl : UserControl
 
     private static readonly HttpClient HttpClient = new();
 
+    private static readonly string DefaultApiBaseUrl =
+#if DEBUG
+        "http://localhost:5292";
+#else
+        "https://lebenslauf-api.azurewebsites.net";
+#endif
+
     public static readonly DependencyProperty ApiBaseUrlProperty =
         DependencyProperty.Register(
             nameof(ApiBaseUrl),
             typeof(string),
             typeof(ExportHeaderControl),
-            new PropertyMetadata("https://lebenslauf-api.azurewebsites.net"));
+            new PropertyMetadata(DefaultApiBaseUrl));
 
     public static readonly DependencyProperty ProfileSlugProperty =
         DependencyProperty.Register(
@@ -44,6 +51,13 @@ public sealed partial class ExportHeaderControl : UserControl
             typeof(string),
             typeof(ExportHeaderControl),
             new PropertyMetadata("Lebenslauf"));
+
+    public static readonly DependencyProperty ExportPathProperty =
+        DependencyProperty.Register(
+            nameof(ExportPath),
+            typeof(string),
+            typeof(ExportHeaderControl),
+            new PropertyMetadata("/api/cv/export"));
 
     /// <summary>
     /// Base URL of the API (e.g., https://lebenslauf-api.azurewebsites.net).
@@ -70,6 +84,15 @@ public sealed partial class ExportHeaderControl : UserControl
     {
         get => (string)GetValue(FileNameProperty);
         set => SetValue(FileNameProperty, value);
+    }
+
+    /// <summary>
+    /// API export path (e.g., /api/cv/export or /api/cv/projects/export).
+    /// </summary>
+    public string ExportPath
+    {
+        get => (string)GetValue(ExportPathProperty);
+        set => SetValue(ExportPathProperty, value);
     }
 
     public ExportHeaderControl()
@@ -176,13 +199,9 @@ public sealed partial class ExportHeaderControl : UserControl
     private string BuildExportUrl(string format)
     {
         var baseUrl = ApiBaseUrl.TrimEnd('/');
+        var exportPath = ExportPath.TrimStart('/').TrimEnd('/');
 
-        if (!string.IsNullOrEmpty(ProfileSlug))
-        {
-            return $"{baseUrl}/api/cv/{ProfileSlug}/export/{format}";
-        }
-
-        return $"{baseUrl}/api/cv/export/{format}";
+        return $"{baseUrl}/{exportPath}/{format}";
     }
 
     private void SetButtonsEnabled(bool enabled)

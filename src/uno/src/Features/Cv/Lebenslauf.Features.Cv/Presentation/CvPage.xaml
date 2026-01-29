@@ -535,8 +535,7 @@
     </utu:ResponsiveView>
 
             <!-- Floating PDF Export Button -->
-            <controls:ExportHeaderControl ExportTarget="{x:Bind CvContent}"
-                                           FileName="Lebenslauf_Daniel_Hufnagl"
+            <controls:ExportHeaderControl FileName="Lebenslauf_Daniel_Hufnagl"
                                            Margin="0,16,48,0"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Top" />

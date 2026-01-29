@@ -569,9 +569,9 @@
             </utu:ResponsiveView>
         </Grid>
 
-            <!-- Floating PDF Export Button (rendered on top) -->
-            <controls:ExportHeaderControl ExportTarget="{x:Bind ProjectsExportArea}"
-                                           FileName="Projekte_Daniel_Hufnagl"
+            <!-- Floating PDF Export Button for Projects -->
+            <controls:ExportHeaderControl FileName="Projekte_Daniel_Hufnagl"
+                                           ExportPath="/api/cv/projects/export"
                                            Margin="0,16,48,0"
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Top" />
