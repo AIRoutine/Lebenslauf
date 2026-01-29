@@ -149,11 +149,11 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
             new()
             {
                 Id = Guid.NewGuid(),
-                Institution = "Grieskirchen",
-                Degree = "HTL Grieskirchen",
+                Institution = "HTL Grieskirchen",
+                Degree = "Informatik",
                 StartYear = 2012,
                 EndYear = 2017,
-                Description = "Hoehere Technische Lehranstalt fuer Informatik - Reife- und Diplompruefung. Diplomarbeit (2016): Programmierung eines Verwaltungssystems fuer Aerzte und Mitarbeiter inklusive Anzeige auf IP-TVS fuer das Kurheim Bad Schallerbach.",
+                Description = "Diplomarbeit: Verwaltungssystem fuer Aerzte und Mitarbeiter inkl. IP-TV Anzeige fuer Kurheim Bad Schallerbach.",
                 SortOrder = 1
             },
             new()
@@ -196,6 +196,17 @@ public class CvSeeder(AppDbContext dbContext) : ISeeder
                 EndMonth = 8,
                 Description = "Elektrotechnische Arbeiten",
                 SortOrder = 2
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Company = "HTL Grieskirchen",
+                Role = "Reife- und Diplompruefung",
+                Year = 2017,
+                Month = 6,
+                EndMonth = 6,
+                Description = "Abschluss Informatik",
+                SortOrder = 3
             }
         };
 
